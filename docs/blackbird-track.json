@@ -1,0 +1,323 @@
+{
+  "id": "blackbird",
+  "kind": "track",
+  "sponsor": "Blackbird",
+  "title": "Best Use of Flynet",
+  "prize": "$2,500 prize pool in $FLY. The top 5 teams receive $500 in $FLY each.",
+  "prizeSummary": "$2,500 in $FLY",
+  "prizeBreakdown": "Top 5 teams receive $500 in $FLY each.",
+  "preview": "Build something people can use before, during, or after a meal with Flynet\u2019s restaurant data, member context, or payment tools. The top 5 teams receive $500 in $FLY each.",
+  "build": "Create a dining app, a discovery agent, a useful view of someone\u2019s restaurant history, or a payment experience built on Flynet.",
+  "requirements": [
+    "Use the Flynet API or SDK in a working project and show where it powers the experience.",
+    "Select Blackbird in the Runtime submission form and explain your Flynet integration.",
+    "Include a recorded demo for online submissions. A recording is strongly encouraged for in-person demos too."
+  ],
+  "resources": [
+    {
+      "label": "Flynet developer docs",
+      "url": "https://docs.flynet.org/"
+    },
+    {
+      "label": "Get started and request access",
+      "url": "https://docs.flynet.org/getting-started"
+    },
+    {
+      "label": "Build with AI",
+      "url": "https://docs.flynet.org/build-with-ai/overview"
+    }
+  ],
+  "guide": {
+    "subtitle": "Best Use of Flynet",
+    "description": "Build something that earns a place in someone\u2019s next night out. Blackbird\u2019s track is for apps and agents that put Flynet\u2019s restaurant network, member data, or $FLY payments to useful work.",
+    "sections": [
+      {
+        "id": "challenge",
+        "title": "The challenge",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Help someone find their next spot, make more of their dining history, or pay for an experience. Pick a specific problem and build a working flow with Flynet."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Flynet opens Blackbird\u2019s dining network to developers. Its tools cover restaurant and location discovery, authenticated member profiles and check-ins, and $FLY payments. You can build an app, an agent, or a focused tool for diners or merchants."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Keep the scope small enough to demonstrate from start to finish. Flynet should make the product meaningfully better, and your demo should make that connection easy to see."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "build-ideas",
+        "title": "What to build",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "These are starting points. Bring your own idea if you see a better use for the network."
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "text": "A dinner concierge that turns a request like \u201csomewhere nearby for four people, open late\u201d into a useful shortlist using restaurant details, locations, and hours."
+                }
+              ],
+              [
+                {
+                  "text": "A dining passport that helps a member revisit favorite places, see where they\u2019ve been, and discover gaps in their own neighborhood map."
+                }
+              ],
+              [
+                {
+                  "text": "A plan for a night out that connects a few restaurants or bars on Flynet, with venue details and opening hours people can actually use."
+                }
+              ],
+              [
+                {
+                  "text": "A checkout flow that lets a Blackbird member pay with $FLY. Show the amount, request confirmation, and give them a clear payment result."
+                }
+              ],
+              [
+                {
+                  "text": "A discovery tool with a point of view: an occasion, a cuisine, a neighborhood, or a better way to explore the restaurant network."
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "setup",
+        "title": "Get started",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Start with discovery if your idea only needs restaurant and location data. Add member authentication when you need someone\u2019s profile or visit history. Payment integrations require the appropriate partner access."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Follow the Flynet getting started guide and request staging access",
+                "url": "https://docs.flynet.org/getting-started"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Request access early. If you\u2019re waiting on credentials, post in the Runtime Discord and say you\u2019re building for the Blackbird / Flynet track. State which API access you need."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Once you have access, get one authenticated request working before building the rest of the product. The TypeScript SDK, @flynetdev/core, supports API calls; @flynetdev/react provides components for discovery and member experiences."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Use Flynet\u2019s AI setup for Claude Code, Cursor, MCP servers, and agent skills",
+                "url": "https://docs.flynet.org/build-with-ai/overview"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Keep API keys and client secrets on your server. Use a member\u2019s authorized access for their personal data. In your demo, make clear which parts use staging data and which are live."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "strong-entry",
+        "title": "What makes a strong entry",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "text": "A clear reason to use it. Show who the product helps and how it improves a real dining or commerce experience."
+                }
+              ],
+              [
+                {
+                  "text": "A meaningful Flynet integration. Explain which data or payment tools you use and how they affect what the user can do."
+                }
+              ],
+              [
+                {
+                  "text": "A complete interaction. Let someone get from their initial request to a useful result, with sensible handling for missing data or a failed request."
+                }
+              ],
+              [
+                {
+                  "text": "An idea with some character. A focused product with a thoughtful interaction is easier to understand than a large collection of unfinished features."
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "submission",
+        "title": "What to submit",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              [
+                {
+                  "text": "Choose Blackbird under Sponsor track prizes in the Runtime submission form. Every submission is automatically eligible for the Bankr grand prize, and you can opt in to other tracks too."
+                }
+              ],
+              [
+                {
+                  "text": "Share your project link and describe the problem it solves, the Flynet APIs or SDK features you used, and the part that works today."
+                }
+              ],
+              [
+                {
+                  "text": "Walk through one complete user flow in your demo. Point out the Flynet integration and identify any mocked steps or test data."
+                }
+              ],
+              [
+                {
+                  "text": "Online submissions must include a viewable recorded demo. If you demo in person, a recording is strongly encouraged so reviewers can revisit the build."
+                }
+              ],
+              [
+                {
+                  "text": "Include a repository or technical walkthrough if it helps reviewers understand the integration. Keep credentials out of every shared link."
+                }
+              ]
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Submit by Saturday, September 19 at 4 PM EDT. Demos begin at 5 PM EDT. All entries use the same Runtime submission form."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "prizes",
+        "title": "Prizes",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "$2,500 total, awarded in $FLY. The top 5 teams each receive $500 in $FLY."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "This is an opt-in track prize. Your project is also automatically eligible for the Bankr grand prize, and you can enter other sponsor tracks with the same project."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "resources",
+        "title": "Resources and help",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Flynet developer documentation",
+                "url": "https://docs.flynet.org/"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Getting started and developer access",
+                "url": "https://docs.flynet.org/getting-started"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Member profile and dining history recipe",
+                "url": "https://docs.flynet.org/recipes/mains/user-passport"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Build with AI, MCP, and agent skills",
+                "url": "https://docs.flynet.org/build-with-ai/overview"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Flynet naming and brand guidance",
+                "url": "https://docs.flynet.org/resources/brand"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "runs": [
+              {
+                "text": "Ask build questions in the Runtime Discord",
+                "url": "https://discord.gg/vmXqxGaggx"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

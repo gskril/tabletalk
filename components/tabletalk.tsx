@@ -1,0 +1,1949 @@
+"use client";
+import { useCallback, useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+function Link(
+  props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string },
+) {
+  return <a {...props} />;
+}
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowDown,
+  Bookmark,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  Compass,
+  Heart,
+  Link2,
+  List,
+  Lock,
+  MapPin,
+  Map as MapIcon,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+  Star,
+  Users,
+  Utensils,
+  X,
+  LogOut,
+  ExternalLink,
+  Grid2X2,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast, Toaster } from "sonner";
+import type { State, Venue, Person, Review, DiningList } from "@/lib/types";
+import DiningMap from "@/components/dining-map";
+import ConfirmDialog from "@/components/confirm-dialog";
+type Modal =
+  | { type: "login" }
+  | { type: "review"; venue: Venue }
+  | { type: "list"; list?: DiningList; add?: string }
+  | { type: "profile" }
+  | { type: "confirm"; title: string; run: () => Promise<void> }
+  | null;
+const safeUrl = (s: string) => (/^https?:\/\//.test(s) ? s : "#");
+const initials = (s: string) =>
+  s
+    .split(" ")
+    .slice(0, 2)
+    .map((x) => x[0])
+    .join("")
+    .toUpperCase();
+function Avatar({
+  person,
+  large = false,
+}: {
+  person: Pick<Person, "name" | "color">;
+  large?: boolean;
+}) {
+  return (
+    <span
+      className={`avatar ${large ? "large" : ""}`}
+      style={{ background: person.color }}
+      aria-hidden="true"
+    >
+      {initials(person.name)}
+    </span>
+  );
+}
+function Filter({
+  value,
+  onChange,
+  placeholder,
+  values,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  values: string[];
+}) {
+  return (
+    <Select
+      value={value || "all"}
+      onValueChange={(v) => onChange(v === "all" ? "" : v)}
+    >
+      <SelectTrigger className="filter-select" aria-label={placeholder}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">{placeholder}</SelectItem>
+        {values.map((x) => (
+          <SelectItem key={x} value={x}>
+            {x}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+function Empty({
+  title,
+  body,
+  action,
+}: {
+  title: string;
+  body: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="empty">
+      <Utensils size={30} style={{ margin: "auto", color: "#78866b" }} />
+      <h2>{title}</h2>
+      <p>{body}</p>
+      {action}
+    </div>
+  );
+}
+export default function Tabletalk() {
+  const [data, setData] = useState<State | null>(null),
+    [error, setError] = useState(""),
+    [modal, setModal] = useState<Modal>(null),
+    [busy, setBusy] = useState(false);
+  const path = usePathname(),
+    params = useSearchParams();
+  const [query, setQuery] = useState(params.get("q") || ""),
+    [neighborhood, setNeighborhood] = useState(
+      params.get("neighborhood") || "",
+    ),
+    [cuisine, setCuisine] = useState(params.get("cuisine") || ""),
+    [price, setPrice] = useState(params.get("price") || ""),
+    [occasion, setOccasion] = useState(""),
+    [mapView, setMapView] = useState(false),
+    [feedTab, setFeedTab] = useState("everyone"),
+    [savedTab, setSavedTab] = useState("places"),
+    [profileTab, setProfileTab] = useState("rankings");
+  const load = useCallback(async () => {
+    try {
+      const r = await fetch("/api/state");
+      const d = (await r.json()) as State & { error?: string };
+      if (!r.ok) throw new Error(d.error);
+      setData(d);
+      setError("");
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Unable to load your notebook.",
+      );
+    }
+  }, []);
+  useEffect(() => {
+    load();
+  }, [load]);
+  useEffect(() => {
+    if (params.get("auth_error"))
+      toast.error("Blackbird connection did not complete. Please reconnect.");
+    if (params.get("connected"))
+      toast.success("Blackbird connected. Import visits from your passport.");
+  }, [params]);
+  async function action(body: Record<string, unknown>) {
+    const r = await fetch("/api/action", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const d = (await r.json()) as { id?: string; error?: string };
+    if (!r.ok) throw new Error(d.error);
+    await load();
+    return d;
+  }
+  async function quick(body: Record<string, unknown>, message?: string) {
+    if (!data?.me) {
+      setModal({ type: "login" });
+      return;
+    }
+    if (busy) return;
+    setBusy(true);
+    try {
+      await action(body);
+      if (message) toast.success(message);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  function authThen(m: Modal) {
+    setModal(data?.me ? m : { type: "login" });
+  }
+  function go(to: string) {
+    window.location.assign(to);
+  }
+  if (!data)
+    return (
+      <>
+        <header className="topbar">
+          <Link className="brand" href="/">
+            tabletalk
+          </Link>
+        </header>
+        <main className="shell">
+          {error ? (
+            <Empty
+              title="We couldn't set the table"
+              body={error}
+              action={
+                <button className="btn primary" onClick={load}>
+                  Try again
+                </button>
+              }
+            />
+          ) : (
+            <div
+              className="loading"
+              role="status"
+              aria-label="Loading Tabletalk"
+            >
+              <span />
+            </div>
+          )}
+        </main>
+      </>
+    );
+  const d = data,
+    me = d.me;
+  const venue = (id: string) => d.venues.find((v) => v.id === id);
+  const person = (id: string) => d.people.find((p) => p.id === id);
+  const listVenues = (id: string) =>
+    d.items
+      .filter((i) => i.list_id === id)
+      .map((i) => venue(i.venue_id))
+      .filter((v): v is Venue => !!v);
+  const average = (id: string) => {
+    const r = d.reviews.filter((r) => r.venue_id === id);
+    return r.length
+      ? (r.reduce((a, r) => a + r.rating, 0) / r.length).toFixed(1)
+      : null;
+  };
+  const score = (id: string) => (
+    <span
+      className={`score ${average(id) ? "" : "none"}`}
+      aria-label={average(id) ? `Rating ${average(id)} out of 10` : "Not rated"}
+    >
+      {average(id) || "New"}
+    </span>
+  );
+  const bookmark = (v: Venue) => (
+    <button
+      className={`icon-btn ${d.bookmarks.includes(v.id) ? "selected" : ""}`}
+      aria-label={`${d.bookmarks.includes(v.id) ? "Unsave" : "Save"} ${v.name}`}
+      disabled={busy}
+      onClick={() =>
+        quick(
+          {
+            action: "bookmark",
+            venueId: v.id,
+            active: !d.bookmarks.includes(v.id),
+          },
+          d.bookmarks.includes(v.id)
+            ? "Removed from Want to try"
+            : "Saved to Want to try",
+        )
+      }
+    >
+      <Bookmark
+        size={17}
+        fill={d.bookmarks.includes(v.id) ? "currentColor" : "none"}
+      />
+    </button>
+  );
+  function card(v: Venue) {
+    const rev = d.reviews.filter((r) => r.venue_id === v.id);
+    return (
+      <article className="venue-card" key={v.id}>
+        <div className="venue-image">
+          <Link href={`/restaurants/${v.id}`} aria-label={`View ${v.name}`}>
+            {v.image ? (
+              <img
+                src={safeUrl(v.image)}
+                alt={`${v.name} food`}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            ) : (
+              <div className="venue-type">
+                <strong>{v.cuisine}</strong>
+                <span>{v.neighborhood}</span>
+              </div>
+            )}
+          </Link>
+          {bookmark(v)}
+          <span className="image-label">
+            {v.source === "demo" ? (
+              <>
+                <Utensils size={12} /> NYC sample spot
+              </>
+            ) : (
+              <>
+                <CheckCircle2 size={12} />{" "}
+                {v.source === "staging"
+                  ? "Blackbird · staging"
+                  : "On Blackbird"}
+              </>
+            )}
+          </span>
+        </div>
+        <div className="venue-body">
+          <div className="venue-title">
+            <Link href={`/restaurants/${v.id}`}>
+              <h3>{v.name}</h3>
+            </Link>
+            {score(v.id)}
+          </div>
+          <p className="venue-meta">
+            {v.neighborhood} · {v.cuisine} · {"$".repeat(v.price)}
+          </p>
+          <div className="card-footer">
+            <div className="actions" style={{ gap: 0 }}>
+              {rev.slice(0, 3).map((r) => (
+                <Avatar key={r.id} person={r} />
+              ))}
+              <span
+                className="small muted"
+                style={{ marginLeft: rev.length ? 7 : 0 }}
+              >
+                {rev.length
+                  ? `${rev.length} ${rev.length === 1 ? "review" : "reviews"}`
+                  : "Be the first to review"}
+              </span>
+            </div>
+            <Link
+              className="small"
+              href={`/restaurants/${v.id}`}
+              aria-label={`Details for ${v.name}`}
+            >
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  }
+  function listCard(l: DiningList) {
+    const p = person(l.user_id);
+    const vs = listVenues(l.id);
+    return (
+      <Link
+        href={`/lists/${l.id}`}
+        className={`list-card ${l.color === "#ed563d" ? "red" : ""}`}
+        style={{ background: l.color }}
+        key={l.id}
+      >
+        <div className="eyebrow">
+          {l.visibility === "private"
+            ? "Private collection"
+            : "A good list goes a long way"}
+        </div>
+        <h3>{l.title}</h3>
+        <p>{l.description}</p>
+        <div className="byline">
+          {p && <Avatar person={p} />}
+          <span>
+            {p?.name || "A diner"} · {vs.length} spots{" "}
+            {p?.demo ? <span className="demo-tag">Demo</span> : null}
+          </span>
+        </div>
+        <span className="list-number" aria-hidden="true">
+          {String(vs.length).padStart(2, "0")}
+        </span>
+      </Link>
+    );
+  }
+  function reviewCard(r: Review, showVenue = false) {
+    const v = venue(r.venue_id);
+    return (
+      <article className="review" key={r.id}>
+        <div className="review-head">
+          <Link href={`/profile/${r.user_id}`}>
+            <Avatar person={r} />
+          </Link>
+          <div>
+            <Link href={`/profile/${r.user_id}`}>
+              <strong className="small">{r.name}</strong>
+            </Link>{" "}
+            {r.demo ? <span className="demo-tag">Demo</span> : null}
+            <div className="small muted">
+              {showVenue && v ? (
+                <Link href={`/restaurants/${v.id}`}>{v.name} · </Link>
+              ) : null}
+              {new Date(r.visited_at + "T12:00:00").toLocaleDateString(
+                "en-US",
+                { month: "short", day: "numeric" },
+              )}
+            </div>
+          </div>
+          <span className="score">{r.rating.toFixed(1)}</span>
+        </div>
+        {r.verified ? (
+          <div className="verified">
+            <CheckCircle2 size={13} />{" "}
+            {v?.source === "staging"
+              ? "Staging visit verified"
+              : "Blackbird visit verified"}
+          </div>
+        ) : null}
+        <p>{r.body}</p>
+        {r.dish && (
+          <div className="review-dish">
+            <Utensils size={14} />
+            <span>Order this: {r.dish}</span>
+          </div>
+        )}
+        <div className="review-actions">
+          <button
+            disabled={busy}
+            onClick={() =>
+              quick({
+                action: "like",
+                reviewId: r.id,
+                active: !d.likes.includes(r.id),
+              })
+            }
+            aria-label={`${d.likes.includes(r.id) ? "Unlike" : "Like"} review by ${r.name}`}
+          >
+            <Heart
+              size={16}
+              fill={d.likes.includes(r.id) ? "#d94a31" : "none"}
+              color={d.likes.includes(r.id) ? "#d94a31" : undefined}
+            />
+            {r.likes || "Helpful"}
+          </button>
+          {me?.id === r.user_id && v && (
+            <>
+              <button onClick={() => setModal({ type: "review", venue: v })}>
+                Edit review
+              </button>
+              <button
+                onClick={() =>
+                  setModal({
+                    type: "confirm",
+                    title: "Delete this review?",
+                    run: async () => {
+                      await action({ action: "deleteReview", reviewId: r.id });
+                      toast.success("Review deleted");
+                    },
+                  })
+                }
+              >
+                Delete
+              </button>
+            </>
+          )}
+        </div>
+      </article>
+    );
+  }
+  function row(v: Venue, i: number) {
+    return (
+      <div className="list-row" key={v.id}>
+        <span className="rank">{String(i + 1).padStart(2, "0")}</span>
+        {v.image && (
+          <Link href={`/restaurants/${v.id}`}>
+            <img src={safeUrl(v.image)} alt={v.name} loading="lazy" />
+          </Link>
+        )}
+        <div className="row-info">
+          <Link href={`/restaurants/${v.id}`}>
+            <h3>{v.name}</h3>
+          </Link>
+          <p className="small muted">
+            {v.neighborhood} · {v.cuisine} · {"$".repeat(v.price)}
+          </p>
+        </div>
+        {score(v.id)}
+        {bookmark(v)}
+      </div>
+    );
+  }
+  const active = path.split("/")[1] || "explore";
+  let content: React.ReactNode;
+  if (path === "/") {
+    const filtered = d.venues
+      .filter(
+        (v) =>
+          (!query ||
+            `${v.name} ${v.cuisine} ${v.neighborhood}`
+              .toLowerCase()
+              .includes(query.toLowerCase())) &&
+          (!neighborhood || v.neighborhood === neighborhood) &&
+          (!cuisine || v.cuisine === cuisine) &&
+          (!price || v.price === price.length) &&
+          (!occasion || JSON.parse(v.tags).includes(occasion)),
+      )
+      .sort(
+        (a, b) =>
+          Number(!!b.image) - Number(!!a.image) ||
+          Number(average(b.id) || 0) - Number(average(a.id) || 0),
+      );
+    const reset = () => {
+      setQuery("");
+      setNeighborhood("");
+      setCuisine("");
+      setPrice("");
+      setOccasion("");
+    };
+    content = (
+      <>
+        <div className="intro-line eyebrow">
+          <span /> A LITTLE LOCAL KNOWLEDGE
+        </div>
+        <div className="heading">
+          <div>
+            <h1>
+              New York, <span className="serif">by taste.</span>
+            </h1>
+            <p>Good tables. Great company. Your next favorite is out there.</p>
+          </div>
+          <span className="location-pill">
+            <MapPin size={15} /> New York City
+          </span>
+        </div>
+        <div className="search-row">
+          <div className="searchbox">
+            <Search size={20} />
+            <input
+              aria-label="Search restaurants"
+              placeholder="A restaurant, a neighborhood, a craving…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+          <Filter
+            value={neighborhood}
+            onChange={setNeighborhood}
+            placeholder="Neighborhood"
+            values={[...new Set(d.venues.map((v) => v.neighborhood))].sort()}
+          />
+          <Filter
+            value={cuisine}
+            onChange={setCuisine}
+            placeholder="Cuisine"
+            values={[...new Set(d.venues.map((v) => v.cuisine))].sort()}
+          />
+          <Filter
+            value={price}
+            onChange={setPrice}
+            placeholder="Any price"
+            values={["$", "$$", "$$$", "$$$$"]}
+          />
+        </div>
+        <div className="filter-chips">
+          {[
+            "All spots",
+            "Date night",
+            "Brunch",
+            "Good for groups",
+            "Casual",
+            "Vegetarian",
+          ].map((t) => (
+            <button
+              key={t}
+              className={`chip ${occasion === t || (!occasion && t === "All spots") ? "active" : ""}`}
+              onClick={() => setOccasion(t === "All spots" ? "" : t)}
+            >
+              {t === "All spots" && <Sparkles size={13} />} {t}
+            </button>
+          ))}
+          <div className="view-toggle">
+            <button
+              className={!mapView ? "active" : ""}
+              onClick={() => setMapView(false)}
+              aria-pressed={!mapView}
+            >
+              <Grid2X2 size={15} /> Grid
+            </button>
+            <button
+              className={mapView ? "active" : ""}
+              onClick={() => setMapView(true)}
+              aria-pressed={mapView}
+            >
+              <MapIcon size={15} /> Map
+            </button>
+          </div>
+        </div>
+        <div className="section-head">
+          <h2>
+            {query || neighborhood || cuisine || price || occasion
+              ? "Find your kind of table"
+              : "On the tip of our tongues"}
+          </h2>
+          <span className="small muted">{filtered.length} spots</span>
+        </div>
+        {!filtered.length ? (
+          <Empty
+            title="Nothing on this corner, yet"
+            body="Try another neighborhood or loosen your filters."
+            action={
+              <button className="btn" onClick={reset}>
+                Clear filters
+              </button>
+            }
+          />
+        ) : mapView ? (
+          <DiningMap venues={filtered} card={card} />
+        ) : (
+          <div className="cards">{filtered.map(card)}</div>
+        )}
+        <p className="note">
+          {d.integration.discovery
+            ? "Live Flynet venues are marked “On Blackbird”. Sample spots remain labeled."
+            : "Demo catalog · Sample reviews and prices · Current Blackbird participation is not verified."}
+        </p>
+        <div className="section-head">
+          <h2>Pass a good list around.</h2>
+          <Link className="text-link" href="/lists">
+            All collections <ArrowRight size={16} />
+          </Link>
+        </div>
+        <div className="cards list-cards">
+          {d.lists
+            .filter((l) => l.visibility === "public")
+            .slice(0, 3)
+            .map(listCard)}
+        </div>
+        <div className="banner">
+          <div>
+            <h3>A dining history with good taste.</h3>
+            <p>
+              Connect Blackbird to bring your visits into your own private
+              notebook.
+            </p>
+          </div>
+          <button
+            className="btn dark"
+            onClick={() => (me ? go("/me") : setModal({ type: "login" }))}
+          >
+            Start your notebook <ArrowRight size={16} />
+          </button>
+        </div>
+      </>
+    );
+  } else if (active === "restaurants") {
+    const v = venue(path.split("/")[2]);
+    content = !v ? (
+      <Empty title="Spot not found" body="Try the restaurant directory." />
+    ) : (
+      <>
+        <Link href="/" className="back">
+          <ArrowLeft size={15} /> All spots
+        </Link>
+        <div className="heading">
+          <div>
+            <p className="eyebrow" style={{ margin: "0 0 12px" }}>
+              {v.neighborhood} / NEW YORK
+            </p>
+            <h1>{v.name}</h1>
+            <p>
+              {v.cuisine} · {"$".repeat(v.price)} ·{" "}
+              {v.source === "demo"
+                ? "Sample catalog entry"
+                : "On the Blackbird network"}
+            </p>
+          </div>
+          <div className="actions">
+            {bookmark(v)}
+            <button
+              className="btn primary"
+              onClick={() => authThen({ type: "review", venue: v })}
+            >
+              <Plus size={16} /> Write a review
+            </button>
+          </div>
+        </div>
+        <div className="detail-grid">
+          <div>
+            {v.image && (
+              <img
+                className="detail-photo"
+                src={safeUrl(v.image)}
+                alt={`${v.name} food`}
+              />
+            )}
+            <p>{v.description}</p>
+            <div className="section-head">
+              <h2>Notes from the table</h2>
+              {score(v.id)}
+            </div>
+            {d.reviews.filter((r) => r.venue_id === v.id).length ? (
+              d.reviews
+                .filter((r) => r.venue_id === v.id)
+                .map((r) => reviewCard(r))
+            ) : (
+              <Empty
+                title="Your take belongs here"
+                body="Be the first to leave a review for this spot."
+                action={
+                  <button
+                    className="btn primary"
+                    onClick={() => authThen({ type: "review", venue: v })}
+                  >
+                    Write a review
+                  </button>
+                }
+              />
+            )}
+          </div>
+          <aside className="stack">
+            <div className="panel stack">
+              <h3>Make a plan</h3>
+              <p className="small">
+                <MapPin
+                  size={16}
+                  style={{ display: "inline", marginRight: 8 }}
+                />
+                {v.address}
+              </p>
+              <a
+                className="btn"
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + " " + v.address)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Get directions <ExternalLink size={14} />
+              </a>
+              {v.website && (
+                <a
+                  className="btn"
+                  href={safeUrl(v.website)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Restaurant website <ExternalLink size={14} />
+                </a>
+              )}
+              <button
+                className="btn dark"
+                onClick={() => authThen({ type: "list", add: v.id })}
+              >
+                <Plus size={16} /> Add to a list
+              </button>
+              <p className="form-help">
+                Check the restaurant website for current menus, hours and
+                reservations.
+              </p>
+            </div>
+            <div className="panel">
+              <h3>In good company</h3>
+              <p className="small muted" style={{ margin: "9px 0 15px" }}>
+                Find this spot in these public lists.
+              </p>
+              <div className="stack">
+                {d.lists
+                  .filter(
+                    (l) =>
+                      l.visibility === "public" &&
+                      listVenues(l.id).some((x) => x.id === v.id),
+                  )
+                  .map((l) => (
+                    <Link
+                      className="text-link"
+                      key={l.id}
+                      href={`/lists/${l.id}`}
+                    >
+                      {l.title}
+                      <ChevronRight size={15} />
+                    </Link>
+                  ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </>
+    );
+  } else if (active === "lists" && !path.split("/")[2]) {
+    content = (
+      <>
+        <div className="heading">
+          <div>
+            <div className="intro-line eyebrow">
+              SAVE A LITTLE LOCAL KNOWLEDGE
+            </div>
+            <h1>
+              Good taste <span className="serif">travels.</span>
+            </h1>
+            <p>Lists to borrow, places to try, friends to thank later.</p>
+          </div>
+          <button
+            className="btn primary"
+            onClick={() => authThen({ type: "list" })}
+          >
+            <Plus size={16} /> Create a list
+          </button>
+        </div>
+        <div className="cards list-cards">
+          {d.lists.filter((l) => l.visibility === "public").map(listCard)}
+        </div>
+      </>
+    );
+  } else if (active === "lists") {
+    const l = d.lists.find((l) => l.id === path.split("/")[2]);
+    content = !l ? (
+      <Empty
+        title="This list isn't available"
+        body="It may be private or have been removed."
+      />
+    ) : (
+      <>
+        <Link href="/lists" className="back">
+          <ArrowLeft size={15} /> All lists
+        </Link>
+        <div
+          className="list-hero"
+          style={{
+            background: l.color,
+            color: l.color === "#ed563d" ? "white" : undefined,
+          }}
+        >
+          <div className="eyebrow">
+            {l.visibility === "public"
+              ? "A LIST WORTH SHARING"
+              : "YOUR PRIVATE LIST"}
+          </div>
+          <h1 style={{ marginTop: 15 }}>{l.title}</h1>
+          <p>{l.description}</p>
+          <div className="actions">
+            {person(l.user_id) && <Avatar person={person(l.user_id)!} />}
+            <Link href={`/profile/${l.user_id}`}>
+              {person(l.user_id)?.name}
+            </Link>
+            <span className="small">· {listVenues(l.id).length} spots</span>
+            {person(l.user_id)?.demo ? (
+              <span className="demo-tag">Demo</span>
+            ) : null}
+          </div>
+        </div>
+        <div className="section-head">
+          <h2>The shortlist</h2>
+          <div className="actions">
+            {l.visibility === "public" && (
+              <button
+                className="btn"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    toast.success(
+                      "Link copied. Anyone can view this public list.",
+                    );
+                  } catch {
+                    toast.info(window.location.href, { duration: 10000 });
+                  }
+                }}
+              >
+                <Link2 size={15} /> Share
+              </button>
+            )}
+            {me?.id === l.user_id ? (
+              <button
+                className="btn primary"
+                onClick={() => setModal({ type: "list", list: l })}
+              >
+                Edit list
+              </button>
+            ) : (
+              <button
+                className="btn primary"
+                disabled={busy}
+                onClick={() =>
+                  quick(
+                    {
+                      action: "saveList",
+                      listId: l.id,
+                      active: !d.saved.includes(l.id),
+                    },
+                    d.saved.includes(l.id) ? "List removed" : "List saved",
+                  )
+                }
+              >
+                <Bookmark size={15} />
+                {d.saved.includes(l.id) ? "Saved" : "Save list"}
+              </button>
+            )}
+          </div>
+        </div>
+        {listVenues(l.id).length ? (
+          listVenues(l.id).map(row)
+        ) : (
+          <Empty
+            title="The first spot is up to you"
+            body="Add restaurants to start filling this list."
+          />
+        )}
+        {l.visibility === "private" && (
+          <p className="note">
+            <Lock size={13} style={{ display: "inline" }} /> Only you can see
+            this list.
+          </p>
+        )}
+      </>
+    );
+  } else if (active === "feed") {
+    const reviews = d.reviews.filter(
+      (r) => feedTab === "everyone" || d.following.includes(r.user_id),
+    );
+    content = (
+      <>
+        <div className="heading">
+          <div>
+            <div className="intro-line eyebrow">WORD OF MOUTH, AT ITS BEST</div>
+            <h1>
+              Around <span className="serif">the table.</span>
+            </h1>
+            <p>What people are eating, loving, and going back for.</p>
+          </div>
+        </div>
+        <div className="detail-grid">
+          <div>
+            <Tabs value={feedTab} onValueChange={setFeedTab}>
+              <TabsList variant="line" className="tabs-list">
+                <TabsTrigger value="everyone">Everyone</TabsTrigger>
+                <TabsTrigger value="following">Following</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            {reviews.length ? (
+              reviews.map((r) => reviewCard(r, true))
+            ) : (
+              <Empty
+                title="Pull up a chair"
+                body="Follow a few diners and their reviews will appear here."
+              />
+            )}
+          </div>
+          <aside className="panel" style={{ alignSelf: "start" }}>
+            <h3>Taste worth following</h3>
+            <div className="people" style={{ marginTop: 23 }}>
+              {d.people
+                .filter((p) => p.id !== me?.id)
+                .slice(0, 8)
+                .map((p) => (
+                  <div className="person" key={p.id}>
+                    <Link href={`/profile/${p.id}`}>
+                      <Avatar person={p} />
+                    </Link>
+                    <div className="person-info">
+                      <Link href={`/profile/${p.id}`}>
+                        <strong>{p.name}</strong>
+                      </Link>
+                      <small>{p.demo ? "Demo diner" : "NYC diner"}</small>
+                    </div>
+                    <button
+                      className="btn"
+                      disabled={busy}
+                      onClick={() =>
+                        quick({
+                          action: "follow",
+                          targetId: p.id,
+                          active: !d.following.includes(p.id),
+                        })
+                      }
+                    >
+                      {d.following.includes(p.id) ? "Following" : "Follow"}
+                    </button>
+                  </div>
+                ))}
+            </div>
+          </aside>
+        </div>
+      </>
+    );
+  } else if (active === "saved") {
+    content = !me ? (
+      <Empty
+        title="A place for your next places"
+        body="Sign in to keep restaurants and lists in your dining notebook."
+        action={
+          <button
+            className="btn primary"
+            onClick={() => setModal({ type: "login" })}
+          >
+            Start your notebook
+          </button>
+        }
+      />
+    ) : (
+      <>
+        <div className="heading">
+          <div>
+            <h1>
+              Your little <span className="serif">black book.</span>
+            </h1>
+            <p>For the next “where should we eat?”</p>
+          </div>
+          <button
+            className="btn primary"
+            onClick={() => setModal({ type: "list" })}
+          >
+            <Plus size={16} /> New list
+          </button>
+        </div>
+        <Tabs value={savedTab} onValueChange={setSavedTab}>
+          <TabsList variant="line" className="tabs-list">
+            <TabsTrigger value="places">
+              Want to try ({d.bookmarks.length})
+            </TabsTrigger>
+            <TabsTrigger value="lists">My lists</TabsTrigger>
+            <TabsTrigger value="saved">Saved lists</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        {savedTab === "places" ? (
+          d.bookmarks.length ? (
+            <div className="cards">
+              {d.venues.filter((v) => d.bookmarks.includes(v.id)).map(card)}
+            </div>
+          ) : (
+            <Empty
+              title="Your next great meal starts here"
+              body="Tap the bookmark on a restaurant to save it for later."
+              action={
+                <Link className="btn primary" href="/">
+                  Find a spot
+                </Link>
+              }
+            />
+          )
+        ) : (
+          (() => {
+            const ls = d.lists.filter((l) =>
+              savedTab === "lists"
+                ? l.user_id === me.id
+                : d.saved.includes(l.id),
+            );
+            return ls.length ? (
+              <div className="cards list-cards">{ls.map(listCard)}</div>
+            ) : (
+              <Empty
+                title={
+                  savedTab === "lists"
+                    ? "Make it a list"
+                    : "Borrow a little good taste"
+                }
+                body={
+                  savedTab === "lists"
+                    ? "The best lists start with a couple of places you love."
+                    : "Save a public list and find it here whenever you need it."
+                }
+                action={
+                  savedTab === "lists" ? (
+                    <button
+                      className="btn primary"
+                      onClick={() => setModal({ type: "list" })}
+                    >
+                      Create your first list
+                    </button>
+                  ) : (
+                    <Link className="btn primary" href="/lists">
+                      Explore lists
+                    </Link>
+                  )
+                }
+              />
+            );
+          })()
+        )}
+      </>
+    );
+  } else if (active === "me" || active === "profile") {
+    const p = active === "me" ? me : person(path.split("/")[2]);
+    const own = p?.id === me?.id;
+    const ranked = d.reviews
+      .filter((r) => r.user_id === p?.id)
+      .sort((a, b) => b.rating - a.rating);
+    const ls = d.lists.filter((l) => l.user_id === p?.id);
+    content = !p ? (
+      <Empty
+        title="Your table is waiting"
+        body="Start a notebook to keep your lists, reviews and dining history together."
+        action={
+          <button
+            className="btn primary"
+            onClick={() => setModal({ type: "login" })}
+          >
+            Start your notebook
+          </button>
+        }
+      />
+    ) : (
+      <>
+        <div className="profile-hero">
+          <Avatar person={p} large />
+          <div>
+            <h1>{p.name}</h1>
+            <p>{p.bio}</p>
+            <div className="stats">
+              <div>
+                <strong>{ranked.length}</strong>Reviews
+              </div>
+              <div>
+                <strong>{ls.length}</strong>Lists
+              </div>
+              {own && (
+                <div>
+                  <strong>{d.visits.length}</strong>Verified spots
+                </div>
+              )}
+            </div>
+            <div className="actions" style={{ marginTop: 18 }}>
+              {p.demo ? <span className="demo-tag">Demo diner</span> : null}
+              {own ? (
+                <button
+                  className="btn"
+                  onClick={() => setModal({ type: "profile" })}
+                >
+                  Edit profile
+                </button>
+              ) : (
+                <button
+                  className="btn primary"
+                  onClick={() =>
+                    quick({
+                      action: "follow",
+                      targetId: p.id,
+                      active: !d.following.includes(p.id),
+                    })
+                  }
+                >
+                  {d.following.includes(p.id) ? "Following" : "Follow"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        {own && (
+          <div className="banner" style={{ margin: "0 0 25px" }}>
+            <div>
+              <h3>Your Blackbird passport</h3>
+              <p>
+                {d.integration.configured
+                  ? "Import your visits privately. Reviews stay yours to publish."
+                  : "Blackbird connection awaits partner access. Your notebook already works."}
+              </p>
+            </div>
+            <div className="actions">
+              <a className="btn" href="/api/auth/blackbird/start">
+                Connect Blackbird
+              </a>
+              {d.integration.configured && (
+                <button
+                  className="btn dark"
+                  disabled={busy}
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      const r = await fetch("/api/flynet/sync", {
+                        method: "POST",
+                      });
+                      const b = (await r.json()) as {
+                        error?: string;
+                        count?: number;
+                        complete?: boolean;
+                      };
+                      if (!r.ok) throw new Error(b.error);
+                      await load();
+                      toast.success(
+                        `Imported ${b.count} visited spots privately.${b.complete === false ? " Import limit reached; more history may remain." : ""}`,
+                      );
+                    } catch (e) {
+                      toast.error((e as Error).message);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  Import visits
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+        <Tabs value={profileTab} onValueChange={setProfileTab}>
+          <TabsList variant="line" className="tabs-list">
+            <TabsTrigger value="rankings">Personal rankings</TabsTrigger>
+            <TabsTrigger value="lists">Lists</TabsTrigger>
+            {own && <TabsTrigger value="visits">Private passport</TabsTrigger>}
+          </TabsList>
+        </Tabs>
+        {profileTab === "rankings" ? (
+          ranked.length ? (
+            ranked.map((r, i) => (
+              <div key={r.id} className="list-row">
+                <span className="rank">{i + 1}</span>
+                <div className="row-info">
+                  <Link href={`/restaurants/${r.venue_id}`}>
+                    <h3>{venue(r.venue_id)?.name}</h3>
+                  </Link>
+                  <p className="small muted">{r.dish || r.body.slice(0, 80)}</p>
+                </div>
+                <span className="score">{r.rating.toFixed(1)}</span>
+                {own && venue(r.venue_id) && (
+                  <button
+                    className="btn"
+                    onClick={() =>
+                      setModal({ type: "review", venue: venue(r.venue_id)! })
+                    }
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            ))
+          ) : (
+            <Empty
+              title="Every good notebook has a first page"
+              body="Review a restaurant to start your personal ranking."
+              action={
+                <Link href="/" className="btn primary">
+                  Explore NYC
+                </Link>
+              }
+            />
+          )
+        ) : profileTab === "lists" ? (
+          <div className="cards list-cards">{ls.map(listCard)}</div>
+        ) : d.visits.length ? (
+          d.visits.map(
+            (v, i) => venue(v.venue_id) && row(venue(v.venue_id)!, i),
+          )
+        ) : (
+          <Empty
+            title="Your visits, just for you"
+            body="Connect Blackbird and import your check-ins to build your private passport."
+          />
+        )}
+        {own && (
+          <button
+            className="btn light"
+            style={{ marginTop: 30 }}
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              window.location.href = "/signout-with-chatgpt?return_to=/";
+            }}
+          >
+            <LogOut size={15} /> Sign out
+          </button>
+        )}
+      </>
+    );
+  } else {
+    content = (
+      <div className="about">
+        <Link href="/" className="back">
+          <ArrowLeft size={15} /> Back to the table
+        </Link>
+        <h1>
+          A little more <span className="serif">about us.</span>
+        </h1>
+        <h2>Your city. Your people. Your taste.</h2>
+        <p>
+          Tabletalk is an independent dining notebook for New York. Explore
+          spots, write honest reviews, share a list without a login wall, and
+          follow people whose taste you trust.
+        </p>
+        <h2>What is real in this demo?</h2>
+        <p>
+          Lists, reviews, follows and saved places are stored on our server and
+          survive a page reload. Public lists can be opened by anyone with the
+          link. The starter catalog, prices and fictional diner reviews are
+          sample content. They do not establish current Blackbird participation
+          or restaurant availability.
+        </p>
+        <p>
+          A demo account is tied to this browser's cookie. Clearing it or
+          signing out loses access to that demo identity. Use sign-in for a
+          recoverable account. Anything you publish as a review, profile or
+          public list is visible to other visitors. Private lists, bookmarks and
+          imported dining history stay private.
+        </p>
+        <h2>Blackbird, connected thoughtfully.</h2>
+        <p>
+          Blackbird sign-in and dining history use the official Flynet SDK. Live
+          access requires partner credentials and an approved callback URL.{" "}
+          {d.integration.configured
+            ? "The integration is configured."
+            : "This deployment is awaiting that access."}{" "}
+          Imported check-ins can verify a visit; they are never published
+          automatically.
+        </p>
+        <p>
+          <a
+            href="https://docs.flynet.org/resources/request-access"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Blackbird developer access
+          </a>{" "}
+          ·{" "}
+          <a href="https://docs.flynet.org/" target="_blank" rel="noreferrer">
+            Flynet docs
+          </a>
+        </p>
+        {d.integration.discovery && me && !me.demo && (
+          <button
+            className="btn"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              try {
+                const r = await fetch("/api/flynet/discovery", {
+                  method: "POST",
+                });
+                const b = (await r.json()) as {
+                  error?: string;
+                  count: number;
+                  complete: boolean;
+                };
+                if (!r.ok) throw new Error(b.error);
+                await load();
+                toast.success(
+                  `Updated ${b.count} NYC spots${b.complete ? "" : ". More pages remain; import limit reached"}.`,
+                );
+              } catch (e) {
+                toast.error((e as Error).message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Refresh Blackbird restaurants
+          </button>
+        )}
+        <h2>Photo credits</h2>
+        <p>
+          Venue photos are credited to{" "}
+          <a href="https://www.rubirosanyc.com/">Rubirosa</a>,{" "}
+          <a href="https://www.thaidiner.com/">Thai Diner</a> and{" "}
+          <a href="https://www.binxnyc.com/">BINX</a>. Additional photos come
+          from Lilia, Estela, Via Carota, Balthazar (Daniel Krieger), COTE, Los
+          Tacos No. 1, Golden Diner (Marcus Lloyd), and Win Son (Gabi Porter).
+          Restaurant website links appear on each venue page. Copyright stays
+          with the respective photographers and restaurants.
+        </p>
+        <h2>Made for the next meal.</h2>
+        <p>
+          Built for Runtime's Blackbird track. Powered by Flynet. Tabletalk is
+          not affiliated with or endorsed by Blackbird or Beli.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <>
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <header className="topbar">
+        <Link className="brand" href="/">
+          <span className="brand-mark">
+            <Utensils size={22} />
+          </span>
+          tabletalk<span style={{ color: "#dc4b33" }}>.</span>
+        </Link>
+        <nav className="nav" aria-label="Main navigation">
+          {[
+            ["/", "Explore", Compass, "explore"],
+            ["/lists", "Lists", List, "lists"],
+            ["/feed", "The table", Users, "feed"],
+            ["/saved", "My notebook", Bookmark, "saved"],
+          ].map(([url, label, Icon, section]) => (
+            <Link
+              href={url as string}
+              key={url as string}
+              className={active === section ? "active" : ""}
+            >
+              {typeof Icon !== "string" && <Icon size={16} />} {label as string}
+            </Link>
+          ))}
+        </nav>
+        <div className="actions">
+          {me ? (
+            <Link href="/me" aria-label="Your profile">
+              <Avatar person={me} />
+            </Link>
+          ) : (
+            <button
+              className="btn dark"
+              onClick={() => setModal({ type: "login" })}
+            >
+              Join the table <ArrowRight size={14} />
+            </button>
+          )}
+        </div>
+      </header>
+      <main id="main" className="shell">
+        {error && (
+          <div role="alert" className="form-error" style={{ marginBottom: 20 }}>
+            {error} <button onClick={load}>Retry</button>
+          </div>
+        )}
+        {content}
+        <footer className="footer">
+          <Link className="brand" style={{ fontSize: 21 }} href="/">
+            tabletalk.
+          </Link>
+          <span>Made for people who make plans around food.</span>
+          <div className="actions">
+            <Link href="/about">About & data</Link>
+            <a href="https://flynet.org" target="_blank" rel="noreferrer">
+              Powered by Flynet ↗
+            </a>
+          </div>
+        </footer>
+      </main>
+      <Dialog
+        open={!!modal && modal.type !== "confirm"}
+        onOpenChange={(v) => {
+          if (!v) setModal(null);
+        }}
+      >
+        <DialogContent className="modal" style={{ maxWidth: 560 }}>
+          <ModalBody
+            key={JSON.stringify(modal)}
+            modal={modal}
+            data={d}
+            close={() => setModal(null)}
+            reload={load}
+            action={action}
+            navigate={go}
+          />
+        </DialogContent>
+      </Dialog>
+      {modal?.type === "confirm" && (
+        <ConfirmDialog
+          open
+          title={modal.title}
+          onClose={() => setModal(null)}
+          onConfirm={modal.run}
+        />
+      )}
+      <Toaster position="bottom-right" richColors />
+    </>
+  );
+}
+function ModalBody({
+  modal,
+  data,
+  close,
+  reload,
+  action,
+  navigate,
+}: {
+  modal: Modal;
+  data: State;
+  close: () => void;
+  reload: () => Promise<void>;
+  action: (b: Record<string, unknown>) => Promise<{ id?: string }>;
+  navigate: (s: string) => void;
+}) {
+  const existing =
+    modal?.type === "review"
+      ? data.reviews.find(
+          (r) => r.user_id === data.me?.id && r.venue_id === modal.venue.id,
+        )
+      : undefined;
+  const original = modal?.type === "list" ? modal.list : undefined;
+  const [name, setName] = useState(data.me?.name || ""),
+    [bio, setBio] = useState(data.me?.bio || ""),
+    [rating, setRating] = useState(existing?.rating || 8),
+    [body, setBody] = useState(existing?.body || ""),
+    [dish, setDish] = useState(existing?.dish || ""),
+    [date, setDate] = useState(
+      existing?.visited_at || new Date().toISOString().slice(0, 10),
+    ),
+    [title, setTitle] = useState(original?.title || ""),
+    [description, setDescription] = useState(original?.description || ""),
+    [visibility, setVisibility] = useState(original?.visibility || "public"),
+    [ids, setIds] = useState<string[]>(
+      original
+        ? data.items
+            .filter((i) => i.list_id === original.id)
+            .map((i) => i.venue_id)
+        : modal?.type === "list" && modal.add
+          ? [modal.add]
+          : [],
+    ),
+    [deleteConfirm, setDeleteConfirm] = useState(false),
+    [search, setSearch] = useState(""),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  async function run(fn: () => Promise<void>) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await fn();
+      close();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (!modal) return null;
+  const head = (t: string, desc: string) => (
+    <DialogHeader>
+      <DialogTitle>{t}</DialogTitle>
+      <DialogDescription>{desc}</DialogDescription>
+    </DialogHeader>
+  );
+  if (modal.type === "login")
+    return (
+      <>
+        {head(
+          "Pull up a chair.",
+          "A notebook for the places you love and the ones you’ll love next.",
+        )}
+        <div className="form-stack">
+          <a className="btn dark" href="/api/auth/blackbird/start">
+            <Utensils size={17} /> Connect with Blackbird{" "}
+            <ArrowRight size={16} />
+          </a>
+          {!data.integration.configured && (
+            <p className="form-help">
+              Blackbird sign-in is awaiting developer access. You can explore
+              everything or try a separate demo notebook below.
+            </p>
+          )}
+          <a
+            className="btn"
+            target="_top"
+            href={`/signin-with-chatgpt?return_to=${encodeURIComponent("/me")}`}
+          >
+            Continue with ChatGPT
+          </a>
+          {data.integration.demoEnabled && (
+            <form
+              className="form-stack"
+              onSubmit={(e) => {
+                e.preventDefault();
+                run(async () => {
+                  const r = await fetch("/api/auth/demo", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name }),
+                  });
+                  const b = (await r.json()) as {
+                    error?: string;
+                    count?: number;
+                  };
+                  if (!r.ok) throw new Error(b.error);
+                  await reload();
+                  toast.success("Your demo notebook is ready.");
+                });
+              }}
+            >
+              <div style={{ borderTop: "1px solid #dfe4d6", paddingTop: 15 }}>
+                <strong className="small">Just taking a look?</strong>
+                <p className="form-help">
+                  Try your own demo account. It stays with this browser; public
+                  reviews and lists are visible to everyone.
+                </p>
+              </div>
+              <label>
+                Your display name
+                <input
+                  autoComplete="nickname"
+                  minLength={2}
+                  maxLength={40}
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="What should we call you?"
+                />
+              </label>
+              {error && (
+                <p className="form-error" role="alert">
+                  {error}
+                </p>
+              )}
+              <button className="btn primary" disabled={busy}>
+                {busy ? "Setting your table…" : "Try the demo"}{" "}
+                <ArrowRight size={15} />
+              </button>
+            </form>
+          )}
+          <p className="form-help">
+            Browsing and public lists are always open. No account needed.
+          </p>
+        </div>
+      </>
+    );
+  if (modal.type === "review")
+    return (
+      <>
+        {head(
+          existing ? "Another thought?" : "How was your table?",
+          modal.venue.name,
+        )}
+        <form
+          className="form-stack"
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(async () => {
+              await action({
+                action: "review",
+                venueId: modal.venue.id,
+                rating,
+                body,
+                dish,
+                visitedAt: date,
+              });
+              toast.success(existing ? "Review updated" : "Review published");
+            });
+          }}
+        >
+          <label>
+            Your rating
+            <div className="rating-range">
+              <input
+                type="number"
+                min="1"
+                max="10"
+                step="0.1"
+                required
+                value={rating}
+                onChange={(e) => setRating(Number(e.target.value))}
+              />
+              <span className="muted">out of 10 · your personal taste</span>
+            </div>
+          </label>
+          <label>
+            The honest take
+            <textarea
+              required
+              minLength={3}
+              maxLength={2000}
+              placeholder="The dish you'd go back for, the vibe, the little details…"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+            />
+          </label>
+          <label>
+            What should we order?
+            <input
+              maxLength={100}
+              placeholder="Your favorite dish (optional)"
+              value={dish}
+              onChange={(e) => setDish(e.target.value)}
+            />
+          </label>
+          <label>
+            When did you visit?
+            <input
+              type="date"
+              required
+              max={new Date().toISOString().slice(0, 10)}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </label>
+          <p className="form-help">
+            Your review is public.{" "}
+            {data.me?.demo
+              ? "It will be marked as a demo review."
+              : "Visit verification comes from your connected Blackbird history."}
+          </p>
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          <button className="btn primary" disabled={busy}>
+            {busy ? "Saving…" : existing ? "Save review" : "Publish review"}
+          </button>
+        </form>
+      </>
+    );
+  if (modal.type === "profile")
+    return (
+      <>
+        {head("Make yourself at home.", "Your name and bio are public.")}
+        <form
+          className="form-stack"
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(async () => {
+              await action({ action: "profile", name, bio });
+              toast.success("Profile updated");
+            });
+          }}
+        >
+          <label>
+            Display name
+            <input
+              value={name}
+              minLength={2}
+              maxLength={40}
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
+          <label>
+            A little about your taste
+            <textarea
+              value={bio}
+              maxLength={200}
+              onChange={(e) => setBio(e.target.value)}
+            />
+          </label>
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          <button className="btn primary" disabled={busy}>
+            Save profile
+          </button>
+        </form>
+      </>
+    );
+  if (modal.type === "confirm") return null;
+  return (
+    <>
+      {head(
+        original ? "Fine-tune your shortlist." : "Make it a list.",
+        "A few good places, in your own order.",
+      )}
+      <form
+        className="form-stack"
+        onSubmit={(e) => {
+          e.preventDefault();
+          run(async () => {
+            const r = await action({
+              action: "list",
+              listId: original?.id,
+              title,
+              description,
+              visibility,
+              venueIds: ids,
+            });
+            toast.success(original ? "List updated" : "List created");
+            navigate(`/lists/${r.id}`);
+          });
+        }}
+      >
+        {modal.add &&
+          !original &&
+          data.lists.some((l) => l.user_id === data.me?.id) && (
+            <div>
+              <label>Add to an existing list</label>
+              <div className="picker" style={{ marginTop: 8 }}>
+                {data.lists
+                  .filter((l) => l.user_id === data.me?.id)
+                  .map((l) => (
+                    <button
+                      key={l.id}
+                      type="button"
+                      disabled={busy}
+                      onClick={() =>
+                        run(async () => {
+                          const venueIds = [
+                            ...new Set([
+                              ...data.items
+                                .filter((i) => i.list_id === l.id)
+                                .map((i) => i.venue_id),
+                              modal.add!,
+                            ]),
+                          ];
+                          await action({
+                            action: "list",
+                            listId: l.id,
+                            title: l.title,
+                            description: l.description,
+                            visibility: l.visibility,
+                            venueIds,
+                          });
+                          toast.success("Added to list");
+                          navigate(`/lists/${l.id}`);
+                        })
+                      }
+                    >
+                      {l.title}
+                      <Plus size={15} />
+                    </button>
+                  ))}
+              </div>
+              <p className="form-help" style={{ marginTop: 12 }}>
+                Or create a new list below.
+              </p>
+            </div>
+          )}
+        <label>
+          List name
+          <input
+            required
+            minLength={2}
+            maxLength={80}
+            placeholder="e.g. The downtown dinner rotation"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+        <label>
+          A note for the table
+          <textarea
+            maxLength={500}
+            placeholder="What ties these places together?"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+        <div>
+          <label style={{ marginBottom: 6 }}>Who can see it?</label>
+          <Filter
+            value={visibility}
+            onChange={setVisibility}
+            placeholder="Visibility"
+            values={["public", "private"]}
+          />
+          <p className="form-help" style={{ marginTop: 5 }}>
+            {visibility === "public"
+              ? "Anyone with the link. Share freely."
+              : "Only you. Shared links will not reveal this list."}
+          </p>
+        </div>
+        <div>
+          <label style={{ marginBottom: 7 }}>Your spots ({ids.length})</label>
+          <div className="selected-places">
+            {ids.map((id, i) => (
+              <div className="selected-place" key={id}>
+                <span>
+                  {i + 1}. {data.venues.find((v) => v.id === id)?.name}
+                </span>
+                <button
+                  type="button"
+                  aria-label={`Move ${data.venues.find((v) => v.id === id)?.name} up`}
+                  disabled={i === 0}
+                  onClick={() =>
+                    setIds((a) => {
+                      const b = [...a];
+                      [b[i - 1], b[i]] = [b[i], b[i - 1]];
+                      return b;
+                    })
+                  }
+                >
+                  <ArrowUp size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Move ${data.venues.find((v) => v.id === id)?.name} down`}
+                  disabled={i === ids.length - 1}
+                  onClick={() =>
+                    setIds((a) => {
+                      const b = [...a];
+                      [b[i + 1], b[i]] = [b[i], b[i + 1]];
+                      return b;
+                    })
+                  }
+                >
+                  <ArrowDown size={14} />
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Remove ${data.venues.find((v) => v.id === id)?.name}`}
+                  onClick={() => setIds((a) => a.filter((x) => x !== id))}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <input
+            aria-label="Find a restaurant for your list"
+            placeholder="Find a spot to add…"
+            style={{ marginTop: 10 }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div className="picker" style={{ marginTop: 6 }}>
+            {data.venues
+              .filter(
+                (v) =>
+                  !ids.includes(v.id) &&
+                  `${v.name} ${v.neighborhood}`
+                    .toLowerCase()
+                    .includes(search.toLowerCase()),
+              )
+              .map((v) => (
+                <button
+                  type="button"
+                  key={v.id}
+                  onClick={() => setIds((a) => [...a, v.id])}
+                >
+                  {v.name}
+                  <Plus size={15} />
+                </button>
+              ))}
+          </div>
+        </div>
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="btn primary" disabled={busy}>
+          {busy ? "Saving…" : original ? "Save list" : "Create list"}
+        </button>
+        {original && (
+          <button
+            type="button"
+            className="btn light"
+            disabled={busy}
+            onClick={() => setDeleteConfirm(true)}
+          >
+            Delete this list
+          </button>
+        )}
+      </form>
+      {original && (
+        <ConfirmDialog
+          open={deleteConfirm}
+          title="Delete this list?"
+          onClose={() => setDeleteConfirm(false)}
+          onConfirm={async () => {
+            await action({ action: "deleteList", listId: original.id });
+            close();
+            navigate("/saved");
+            toast.success("List deleted");
+          }}
+        />
+      )}
+    </>
+  );
+}

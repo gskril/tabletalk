@@ -17,6 +17,7 @@ export type Venue = {
   lat: number | null;
   lng: number | null;
   image: string;
+  image_thumb?: string;
   website: string;
   description: string;
   tags: string;

@@ -1238,3 +1238,32 @@ svg {
   .visit-row h2 { font-size: 24px; }
   .tabs-list { gap: 18px !important; overflow-x: auto; }
 }
+
+/* Fixed image slots avoid layout jumps; compact views use provider thumbnails. */
+.restaurant-image, .restaurant-image picture { display: block; width: 100%; height: 100%; overflow: hidden; }
+.restaurant-image { background: #e9ede3; }
+.restaurant-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.restaurant-image-empty { height: 100%; min-height: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: #78866b; font-size: 12px; }
+.venue-image > a { display: block; height: 100%; }
+.detail-photo { aspect-ratio: 16 / 10; overflow: hidden; }
+.row-photo { width: 94px; height: 80px; border-radius: 9px; overflow: hidden; flex-shrink: 0; }
+.visit-row { display: grid; grid-template-columns: 148px minmax(0, 1fr) auto; }
+.visit-photo { display: block; width: 148px; height: 116px; border-radius: 12px; overflow: hidden; }
+.review-photo { display: block; height: 210px; border-radius: 12px; overflow: hidden; margin-bottom: 18px; }
+.list-cover { display: flex; gap: 3px; height: 120px; border-radius: 9px; overflow: hidden; }
+.list-cover > .restaurant-image { flex: 1; min-width: 0; }
+.picker-photo { display: block; width: 48px; height: 42px; flex: 0 0 48px !important; border-radius: 6px; overflow: hidden; }
+.picker button { align-items: center; gap: 10px; }
+.map-picker-photo { display: inline-block; width: 32px; height: 28px; border-radius: 4px; overflow: hidden; }
+.map-place-picker { max-height: 260px; overflow: auto; }
+.picker-photo .restaurant-image-empty span, .map-picker-photo .restaurant-image-empty span { display: none; }
+@media (max-width: 600px) {
+  .visit-row { grid-template-columns: 88px minmax(0,1fr); gap: 12px; }
+  .visit-photo { width: 88px; height: 88px; }
+  .visit-row > .actions, .visit-row > .verified { grid-column: 2; }
+  .visit-row h2 { font-size: 22px; }
+  .row-photo { width: 67px; height: 67px; }
+  .review-photo { height: 180px; }
+  .selected-place { flex-wrap: wrap; }
+  .list-cover { height: 110px; }
+}

@@ -152,7 +152,7 @@ export function upsertVenue(l: Location) {
   const addr = l.address;
   return db()
     .prepare(
-      "INSERT INTO venues(id,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,cuisine=excluded.cuisine,neighborhood=excluded.neighborhood,address=excluded.address,price=excluded.price,lat=excluded.lat,lng=excluded.lng,image=excluded.image,website=excluded.website,source=excluded.source,updated_at=excluded.updated_at",
+      "INSERT INTO venues(id,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at,image_thumb) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,cuisine=excluded.cuisine,neighborhood=excluded.neighborhood,address=excluded.address,price=excluded.price,lat=excluded.lat,lng=excluded.lng,image=excluded.image,image_thumb=excluded.image_thumb,website=excluded.website,source=excluded.source,updated_at=excluded.updated_at",
     )
     .bind(
       l.id,
@@ -169,6 +169,7 @@ export function upsertVenue(l: Location) {
       "[]",
       settings().environment,
       now(),
+      r.asset?.preview1x || "",
     );
 }
 export async function syncDiscovery() {

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import RestaurantImage from "./restaurant-image";
 import type { Venue } from "@/lib/types";
 import type { Map as LeafletMap } from "leaflet";
 export default function DiningMap({
@@ -92,6 +93,7 @@ export default function DiningMap({
                   map.current?.setView([v.lat, v.lng], 16);
               }}
             >
+              <span className="map-picker-photo"><RestaurantImage venue={v} compact /></span>
               {i + 1}. {v.name}
             </button>
           ))}

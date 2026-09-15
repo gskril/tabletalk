@@ -17,8 +17,8 @@ export async function publicCatalog(background = true) {
   const { apiKey, environment } = settings();
   if (!apiKey) return null;
   // Invalidate older city-name-only snapshots when the coverage rules change.
-  const previousKey = `${environment}:nyc-postal-v2`;
-  const cacheKey = `${environment}:restaurant-names-v3`;
+  const previousKey = `${environment}:restaurant-names-v3`;
+  const cacheKey = `${environment}:image-previews-v4`;
   let saved = await snapshot(cacheKey);
   const time = Date.now();
   if (!saved || saved.next_attempt_at <= time) {

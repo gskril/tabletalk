@@ -349,7 +349,7 @@ test("reviews require the same Blackbird member and exact location, including ed
   const secondLocation = "other-location-same-brand";
   sql
     .prepare(
-      "INSERT INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at FROM venues WHERE id=?",
+      "INSERT INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at,image_thumb FROM venues WHERE id=?",
     )
     .run(secondLocation, locationId);
   assert.equal(
@@ -422,7 +422,7 @@ test("SDK wire schemas, optional fields, date conversion and multiple pages matc
         price: 3,
         website_url: "https://example.com",
         asset: {
-          preview_1x: null,
+          preview_1x: "https://example.com/thumbnail.jpg",
           web_2x: "https://example.com/food.jpg",
           full_3x: null,
         },
@@ -623,7 +623,7 @@ test("concurrent cold requests acquire only one catalog refresh lease", async ()
 });
 test("stale catalog remains public during background refresh and provider failures back off", async () => {
   const savedFetch = globalThis.fetch;
-  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging:restaurant-names-v3'").get().synced_at;
+  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging:image-previews-v4'").get().synced_at;
   sql.prepare("UPDATE catalog_cache SET next_attempt_at=0").run();
   let requests = 0;
   globalThis.fetch = async () => { requests++; return new Response(null, { status: 403 }); };
@@ -636,7 +636,7 @@ test("stale catalog remains public during background refresh and provider failur
     assert.equal(after.syncedAt, old);
     assert.deepEqual(after.locationIds, [locationId]);
     assert.equal(requests, 1);
-    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging:restaurant-names-v3'").get().next_attempt_at > Date.now());
+    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging:image-previews-v4'").get().next_attempt_at > Date.now());
   } finally { globalThis.fetch = savedFetch; }
 });
 test("OAuth diagnostics omit provider payloads, tokens and unrecognized error strings", () => {
@@ -719,7 +719,7 @@ test("legacy fixtures are hidden while empty Blackbird accounts remain visible",
   cookieJar.delete("tt_session");
   sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#ed563d',0,?,?)")
     .run("empty-real", "New member", "production:new-member", at);
-  sql.prepare("INSERT INTO venues SELECT 'legacy-place',name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'demo',updated_at FROM venues WHERE id=?").run(locationId);
+  sql.prepare("INSERT INTO venues SELECT 'legacy-place',name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'demo',updated_at,image_thumb FROM venues WHERE id=?").run(locationId);
   for (const [list, owner] of [["legacy-list", "demo-member"], ["real-list", "empty-real"]]) {
     sql.prepare("INSERT INTO lists(id,user_id,title,description,visibility,color,created_at) VALUES(?,?,'Test list','','public','#fff',?)").run(list, owner, at);
     sql.prepare("INSERT INTO list_items VALUES(?,?,0)").run(list, locationId);
@@ -760,6 +760,8 @@ test("restaurant name takes precedence over the location label", async () => {
   const l = result.checkIns[0].location;
   await upsertVenue({...l, name:"Nolita", restaurant:{...l.restaurant, name:"Restaurant Name"}}).run();
   assert.equal(sql.prepare("SELECT name FROM venues WHERE id=?").get(l.id).name, "Restaurant Name");
+  await upsertVenue({...l,restaurant:{...l.restaurant,asset:{preview1x:"https://example.com/thumb.jpg",web2x:"https://example.com/medium.jpg",full3x:"https://example.com/full.jpg"}}}).run();
+  assert.deepEqual({...sql.prepare("SELECT image,image_thumb FROM venues WHERE id=?").get(l.id)}, {image:"https://example.com/medium.jpg",image_thumb:"https://example.com/thumb.jpg"});
   await upsertVenue({...l, name:"Location fallback", restaurant:{...l.restaurant, name:" "}}).run();
   assert.equal(sql.prepare("SELECT name FROM venues WHERE id=?").get(l.id).name, "Location fallback");
 });
@@ -775,7 +777,7 @@ test("public places and community ranking use only verified distinct locations",
       .run(user,user,"staging:"+user,at);
     for (let i=0;i<count;i++) {
       const venue = "rank-place-"+i;
-      sql.prepare("INSERT OR IGNORE INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'staging',updated_at FROM venues WHERE id=?").run(venue,locationId);
+      sql.prepare("INSERT OR IGNORE INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'staging',updated_at,image_thumb FROM venues WHERE id=?").run(venue,locationId);
       sql.prepare("INSERT OR REPLACE INTO visits VALUES(?,?,?)").run(user,venue,at);
     }
     sql.prepare("INSERT INTO lists(id,user_id,title,description,visibility,color,created_at) VALUES(?,?,'Ranking list','','public','#fff',?)")

@@ -51,6 +51,7 @@ export const venues = sqliteTable("venues", {
   tags: text("tags").notNull().default("[]"),
   source: text("source").notNull().default("demo"),
   updatedAt: text("updated_at").notNull(),
+  imageThumb: text("image_thumb").notNull().default(""),
 });
 export const reviews = sqliteTable(
   "reviews",

@@ -39,3 +39,9 @@ The city-name-only filter omitted 26 real Queens locations whose postal cities a
 
 ## Member avatars
 SDK 0.8.1 `User.avatar` is an optional nullable profile-image URL. The app persists safe HTTPS URLs at sign-in and refreshes them during authenticated visit sync. Existing app names are retained. An external-ID match prevents another member's response from updating the account. Missing, malformed, or failed images show initials. A profile-photo lookup failure does not block visit imports.
+
+## Want-to-go read access (September 15)
+The current docs index, published OpenAPI at https://flynet-dev-portal.mintlify.app/api-reference/openapi.yaml, and latest npm SDK 0.8.1 expose no saved-restaurant/want-to-go read operation. Member endpoints are profile, status, check-ins, wallets, tags and memberships. The portal's “Save restaurants” permission describes adding places, not reading the existing list. Import requires Blackbird to provide a read endpoint, response schema and scope. Tabletalk bookmarks are not represented as imported Blackbird data.
+
+## Restaurant media
+Store the SDK's actual `asset.preview1x` URL separately from `asset.web2x`; never infer URLs or use full3x. Compact visit/list/picker images load the preview; larger cards use web2x with a mobile preview source. Lazy loading, asynchronous decoding and fixed-size slots limit transfers and layout shifts. Missing/broken assets retain an explicit fallback.

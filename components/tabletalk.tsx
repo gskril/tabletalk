@@ -53,6 +53,7 @@ import { toast, Toaster } from "sonner";
 import { avatarUrl } from "@/lib/avatar";
 import type { State, Venue, Person, Review, DiningList } from "@/lib/types";
 import DiningMap from "@/components/dining-map";
+import RestaurantImage from "@/components/restaurant-image";
 import ConfirmDialog from "@/components/confirm-dialog";
 type Modal =
   | { type: "login" }
@@ -313,21 +314,7 @@ export default function Tabletalk() {
       <article className="venue-card" key={v.id}>
         <div className="venue-image">
           <Link href={`/restaurants/${v.id}`} aria-label={`View ${v.name}`}>
-            {v.image ? (
-              <img
-                src={safeUrl(v.image)}
-                alt={`${v.name} food`}
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            ) : (
-              <div className="venue-type">
-                <strong>{v.cuisine}</strong>
-                <span>{v.neighborhood}</span>
-              </div>
-            )}
+            <RestaurantImage venue={v} />
           </Link>
           {bookmark(v)}
           <span className="image-label">
@@ -391,6 +378,7 @@ export default function Tabletalk() {
         style={{ background: l.color }}
         key={l.id}
       >
+        {vs.length > 0 && <div className="list-cover">{vs.slice(0,3).map(v => <RestaurantImage key={v.id} venue={v} compact />)}</div>}
         <div className="eyebrow">
           {l.visibility === "private"
             ? "Private collection"
@@ -416,6 +404,7 @@ export default function Tabletalk() {
     const v = venue(r.venue_id);
     return (
       <article className="review" key={r.id}>
+        {showVenue && v && <Link className="review-photo" href={`/restaurants/${v.id}`} aria-label={`View ${v.name}`}><RestaurantImage venue={v} /></Link>}
         <div className="review-head">
           <Link href={`/profile/${r.user_id}`}>
             <Avatar person={r} />
@@ -559,6 +548,7 @@ export default function Tabletalk() {
         if (!v) return null;
         const review = d.reviews.find(r => r.user_id === me?.id && r.venue_id === v.id);
         return <article className="visit-row" key={v.id}>
+          <Link href={`/restaurants/${v.id}`} className="visit-photo"><RestaurantImage venue={v} compact /></Link>
           <div className="row-info">
             <Link href={`/restaurants/${v.id}`}><h2>{v.name}</h2></Link>
             <p className="muted">{v.neighborhood} · {v.cuisine}</p>
@@ -576,11 +566,7 @@ export default function Tabletalk() {
     return (
       <div className="list-row" key={v.id}>
         <span className="rank">{String(i + 1).padStart(2, "0")}</span>
-        {v.image && (
-          <Link href={`/restaurants/${v.id}`}>
-            <img src={safeUrl(v.image)} alt={v.name} loading="lazy" />
-          </Link>
-        )}
+        <Link href={`/restaurants/${v.id}`} className="row-photo"><RestaurantImage venue={v} compact /></Link>
         <div className="row-info">
           <Link href={`/restaurants/${v.id}`}>
             <h3>{v.name}</h3>
@@ -796,13 +782,7 @@ export default function Tabletalk() {
         </div>
         <div className="detail-grid">
           <div>
-            {v.image && (
-              <img
-                className="detail-photo"
-                src={safeUrl(v.image)}
-                alt={`${v.name} food`}
-              />
-            )}
+            <div className="detail-photo"><RestaurantImage venue={v} priority /></div>
             <p>{v.description}</p>
             <div className="section-head">
               <h2>Notes from the table</h2>
@@ -1219,6 +1199,7 @@ export default function Tabletalk() {
           visited.length ? <>
             <p className="notebook-description">Places visited, verified by Blackbird check-ins.</p>
             <div className="public-visits">{visited.map(v => <article className="visit-row" key={v.id}>
+              <Link href={`/restaurants/${v.id}`} className="visit-photo"><RestaurantImage venue={v} compact /></Link>
               <div className="row-info"><Link href={`/restaurants/${v.id}`}><h2>{v.name}</h2></Link><p className="muted">{v.neighborhood} · {v.cuisine}</p></div>
               <span className="verified"><CheckCircle2 size={16} /> Visited</span>
             </article>)}</div>
@@ -1805,6 +1786,7 @@ function ModalBody({
           <div className="selected-places">
             {ids.map((id, i) => (
               <div className="selected-place" key={id}>
+                {data.venues.find(v=>v.id===id) && <span className="picker-photo"><RestaurantImage venue={data.venues.find(v=>v.id===id)!} compact /></span>}
                 <span>
                   {i + 1}. {data.venues.find((v) => v.id === id)?.name}
                 </span>
@@ -1868,6 +1850,7 @@ function ModalBody({
                   key={v.id}
                   onClick={() => setIds((a) => [...a, v.id])}
                 >
+                  <span className="picker-photo"><RestaurantImage venue={v} compact /></span>
                   {v.name}
                   <Plus size={15} />
                 </button>

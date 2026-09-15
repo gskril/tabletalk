@@ -1,0 +1,1 @@
+ALTER TABLE `venues` ADD `image_thumb` text DEFAULT '' NOT NULL;

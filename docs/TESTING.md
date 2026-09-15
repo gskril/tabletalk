@@ -82,3 +82,6 @@ The current product policy makes verified visited locations public on every Blac
 
 ## Profile photos
 Eighteen contract tests pass, including sign-in avatar persistence, canonical member matching, missing photos, and invalid URL rejection. Browser coverage checks successful image loading and initials after image failure. The additive avatar column defaults to empty for existing profiles; photos populate on their next authenticated sync or sign-in.
+
+## Restaurant media and want-to-go API review
+The build and 18 contract tests pass with image preview persistence. Four browser scenarios pass: exploration/map/mobile, notebook/list interactions, public profiles/reviews, and thumbnail versus mobile picture-source selection. Restaurant photos now appear in visit rows, review cards, list covers/rows and pickers; images load lazily except the detail hero and retain fixed slots. The Blackbird want-to-go import is not implemented because the current official docs, OpenAPI and latest SDK expose no read endpoint. See SDK-AUDIT.md for the required provider clarification.

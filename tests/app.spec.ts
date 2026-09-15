@@ -429,7 +429,7 @@ test("guest profiles show verified places and full reviews without private check
   await expect(page.getByRole('link',{name:'View my visit details in My notebook'})).toHaveCount(0);
   await page.getByRole('tab',{name:'Reviews (1)',exact:true}).click();
   await expect(page.getByText('A full review visible on the public profile.',{exact:true})).toBeVisible();
-  await expect(page.locator('.review a[href="/restaurants/rubirosa"]')).toContainText('Rubirosa');
+  await expect(page.locator('.review-head a[href="/restaurants/rubirosa"]')).toContainText('Rubirosa');
   const data = await (await page.request.get('/api/state')).json();
   expect(data.visits).toEqual([]);
   expect(data.people.find((p:{id:string})=>p.id==='e2e-public-diner').visited_count).toBe(3);
@@ -461,4 +461,33 @@ test("Blackbird avatar images render and fall back to initials on failure", asyn
   await page.reload();
   await expect(avatar).toHaveText('PE');
   await expect(avatar.locator('img')).toHaveCount(0);
+});
+
+
+test("restaurant photos use thumbnails in visits and responsive previews in cards", async ({page}) => {
+  localPublicProfile(baseURL);
+  const thumb='https://restaurant-images.example.test/preview.png';
+  const medium='https://restaurant-images.example.test/web.png';
+  await page.route('https://restaurant-images.example.test/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aK1cAAAAASUVORK5CYII=','base64')}));
+  await page.route('**/api/state', async route=>{
+    const response=await route.fetch();const data=await response.json();
+    data.venues=data.venues.map((v:object)=>({...v,image:medium,image_thumb:thumb}));
+    await route.fulfill({response,json:data});
+  });
+  await page.goto('/profile/e2e-public-diner');
+  const photos=page.locator('.visit-photo img');
+  await expect(photos).toHaveCount(3);
+  await expect(photos.first()).toHaveAttribute('src',thumb);
+  await expect(photos.first()).toHaveAttribute('loading','lazy');
+  await expect(photos.first()).toHaveAttribute('decoding','async');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.goto('/');
+  const cardImage=page.locator('.venue-card img').first();
+  await expect(cardImage).toBeVisible();
+  await expect.poll(()=>cardImage.evaluate((img:HTMLImageElement)=>img.currentSrc)).toBe(thumb);
+  await page.goto('/lists/downtown-date-night');
+  await expect(page.locator('.row-photo img')).toHaveCount(4);
+  await page.goto('/lists');
+  await expect(page.locator('.list-cover img').first()).toBeVisible();
 });

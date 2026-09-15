@@ -90,3 +90,31 @@ The build and 18 contract tests pass with image preview persistence. Four browse
 
 ## Token-renewal verification
 Twenty-one contract tests pass. New cases cover encrypted refresh-token retention at callback, consecutive rotations with new visit/photo imports, per-session concurrency, revoked grants, transient upstream failure, malformed refresh responses, and logout while refresh is in progress. Real rotation requires one new provider sign-in because previously issued refresh tokens were discarded. The profile exposes reconnect recovery directly.
+
+## Performance pass (September 16, 2026)
+
+Before the change, the production guest `/api/state` response was 517,284 bytes
+of uncompressed JSON, including 475,338 bytes of restaurant rows, on every page
+navigation and account refresh. Two warm observations from the development host
+were 841 ms and 748 ms end to end; these are point observations, not an SLA.
+The grid rendered all 808 current discovery restaurants.
+
+The browser now requests `/api/state?catalog=separate` alongside `/api/catalog`.
+Only the public restaurant response has a five-minute HTTP cache lifetime;
+identity, private lists, bookmarks, and check-in dates remain `private, no-store`.
+Missing restaurants referenced by freshly imported visits trigger catalog
+revalidation. The original full state response remains compatible with older
+clients and the read-only WebMCP tool. D1 reads for the state response are batched
+into one request; public restaurant/profile page validation no longer performs
+an unnecessary member lookup. Venue/review lookup maps avoid repeated scans.
+
+The explore grid initially renders 24 cards, with a Show more button adding 24.
+Filtering still searches the complete catalog and resets the displayed batch;
+the map continues to contain all matching places. This is progressive rendering,
+not server-side pagination: the full catalog is downloaded on the initial visit
+and when its cache expires.
+
+Validation covers identical public catalog responses across auth states, absence
+of private fields from that cache, lightweight/full state equivalence, and an
+808-restaurant browser fixture whose last restaurant remains searchable. Existing
+browser flows cover account actions, visits, images, and public/private lists.

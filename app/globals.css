@@ -1267,3 +1267,4 @@ svg {
   .selected-place { flex-wrap: wrap; }
   .list-cover { height: 110px; }
 }
+.load-more { text-align: center; margin: 28px 0; }

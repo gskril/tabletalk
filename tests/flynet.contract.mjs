@@ -14,6 +14,7 @@ import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
 import { POST as sync } from "../app/api/flynet/sync/route.ts";
 import { POST as action } from "../app/api/action/route.ts";
 import { GET as state } from "../app/api/state/route.ts";
+import { GET as catalogResponse } from "../app/api/catalog/route.ts";
 import { makeSession, currentUser, hash } from "../lib/auth.ts";
 import { POST as demoSignup } from "../app/api/auth/demo/route.ts";
 import { requestHeaders } from "./headers-mock.mjs";
@@ -46,6 +47,7 @@ function statement(query) {
       return { results: sql.prepare(query).all(...args) };
     },
     async run() {
+      if (/^SELECT\b/i.test(query)) return this.all();
       const r = sql.prepare(query).run(...args);
       return { success: true, meta: { changes: r.changes } };
     },
@@ -927,4 +929,40 @@ test("refresh failure preserves usable credentials and malformed rotation fails 
     assert.equal(stored.refresh_token,null);
     assert.equal(stored.token_expires_at,0);
   } finally {globalThis.fetch=original;}
+});
+
+test("cached catalog is identical for members and guests; lightweight state stays private", async () => {
+  const session = cookieJar.get("tt_session");
+  const originalBatch = env.DB.batch;
+  let batches = 0;
+  env.DB.batch = async statements => { batches++; return originalBatch(statements); };
+  try {
+    const memberCatalog = await catalogResponse();
+    const publicData = await memberCatalog.json();
+    assert.equal(memberCatalog.headers.get("Cache-Control"), "public, max-age=300");
+    assert.deepEqual(Object.keys(publicData).sort(), ["catalog", "venues"]);
+    assert.ok(publicData.venues.length > 0);
+    assert.ok(publicData.venues.every(v => v.source !== "demo"));
+    cookieJar.delete("tt_session");
+    assert.deepEqual(await (await catalogResponse()).json(), publicData);
+
+    const response = await state(new Request("https://tabletalk.test/api/state?catalog=separate"));
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("Cache-Control"), "private, no-store");
+    const lightweight = await response.json();
+    assert.equal(batches, 1);
+    assert.equal("venues" in lightweight, false);
+    assert.equal("catalog" in lightweight, false);
+    assert.equal(lightweight.me, null);
+    assert.deepEqual(lightweight.visits, []);
+    assert.deepEqual(lightweight.bookmarks, []);
+    assert.ok(lightweight.lists.every(l => l.visibility === "public"));
+    const full = await (await state()).json();
+    const { venues, catalog, ...remaining } = full;
+    assert.deepEqual(lightweight, remaining);
+    assert.deepEqual(venues, publicData.venues);
+  } finally {
+    env.DB.batch = originalBatch;
+    if (session) cookieJar.set("tt_session", session);
+  }
 });

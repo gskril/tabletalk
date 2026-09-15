@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 function Link(
   props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string },
@@ -158,12 +158,25 @@ export default function Tabletalk() {
     [feedTab, setFeedTab] = useState("everyone"),
     [savedTab, setSavedTab] = useState(["places", "visits", "lists"].includes(params.get("tab") || "") ? params.get("tab")! : "places"),
     [profileTab, setProfileTab] = useState("visits");
+  const [visibleCount, setVisibleCount] = useState(24);
+  useEffect(() => setVisibleCount(24), [query, neighborhood, cuisine, price, occasion]);
   const load = useCallback(async () => {
     try {
-      const r = await fetch("/api/state");
+      const [r, catalogResponse] = await Promise.all([
+        fetch("/api/state?catalog=separate"),
+        fetch("/api/catalog"),
+      ]);
       const d = (await r.json()) as State & { error?: string };
       if (!r.ok) throw new Error(d.error);
-      setData(d);
+      let catalog = await catalogResponse.json() as Pick<State, "venues" | "catalog"> & { error?: string };
+      if (!catalogResponse.ok) throw new Error(catalog.error);
+      // A new visit can introduce an older restaurant outside the discovery catalog.
+      const known = new Set(catalog.venues.map((v: Venue) => v.id));
+      if ([...d.visits, ...d.publicVisits, ...d.items].some(v => !known.has(v.venue_id))) {
+        const fresh = await fetch("/api/catalog", { cache: "reload" });
+        if (fresh.ok) catalog = await fresh.json() as typeof catalog;
+      }
+      setData({ ...d, ...catalog });
       setError("");
     } catch (e) {
       setError(
@@ -236,6 +249,16 @@ export default function Tabletalk() {
   function go(to: string) {
     window.location.assign(to);
   }
+  const venueById = useMemo(() => new Map(data?.venues.map(v => [v.id, v])), [data?.venues]);
+  const reviewsByVenue = useMemo(() => {
+    const grouped = new Map<string, Review[]>();
+    for (const review of data?.reviews || []) {
+      const group = grouped.get(review.venue_id) || [];
+      group.push(review);
+      grouped.set(review.venue_id, group);
+    }
+    return grouped;
+  }, [data?.reviews]);
   if (!data)
     return (
       <>
@@ -269,7 +292,7 @@ export default function Tabletalk() {
     );
   const d = data,
     me = d.me;
-  const venue = (id: string) => d.venues.find((v) => v.id === id);
+  const venue = (id: string) => venueById.get(id);
   const person = (id: string) => d.people.find((p) => p.id === id);
   const publicVisits = d.publicVisits || [];
   const listVenues = (id: string) =>
@@ -278,7 +301,7 @@ export default function Tabletalk() {
       .map((i) => venue(i.venue_id))
       .filter((v): v is Venue => !!v);
   const average = (id: string) => {
-    const r = d.reviews.filter((r) => r.venue_id === id);
+    const r = reviewsByVenue.get(id) || [];
     return r.length
       ? (r.reduce((a, r) => a + r.rating, 0) / r.length).toFixed(1)
       : null;
@@ -316,7 +339,7 @@ export default function Tabletalk() {
     </button>
   );
   function card(v: Venue) {
-    const rev = d.reviews.filter((r) => r.venue_id === v.id);
+    const rev = reviewsByVenue.get(v.id) || [];
     return (
       <article className="venue-card" key={v.id}>
         <div className="venue-image">
@@ -718,7 +741,15 @@ export default function Tabletalk() {
         ) : mapView ? (
           <DiningMap venues={filtered} card={card} />
         ) : (
-          <div className="cards">{filtered.map(card)}</div>
+          <>
+            <div className="cards">{filtered.slice(0, visibleCount).map(card)}</div>
+            {visibleCount < filtered.length && (
+              <div className="load-more">
+                <p className="small muted">Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} spots</p>
+                <button className="btn" onClick={() => setVisibleCount(n => n + 24)}>Show more restaurants</button>
+              </div>
+            )}
+          </>
         )}
         <p className="note">
           {d.catalog?.syncedAt

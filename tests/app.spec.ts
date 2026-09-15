@@ -337,7 +337,7 @@ test("passport updates automatically and only offers recovery actions when neede
   await localSession(page.context(), baseURL, "Passport diner");
   let mode = "syncing";
   let reads = 0;
-  await page.route("**/api/state", async route => {
+  await page.route(/\/api\/state(?:\?.*)?$/, async route => {
     const response = await route.fetch();
     const body = await response.json();
     reads++;
@@ -450,7 +450,7 @@ test("Blackbird avatar images render and fall back to initials on failure", asyn
     if(route.request().url().endsWith('broken.png')) return route.abort();
     await route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aK1cAAAAASUVORK5CYII=','base64')});
   });
-  await page.route('**/api/state', async route => {
+  await page.route(/\/api\/state(?:\?.*)?$/, async route => {
     const response=await route.fetch();
     const data=await response.json();
     data.people.find((p:{id:string})=>p.id==='e2e-public-diner').avatar=photo;
@@ -472,7 +472,7 @@ test("restaurant photos use thumbnails in visits and responsive previews in card
   const thumb='https://restaurant-images.example.test/preview.png';
   const medium='https://restaurant-images.example.test/web.png';
   await page.route('https://restaurant-images.example.test/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aK1cAAAAASUVORK5CYII=','base64')}));
-  await page.route('**/api/state', async route=>{
+  await page.route('**/api/catalog', async route=>{
     const response=await route.fetch();const data=await response.json();
     data.venues=data.venues.map((v:object)=>({...v,image:medium,image_thumb:thumb}));
     await route.fulfill({response,json:data});
@@ -493,4 +493,25 @@ test("restaurant photos use thumbnails in visits and responsive previews in card
   await expect(page.locator('.row-photo img')).toHaveCount(4);
   await page.goto('/lists');
   await expect(page.locator('.list-cover img').first()).toBeVisible();
+});
+
+
+test("large catalog renders in batches and searches restaurants beyond the first batch", async ({ page }) => {
+  const original = await (await page.request.get("/api/state")).json();
+  const venues = Array.from({ length: 808 }, (_, index) => ({
+    ...original.venues[0], id: `pagination-${index}`, name: `Restaurant ${String(index).padStart(3, "0")}`,
+  }));
+  await page.route("**/api/catalog", route => route.fulfill({ json: { venues, catalog: { locationIds: venues.map(v => v.id), syncedAt: Date.now() } } }));
+  await page.route(/\/api\/state(?:\?.*)?$/, route => route.fulfill({ json: { ...original, items: [], publicVisits: [], visits: [] } }));
+  await page.goto("/");
+  await expect(page.locator(".venue-card")).toHaveCount(24);
+  await expect(page.getByText("808 spots", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Show more restaurants" }).click();
+  await expect(page.locator(".venue-card")).toHaveCount(48);
+  await page.getByRole("textbox", { name: "Search restaurants" }).fill("Restaurant 807");
+  await expect(page.locator(".venue-card")).toHaveCount(1);
+  await expect(page.getByRole("heading", { name: "Restaurant 807", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Show more restaurants" })).toHaveCount(0);
+  await page.getByRole("textbox", { name: "Search restaurants" }).fill("");
+  await expect(page.locator(".venue-card")).toHaveCount(24);
 });

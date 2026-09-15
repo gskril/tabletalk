@@ -53,15 +53,15 @@ export default async function Page({ params }: Props) {
   if (path[1]) {
     let found = true;
     try {
-      const u = await currentUser();
-      if (path[0] === "lists")
+      if (path[0] === "lists") {
+        const u = await currentUser();
         found = !!(await db()
           .prepare(
             `SELECT id FROM lists WHERE id IN (${memberListIds}) AND id=? AND (visibility='public' OR user_id=?)`,
           )
           .bind(path[1], u?.id || "")
           .first());
-      else if (path[0] === "restaurants" || path[0] === "profile")
+      } else if (path[0] === "restaurants" || path[0] === "profile")
         found = !!(await db()
           .prepare(
             path[0] === "restaurants"

@@ -9,7 +9,9 @@ import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
 import { POST as sync } from "../app/api/flynet/sync/route.ts";
 import { POST as action } from "../app/api/action/route.ts";
 import { GET as state } from "../app/api/state/route.ts";
-import { makeSession } from "../lib/auth.ts";
+import { makeSession, currentUser } from "../lib/auth.ts";
+import { POST as demoSignup } from "../app/api/auth/demo/route.ts";
+import { requestHeaders } from "./headers-mock.mjs";
 import { FlynetMemberClient } from "@flynetdev/core";
 import {
   syncVisits,
@@ -352,14 +354,14 @@ test("reviews require the same Blackbird member and exact location, including ed
     cookieJar.set("tt_session", cookie.split(";")[0].split("=")[1]);
     assert.equal(
       (await post({ ...review, userId: member, verified: true })).status,
-      403,
+      demo || !external ? 401 : 403,
     );
     if (other !== "other-member") {
       // Even a stray proof row cannot make a demo/platform or cross-environment identity eligible.
       sql
         .prepare("INSERT INTO visits VALUES(?,?,?)")
         .run(other, locationId, at);
-      assert.equal((await post(review)).status, 403);
+      assert.equal((await post(review)).status, demo || !external ? 401 : 403);
     }
   }
   cookieJar.set("tt_session", originalSession);
@@ -507,6 +509,27 @@ test("invalid API shapes and empty auth errors fail closed without creating visi
   } finally {
     upstreamOverride = undefined;
   }
+});
+test("only a Blackbird identity can authenticate; retired signup never writes", async () => {
+  const session = cookieJar.get("tt_session");
+  cookieJar.delete("tt_session");
+  requestHeaders.set("oai-authenticated-user-id", "platform-only");
+  requestHeaders.set("oai-authenticated-user-email", "private@example.com");
+  const before = sql.prepare("SELECT count(*) AS n FROM profiles").get().n;
+  assert.equal(await currentUser(), null);
+  assert.equal((await demoSignup()).status, 410);
+  assert.equal(
+    sql.prepare("SELECT count(*) AS n FROM profiles").get().n,
+    before,
+  );
+  assert.equal(
+    (await post({ action: "bookmark", venueId: locationId, active: true }))
+      .status,
+    401,
+  );
+  requestHeaders.clear();
+  cookieJar.set("tt_session", session);
+  assert.ok(await currentUser());
 });
 test.after(() => {
   globalThis.fetch = realFetch;

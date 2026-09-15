@@ -19,7 +19,6 @@ export function settings() {
       e.FLYNET_ENVIRONMENT === "production"
         ? ("production" as const)
         : ("staging" as const),
-    demoEnabled: e.DEMO_ENABLED !== "false",
   };
 }
 export function integrationStatus() {
@@ -34,14 +33,13 @@ export function integrationStatus() {
     ),
     discovery: !!c.apiKey,
     environment: c.environment,
-    demoEnabled: c.demoEnabled,
   };
 }
 export function oauth() {
   const c = settings();
   if (!integrationStatus().configured)
     throw new AppError(
-      "Blackbird connection is awaiting partner credentials. You can use a demo notebook meanwhile.",
+      "Blackbird sign-in is awaiting partner access. You can browse restaurants and public lists meanwhile.",
       503,
     );
   return new FlynetOAuth({

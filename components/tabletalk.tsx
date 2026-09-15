@@ -1253,7 +1253,7 @@ export default function Tabletalk() {
             style={{ marginTop: 30 }}
             onClick={async () => {
               await fetch("/api/auth/logout", { method: "POST" });
-              window.location.href = "/signout-with-chatgpt?return_to=/";
+              window.location.href = "/";
             }}
           >
             <LogOut size={15} /> Sign out
@@ -1285,11 +1285,10 @@ export default function Tabletalk() {
           restaurant availability.
         </p>
         <p>
-          A demo account is tied to this browser's cookie. Clearing it or
-          signing out loses access to that demo identity. Use sign-in for a
-          recoverable account. Anything you publish as a review, profile or
-          public list is visible to other visitors. Private lists, bookmarks and
-          imported dining history stay private.
+          Sign in with Blackbird to save places, create lists and follow diners.
+          Anything you publish as a review, profile or public list is visible to
+          other visitors. Private lists, bookmarks and imported dining history
+          stay private.
         </p>
         <h2>Blackbird, connected thoughtfully.</h2>
         <p>
@@ -1536,68 +1535,9 @@ function ModalBody({
           </a>
           {!data.integration.configured && (
             <p className="form-help">
-              Blackbird sign-in is awaiting developer access. You can explore
-              everything or try a separate demo notebook below.
+              Blackbird sign-in is awaiting developer access. You can browse
+              restaurants and public lists without signing in.
             </p>
-          )}
-          <a
-            className="btn"
-            target="_top"
-            href={`/signin-with-chatgpt?return_to=${encodeURIComponent("/me")}`}
-          >
-            Continue with ChatGPT
-          </a>
-          {data.integration.demoEnabled && (
-            <form
-              className="form-stack"
-              onSubmit={(e) => {
-                e.preventDefault();
-                run(async () => {
-                  const r = await fetch("/api/auth/demo", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name }),
-                  });
-                  const b = (await r.json()) as {
-                    error?: string;
-                    count?: number;
-                  };
-                  if (!r.ok) throw new Error(b.error);
-                  await reload();
-                  toast.success("Your demo notebook is ready.");
-                });
-              }}
-            >
-              <div style={{ borderTop: "1px solid #dfe4d6", paddingTop: 15 }}>
-                <strong className="small">Just taking a look?</strong>
-                <p className="form-help">
-                  Try your own demo account. It stays with this browser; public
-                  lists are visible to everyone. Reviews require a Blackbird
-                  check-in.
-                </p>
-              </div>
-              <label>
-                Your display name
-                <input
-                  autoComplete="nickname"
-                  minLength={2}
-                  maxLength={40}
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="What should we call you?"
-                />
-              </label>
-              {error && (
-                <p className="form-error" role="alert">
-                  {error}
-                </p>
-              )}
-              <button className="btn primary" disabled={busy}>
-                {busy ? "Setting your table…" : "Try the demo"}{" "}
-                <ArrowRight size={15} />
-              </button>
-            </form>
           )}
           <p className="form-help">
             Browsing and public lists are always open. No account needed.
@@ -1619,8 +1559,8 @@ function ModalBody({
           </p>
           <p className="form-help">
             {data.integration.configured
-              ? "Connect your Blackbird account, then import your visits from your private passport. Demo accounts cannot post reviews."
-              : "Blackbird connection is awaiting partner access. You can still save places and share lists; reviews will unlock after your Blackbird visit is imported."}
+              ? "Connect your Blackbird account, then import your visits from your private passport. Reviews unlock only for locations in your imported history."
+              : "Blackbird connection is awaiting partner access. You can still browse restaurants and public lists; account features will unlock after Blackbird sign-in is available."}
           </p>
           {data.integration.configured && (
             <a className="btn primary" href="/api/auth/blackbird/start">

@@ -62,6 +62,5 @@ export type State = {
     configured: boolean;
     discovery: boolean;
     environment: string;
-    demoEnabled: boolean;
   };
 };

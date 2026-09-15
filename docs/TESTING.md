@@ -3,15 +3,16 @@
 ## Passing checks
 - **TypeScript:** `npm run typecheck` — passed.
 - **Production build:** Sites build helper / Vinext Worker build — passed.
-- **Browser E2E:** five Playwright suites against the built Worker at `http://127.0.0.1:5173` — all five passed. Four passed in the full run; one encountered a local Worker restart mid-request and passed when rerun after the watcher settled.
-- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **6 passed**.
+- **Browser E2E:** six Playwright suites against the built Worker; includes Blackbird-only UI and rejection of retired authentication methods.
+- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **7 passed**.
 
 ### Browser coverage
 1. Anonymous restaurant search, empty results/reset, neighborhood filter, zoomable map selection, venue navigation, directions, mobile width.
-2. Demo signup, bookmark persistence, review gate and forged-verification rejection, ordered list creation/reordering, public list in another browser, second-account list saving, and follow/feed controls. Verified review CRUD is covered by actual-handler contract tests; live OAuth browser verification remains pending.
+2. Local synthetic Blackbird member session, bookmark persistence, review gate and forged-verification rejection, ordered list creation/reordering, public list in another browser, second-account list saving, and follow/feed controls. Verified review CRUD is covered by actual-handler contract tests; live OAuth browser verification remains pending.
 3. Anonymous write rejection; cross-origin rejection; private-list 404 and exclusion from public DTOs; second-account edit/save rejection; invalid rating/date rejection; idempotent bookmarks; logout.
 4. Unconfigured Blackbird sign-in explains the unavailable integration; forged callback does not create an authenticated session.
-5. WebMCP registration contract, valid query and invalid-input rejection using a test implementation of the proposed browser registry. Native browser WebMCP support was not available; this is a contract harness, not native interoperability certification.
+5. Blackbird-only sign-in UI, retired signup returns 410, legacy session and platform header rejection.
+6. WebMCP registration contract, valid query and invalid-input rejection using a test implementation of the proposed browser registry. Native browser WebMCP support was not available; this is a contract harness, not native interoperability certification.
 
 ### Flynet contract coverage
 - OAuth authorize URL includes audience, exact scopes and S256 PKCE challenge.
@@ -53,4 +54,4 @@ npm run test:contract
 npm run typecheck
 ```
 
-The browser suite creates local demo accounts; repeated runs in one hour may eventually reach the signup rate limit. Use a fresh test database or clear only its test rate-limit rows. Do not run mutation tests against a live community.
+The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Live Blackbird sign-in remains pending credentials.

@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { db, now } from "./data";
 export type User = {
   id: string;
@@ -20,25 +19,11 @@ export async function currentUser(): Promise<User | null> {
   if (token) {
     const u = await db()
       .prepare(
-        "SELECT p.id,p.name,p.bio,p.color,p.demo FROM sessions s JOIN profiles p ON p.id=s.user_id WHERE s.hash=? AND s.expires_at>?",
+        "SELECT p.id,p.name,p.bio,p.color,p.demo FROM sessions s JOIN profiles p ON p.id=s.user_id WHERE s.hash=? AND s.expires_at>? AND p.demo=0 AND (p.external_id LIKE 'staging:_%' OR p.external_id LIKE 'production:_%')",
       )
       .bind(await hash(token), Date.now())
       .first<User>();
     if (u) return u;
-  }
-  const platform = await getChatGPTUser();
-  if (platform) {
-    const id = "oai-" + (await hash(platform.userId));
-    await db()
-      .prepare(
-        "INSERT OR IGNORE INTO profiles(id,name,bio,color,demo,created_at) VALUES(?,?,?, ?,0,?)",
-      )
-      .bind(id, platform.fullName || "NYC diner", "", "#ed563d", now())
-      .run();
-    return await db()
-      .prepare("SELECT id,name,bio,color,demo FROM profiles WHERE id=?")
-      .bind(id)
-      .first<User>();
   }
   return null;
 }

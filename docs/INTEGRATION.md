@@ -17,7 +17,6 @@ The official guide also suggests asking for expedited access in Runtime Discord.
 - `FLYNET_CLIENT_ID`, `FLYNET_CLIENT_SECRET`, `FLYNET_AUDIENCE`: values issued by Blackbird. The SDK requires an explicit audience; don't guess it.
 - `FLYNET_REDIRECT_URI`: `https://your-app.example/api/auth/blackbird/callback`. Exact matching matters. Ask Blackbird to register this path, not the platform-reserved `/callback`.
 - `TOKEN_ENCRYPTION_KEY`: at least 32 random characters generated securely; encrypts stored access tokens with AES-GCM. Rotating it requires Blackbird reconnect for existing sessions.
-- `DEMO_ENABLED`: `true` for hackathon exploration; `false` to stop new demo signups.
 
 For local development set `.env`. For hosting use Sites environment variables and redeploy if the platform requires it. Never commit real values. Staging and production credentials are separate.
 
@@ -27,7 +26,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 3. Confirm the profile uses the authenticated member and no token appears in HTML, browser storage, network DTOs or logs.
 4. Refresh Discovery from the configured app or POST `/api/flynet/discovery` from a signed-in same-origin session; inspect live NYC location records.
 5. Import visits from My profile; verify actual NYC check-ins appear only in Private passport.
-6. Attempt a review before importing: expect 403. Import visits, then write/edit a public review for an imported venue. Check that another location of the same restaurant brand, another member’s visit, and a demo account all remain blocked. A client-supplied `verified` flag must never authorize a review.
+6. Attempt a review before importing: expect 403. Import visits, then write/edit a public review for an imported venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm private history remains absent.
 8. Exercise logout and reconnect; repeat sign-in should recover the same Blackbird account.
 9. After provider token expiry, importing requests reconnect. Existing app reviews/lists remain usable. Refresh tokens are deliberately discarded in this MVP to avoid storing an additional credential or racing single-use rotation.
@@ -37,9 +36,9 @@ For local development set `.env`. For hosting use Sites environment variables an
 - Imports upsert by physical location ID. Brand-level restaurant IDs are not interchangeable with location IDs.
 - Staging records are visibly distinguished from live production participation.
 - Import is explicit and private; no raw user history is inferred from the anonymized venue check-in feed.
-- Demo, platform and Blackbird identities are separate. Connecting Blackbird does not merge a demo's data into a real member account.
+- Blackbird is the only accepted identity. Legacy demo/platform sessions are rejected; their records are not merged into Blackbird accounts.
 - Sessions last 30 days. Provider access is usable only until its issued expiry. Deleting a local session on logout removes its encrypted provider token.
 - No FLY transfer, reward issuance or onchain signature is performed by the app.
 
 ## Review policy and balances
-Reviews require an imported member check-in for the exact location; saves and lists remain available without a visit. The UI and API both enforce this. Demo reviews are no longer published, and legacy unverified rows are hidden from public feeds and averages. Staging proofs are labeled staging and cannot authorize a production location. Wallet balances are intentionally omitted; `read:wallets` is not requested.
+Reviews require an imported member check-in for the exact location; saves and lists require Blackbird sign-in but do not require a visit. The UI and API both enforce this. Demo reviews are no longer published, and legacy unverified rows are hidden from public feeds and averages. Staging proofs are labeled staging and cannot authorize a production location. Wallet balances are intentionally omitted; `read:wallets` is not requested.

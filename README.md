@@ -2,7 +2,7 @@
 
 **Live app:** https://your-app.example
 
-Choose **Join the table → Try the demo** to start. Public lists are readable without signing in. Live Blackbird access still requires partner credentials; see `docs/INTEGRATION.md`.
+Choose **Join the table → Connect with Blackbird** to sign in. Public lists are readable without signing in. Live Blackbird access still requires partner credentials; see `docs/INTEGRATION.md`.
 
 An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse restaurants, map a meal, write reviews, rank your favorites, follow diners, and share public lists without a login wall.
 
@@ -11,15 +11,15 @@ An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse
 - Restaurant pages, directions, review creation/edit/delete restricted to Blackbird-verified visits, 1–10 ratings and personal rankings.
 - Ordered public/private lists, edits, sharing, saving other people's lists, and a personal Want to try collection.
 - Public profiles, follows, community/following feeds and review likes.
-- D1 persistence, isolated demo accounts, optional platform sign-in and real Blackbird OAuth integration.
+- D1 persistence and Blackbird-only OAuth sign-in.
 - Official `@flynetdev/core` discovery and member check-in adapters, encrypted provider tokens, PKCE/state/replay protections, private check-in imports and verified-review badges.
 
 ## Important status
 The default catalog and fictional diners are labeled demo. Credentials were not supplied, so live Blackbird sign-in, discovery and import have **not** been tested against a provisioned Blackbird account. Controlled contract tests cover the actual callback and sync handlers with the installed SDK. A working demo is not evidence of hackathon API eligibility; finish the live smoke test once access arrives.
 
-Demo accounts can save places and curate lists, but cannot post reviews. A matching imported Blackbird check-in is required to post or edit; old unverified examples are excluded from public feeds and scores. Wallet balances are out of scope.
+Only Blackbird-authenticated accounts can save places, curate lists, follow diners or publish reviews. A matching imported Blackbird check-in is required to post or edit; old unverified examples are excluded from public feeds and scores. Wallet balances are out of scope.
 
-A demo account is identified by a 30-day HttpOnly browser cookie. It persists across reloads, but cannot be recovered on another device or after sign-out. Public lists are readable across browsers. Use Blackbird or platform sign-in for recoverable identity.
+Blackbird-authenticated sessions use a 30-day HttpOnly browser cookie. Signing in again resolves the same Blackbird member account. Demo signup is retired and legacy demo/platform sessions no longer authenticate. Public lists remain readable across browsers.
 
 ## Develop
 Requires Node 22.13+ (Node 24 for the SQLite-backed contract tests).
@@ -33,7 +33,7 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1
 npm run dev -- --port 5173
 ```
 
-Apply each migration only once to a given local database. The development server prints its URL (normally `http://localhost:5173`). Local platform sign-in is simulated by the starter; hosted sign-in is handled by Sites.
+Apply each migration only once to a given local database. The development server prints its URL (normally `http://localhost:5173`). Blackbird OAuth is the only application sign-in method.
 
 ```sh
 npm run typecheck
@@ -42,7 +42,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The Playwright suite expects the dev server to be running. It creates records only in the local database. Do not run its mutation journeys against production. Screenshots and traces are in ignored `test-results/`; the HTML report is in ignored `playwright-report/`.
+The Playwright suite expects the dev server to be running. Authenticated browser tests provision explicitly synthetic sessions directly in the local database; their helper refuses non-local URLs and is never part of the application. Actual OAuth handlers are exercised separately with SDK contract tests. Do not run its mutation journeys against production. Screenshots and traces are in ignored `test-results/`; the HTML report is in ignored `playwright-report/`.
 
 ## Connect Blackbird
 See [integration setup](docs/INTEGRATION.md). Configure all variables in `.env.example`; keep real values out of source control. Hosted variables belong in Sites environment settings. API keys and secrets are never shipped to the client.
@@ -58,6 +58,6 @@ See [integration setup](docs/INTEGRATION.md). Configure all variables in `.env.e
 React + TypeScript on Vinext, Cloudflare Workers, D1/SQLite with Drizzle schema migrations; Radix-backed UI primitives; official Flynet SDK; Leaflet/OpenStreetMap; Playwright. App-specific code lives in `components/tabletalk.tsx`, `lib/`, and `app/api/`. All writes are validated and authorized server-side. Public responses exclude email, external member IDs, tokens and private records.
 
 ## MVP limits
-No photo uploads, direct messages, push notifications, collaborative list editing, restaurant reservations, payment/reward transactions, or production moderation console. Review scores are simple arithmetic ratings, not Beli's proprietary ranking algorithm. This is a small hackathon deployment; the state endpoint is designed for a modest catalog and community, not an unbounded production dataset. Public demo creation and writes have server-side rate limits; disable `DEMO_ENABLED` for a real community launch.
+No photo uploads, direct messages, push notifications, collaborative list editing, restaurant reservations, payment/reward transactions, or production moderation console. Review scores are simple arithmetic ratings, not Beli's proprietary ranking algorithm. This is a small hackathon deployment; the state endpoint is designed for a modest catalog and community, not an unbounded production dataset. Authenticated writes have server-side rate limits.
 
 Photo copyrights remain with the credited restaurants. Source code uses an independent product identity; no Blackbird or Beli affiliation is claimed.

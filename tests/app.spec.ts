@@ -1,9 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import { localSession } from "./local-session";
 async function join(page: Page, name: string) {
-  await page.getByRole("button", { name: "Join the table" }).click();
-  await page.getByLabel("Your display name").fill(name);
-  await page.getByRole("button", { name: "Try the demo", exact: true }).click();
-  await expect(page.getByRole("dialog")).toBeHidden();
+  await localSession(page.context(), baseURL, name);
+  await page.reload();
+  await expect(page.getByRole("link", { name: "Your profile" })).toBeVisible();
 }
 const baseURL = process.env.TEST_BASE_URL || "http://localhost:5173";
 const headers = { Origin: baseURL };
@@ -167,9 +167,10 @@ test("notebook: review gate, ordered public list across browsers, saves and foll
   await other.close();
 });
 test("server authorization, private lists, validation, persistence, logout", async ({
-  request,
+  page,
   browser,
 }) => {
+  const request = page.request;
   const publicState = await request.get("/api/state");
   expect(publicState.status()).toBe(200);
   const ps = await publicState.json();
@@ -187,15 +188,12 @@ test("server authorization, private lists, validation, persistence, logout", asy
   expect(
     (
       await request.post("/api/auth/demo", {
-        headers: { Origin: "https://evil.example" },
-        data: { name: "Attacker" },
+        headers,
+        data: { name: "Retired signup" },
       })
     ).status(),
-  ).toBe(403);
-  await request.post("/api/auth/demo", {
-    headers,
-    data: { name: "Private owner" },
-  });
+  ).toBe(410);
+  await localSession(page.context(), baseURL, "Private owner");
   let own = await (await request.get("/api/state")).json();
   expect(own.me.name).toBe("Private owner");
   const l = await request.post("/api/action", {
@@ -219,10 +217,7 @@ test("server authorization, private lists, validation, persistence, logout", asy
       await (await other.request.get(baseURL + "/api/state")).json(),
     ),
   ).not.toContain("Secret dinner");
-  await other.request.post(baseURL + "/api/auth/demo", {
-    headers,
-    data: { name: "Second owner" },
-  });
+  await localSession(other, baseURL, "Second owner");
   expect(
     (
       await other.request.post(baseURL + "/api/action", {
@@ -296,6 +291,44 @@ test("unsupported OAuth is honest and malicious callback cannot sign in", async 
   expect(c.status()).toBe(302);
   expect(c.headers().location).toContain("auth_error");
   expect((await (await request.get("/api/state")).json()).me).toBe(null);
+});
+test("only Blackbird sign-in is offered; legacy sessions and platform headers cannot authorize writes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Join the table" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(
+    dialog.getByRole("link", { name: "Connect with Blackbird" }),
+  ).toHaveAttribute("href", "/api/auth/blackbird/start");
+  await expect(dialog.getByText(/ChatGPT|Try the demo/)).toHaveCount(0);
+  await expect(dialog.getByRole("textbox")).toHaveCount(0);
+  await localSession(page.context(), baseURL, "Legacy demo", true);
+  const spoof = {
+    ...headers,
+    "oai-authenticated-user-id": "fake-platform-user",
+    "oai-authenticated-user-email": "fake@example.com",
+  };
+  expect(
+    (await (await page.request.get("/api/state", { headers: spoof })).json())
+      .me,
+  ).toBe(null);
+  expect(
+    (
+      await page.request.post("/api/action", {
+        headers: spoof,
+        data: { action: "bookmark", venueId: "rubirosa", active: true },
+      })
+    ).status(),
+  ).toBe(401);
+  expect(
+    (
+      await page.request.post("/api/auth/demo", {
+        headers,
+        data: { name: "No alternative" },
+      })
+    ).status(),
+  ).toBe(410);
 });
 test("WebMCP tool contract validates input and reads the same restaurant state", async ({
   page,

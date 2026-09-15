@@ -3,4 +3,5 @@ export const cookies = async () => ({
   get: (name) =>
     cookieJar.has(name) ? { value: cookieJar.get(name) } : undefined,
 });
-export const headers = async () => new Headers();
+export const requestHeaders = new Map();
+export const headers = async () => new Headers([...requestHeaders]);

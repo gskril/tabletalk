@@ -1,5 +1,5 @@
 import { db } from "./data";
-import { AppError, hash } from "./auth";
+import { AppError } from "./auth";
 export async function rateLimit(key: string, limit: number, periodMs: number) {
   const time = Date.now();
   const row = await db()
@@ -13,8 +13,4 @@ export async function rateLimit(key: string, limit: number, periodMs: number) {
       "A few too many requests. Please try again shortly.",
       429,
     );
-}
-export async function limitSignup(req: Request) {
-  const identity = req.headers.get("cf-connecting-ip") || "local-development";
-  await rateLimit("signup:" + (await hash(identity)), 20, 3600000);
 }

@@ -757,6 +757,11 @@ export default function Tabletalk() {
     );
   } else if (active === "restaurants") {
     const v = venue(path.split("/")[2]);
+    const publicLists = d.lists.filter(
+      (l) =>
+        l.visibility === "public" &&
+        listVenues(l.id).some((x) => x.id === v?.id),
+    );
     content = !v ? (
       <Empty title="Spot not found" body="Try the restaurant directory." />
     ) : (
@@ -853,19 +858,14 @@ export default function Tabletalk() {
                 reservations.
               </p>
             </div>
-            <div className="panel">
-              <h3>In good company</h3>
-              <p className="small muted" style={{ margin: "9px 0 15px" }}>
-                Find this spot in these public lists.
-              </p>
-              <div className="stack">
-                {d.lists
-                  .filter(
-                    (l) =>
-                      l.visibility === "public" &&
-                      listVenues(l.id).some((x) => x.id === v.id),
-                  )
-                  .map((l) => (
+            {publicLists.length > 0 && (
+              <div className="panel">
+                <h3>In good company</h3>
+                <p className="small muted" style={{ margin: "9px 0 15px" }}>
+                  Find this spot in these public lists.
+                </p>
+                <div className="stack">
+                  {publicLists.map((l) => (
                     <Link
                       className="text-link"
                       key={l.id}
@@ -875,8 +875,9 @@ export default function Tabletalk() {
                       <ChevronRight size={15} />
                     </Link>
                   ))}
+                </div>
               </div>
-            </div>
+            )}
           </aside>
         </div>
       </>

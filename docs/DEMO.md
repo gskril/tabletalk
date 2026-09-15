@@ -4,9 +4,9 @@
 “Most restaurant recommendations live behind a login or disappear in a group chat. Tabletalk makes good taste shareable, and uses Blackbird's real dining history to add provenance.”
 
 1. Open Explore signed out. Search a NYC neighborhood and use the map.
-2. Open a restaurant. Explain that public reviews require a Blackbird check-in; the demo catalog has no fabricated review scores.
+2. Open a restaurant. Explain that public reviews require a Blackbird check-in; the real catalog has no fabricated review scores.
 3. Open **Downtown, after dark**, copy its link, and show it in an incognito browser: no account required.
-4. Show the Blackbird-only sign-in modal. Complete OAuth once credentials are provisioned; otherwise state clearly that sign-in is not yet available.
+4. Show the Blackbird-only sign-in modal. Complete OAuth once the reported callback failure is resolved; until then, clearly state that live member sign-in is still being debugged.
 5. With Blackbird credentials, save a restaurant, show the review gate before importing, import visits, review a matching location, and show its position in personal rankings.
 6. Create a list, add three spots, reorder them, and open the share link in another browser.
 7. Save that list from a second account. Follow the creator and show the Following feed.

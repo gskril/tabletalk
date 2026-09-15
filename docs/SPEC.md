@@ -39,6 +39,7 @@ D1: profiles, sessions, OAuth pending states, venues, reviews, lists, ordered li
 
 ## Flynet integration
 
+- A shared D1 catalog snapshot serves all guests. Cold cache imports once; snapshots older than six hours refresh on the next visit, in the background when a prior snapshot exists. A database lease prevents concurrent refreshes and failures retain the last successful snapshot with five-minute retry backoff. No private member data enters this cache.
 - Server-side `@flynetdev/core` Discovery with X-API-Key for locations/restaurants. Retain location ID as venue identity; brands can have multiple venues. NYC filtering happens on actual location address, not a nonexistent upstream `city` filter.
 - OAuth scopes: `read:profile read:user_checkins` only. Client secret stays on server, with PKCE verifier and state bound to a short-lived browser cookie. Callback uses an exact registered URL.
 - Member profile identity resolved through authenticated getProfile; never trust a decoded unsigned JWT as authentication.
@@ -56,4 +57,4 @@ This is a coherent hackathon MVP inspired by Beli, not an exact feature clone. N
 
 ## Test plan
 
-Real browser E2E on desktop and mobile: anonymous explore/search/filter/detail, Blackbird-only sign-in UI and local synthetic member sessions, bookmark persistence, create/reorder/share public list in second context, private-list isolation, review CRUD and scores, follow/feed/like, personal rankings, logout, empty/error states and keyboard dialogs. Server integration tests: unauthenticated rejection, cross-origin rejection, ownership/IDOR, validation boundaries, duplicate relationships, public DTO privacy. OAuth contract tests with mocked Flynet transport: PKCE/state/expiry/replay, token exchange, canonical member identity, failures and check-in verification. Live credential test remains explicitly pending until Blackbird provisions access.
+Real browser E2E on desktop and mobile: anonymous explore/search/filter/detail, Blackbird-only sign-in UI and local synthetic member sessions, bookmark persistence, create/reorder/share public list in second context, private-list isolation, review CRUD and scores, follow/feed/like, personal rankings, logout, empty/error states and keyboard dialogs. Server integration tests: unauthenticated rejection, cross-origin rejection, ownership/IDOR, validation boundaries, duplicate relationships, public DTO privacy. OAuth contract tests with mocked Flynet transport: PKCE/state/expiry/replay, token exchange, canonical member identity, failures and check-in verification. Production Discovery and guest catalog browsing are live-verified. Successful member authentication and real check-in import remain pending resolution of the reported callback failure.

@@ -4,7 +4,7 @@
 - **TypeScript:** `npm run typecheck` — passed.
 - **Production build:** Sites build helper / Vinext Worker build — passed.
 - **Browser E2E:** six Playwright suites against the built Worker; includes Blackbird-only UI and rejection of retired authentication methods.
-- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **7 passed**.
+- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **12 passed**.
 
 ### Browser coverage
 1. Anonymous restaurant search, empty results/reset, neighborhood filter, zoomable map selection, venue navigation, directions, mobile width.
@@ -15,7 +15,7 @@
 6. WebMCP registration contract, valid query and invalid-input rejection using a test implementation of the proposed browser registry. Native browser WebMCP support was not available; this is a contract harness, not native interoperability certification.
 
 ### Flynet contract coverage
-- OAuth authorize URL includes audience, exact scopes and S256 PKCE challenge.
+- OAuth authorize URL uses exact scopes and S256 PKCE; audience is optional and included only when configured.
 - Cookie-bound state, invalid-state rejection, expiry and atomic one-use callback consumption.
 - Token exchange uses client secret and verifier; canonical member profile determines identity.
 - AES-GCM ciphertext storage and tamper rejection; provider refresh token is not retained.
@@ -37,16 +37,19 @@ Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the 
 - Repeated test runs left earlier review text in the local database: review assertions now use unique content. Local test data is not part of the deployment archive.
 
 ## Published site smoke test
-- Version 1 deployed successfully to https://your-app.example.
-- Anonymous production API returned 12 sample venues, 3 public lists, no authenticated member, and an explicitly unconfigured Flynet status.
-- Read-only Playwright exploration passed against the deployed site, including filters, map selection, restaurant navigation and mobile overflow check.
-- The sample “Downtown, after dark” list renders in a fresh browser without authentication.
+- Current site: https://your-app.example.
+- Production Discovery: all 34 pages parsed through SDK 0.8.1; 1,675 locations, 782 matching NYC.
+- Live shared D1 cache: first import completed in approximately 16 seconds; repeat public state request returned in approximately one second with the same snapshot timestamp. Anonymous users see all 782 production locations; private visits are absent.
+- Live browser: 782-spot count, search, real restaurant detail, and 390px mobile overflow checks passed with no browser errors.
+- Shared-cache contract checks cover fresh requests making no API calls, concurrent requests sharing one refresh lease, and stale data surviving provider failure with retry backoff.
+- Sign-in reaches Blackbird Passport and returns an authorization code. The owner reported callback failure; successful live sign-in and member history are not yet verified. The callback now emits an allowlisted phase/status/reference diagnostic without tokens, raw responses, or personal data. A second attempt is needed to identify the exact failing step.
+- The local regression passed five suites; the Worker runtime stopped during the sixth. The interrupted WebMCP check passed after restart, alongside the callback rejection check. No application fix was required for that runtime failure.
 
 ## Explicitly not verified
-Live Blackbird OAuth, real Discovery, and real member history require partner-issued credentials and redirect registration. No real credentials were supplied. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the exact live smoke test and access request.
+Successful live Blackbird token exchange, canonical member profile, real private check-in import, and a public review backed by that real import. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the remaining live smoke test.
 
 ## Reproduce
-Build, apply the two local migrations once, start `npm start -- --port 5173`, then:
+Build, apply all three local migrations once, start the local Worker with an explicitly empty test environment file (do not use production credentials for the synthetic suite), then:
 
 ```sh
 TEST_BASE_URL=http://127.0.0.1:5173 npm run test:e2e
@@ -54,4 +57,4 @@ npm run test:contract
 npm run typecheck
 ```
 
-The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Live Blackbird sign-in remains pending credentials.
+The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Live Blackbird sign-in is configured but its reported callback failure remains under investigation.

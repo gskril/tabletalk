@@ -3,10 +3,12 @@ import { all, seed } from "@/lib/data";
 import { currentUser, failure } from "@/lib/auth";
 import { integrationStatus } from "@/lib/flynet";
 import { verifiedVisitFrom } from "@/lib/review-eligibility";
+import { publicCatalog } from "@/lib/catalog-cache";
 export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     await seed();
+    const catalog = await publicCatalog();
     const me = await currentUser();
     const uid = me?.id || "";
     const [
@@ -65,6 +67,7 @@ export async function GET() {
         likes: likes.map((x) => x.review_id),
         visits,
         integration: integrationStatus(),
+        catalog,
       },
       { headers: { "Cache-Control": "private, no-store" } },
     );

@@ -1,17 +1,12 @@
-import { rateLimit } from "@/lib/rate-limit";
-import { currentUser, sameOrigin, AppError, failure } from "@/lib/auth";
-import { syncDiscovery } from "@/lib/flynet";
+import { sameOrigin, AppError, failure } from "@/lib/auth";
+import { publicCatalog } from "@/lib/catalog-cache";
 export async function POST(req: Request) {
   try {
     sameOrigin(req);
-    const u = await currentUser();
-    if (!u || u.demo)
-      throw new AppError(
-        "Sign in with a real account to refresh the catalog.",
-        401,
-      );
-    await rateLimit("catalog-sync", 1, 60000);
-    return Response.json(await syncDiscovery());
+    const catalog = await publicCatalog(false);
+    if (!catalog?.syncedAt)
+      throw new AppError("The restaurant catalog is being prepared. Please try again shortly.", 503);
+    return Response.json({ count: catalog.locationIds.length, complete: true, syncedAt: catalog.syncedAt });
   } catch (e) {
     return failure(e);
   }

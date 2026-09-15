@@ -163,3 +163,10 @@ export const rateLimits = sqliteTable("rate_limits", {
   count: integer("count").notNull(),
   expiresAt: integer("expires_at").notNull(),
 });
+export const catalogCache = sqliteTable("catalog_cache", {
+  environment: text("environment").primaryKey(),
+  locationIds: text("location_ids").notNull().default("[]"),
+  syncedAt: integer("synced_at").notNull().default(0),
+  nextAttemptAt: integer("next_attempt_at").notNull().default(0),
+  leaseToken: text("lease_token").notNull().default(""),
+});

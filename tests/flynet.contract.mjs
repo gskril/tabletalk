@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync, readdirSync } from "node:fs";
-import { env } from "./runtime-mock.mjs";
+import { env, backgroundTasks } from "./runtime-mock.mjs";
+import { publicCatalog } from "../lib/catalog-cache.ts";
+import { POST as checkCatalog } from "../app/api/flynet/discovery/route.ts";
 import { cookieJar } from "./headers-mock.mjs";
 import { GET as start } from "../app/api/auth/blackbird/start/route.ts";
 import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
@@ -547,6 +549,76 @@ test("portal credentials without audience still produce a PKCE authorization req
   } finally {
     env.FLYNET_AUDIENCE = audience;
   }
+});
+test("anonymous requests share a persisted catalog and fresh reads make no provider calls", async () => {
+  const savedFetch = globalThis.fetch;
+  const session = cookieJar.get("tt_session");
+  let requests = 0;
+  sql.prepare("DELETE FROM catalog_cache").run();
+  cookieJar.delete("tt_session");
+  globalThis.fetch = async (input, init) => {
+    const req = new Request(input, init);
+    assert.ok(new URL(req.url).pathname.endsWith("/locations"));
+    assert.equal(req.headers.get("X-API-Key"), "fly_test_fixture");
+    assert.equal(req.headers.has("Authorization"), false);
+    requests++;
+    return Response.json({ locations: [location], pagination });
+  };
+  try {
+    const response = await state();
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    assert.equal(body.me, null);
+    assert.deepEqual(body.visits, []);
+    assert.deepEqual(body.catalog.locationIds, [locationId]);
+    assert.ok(body.catalog.syncedAt);
+    const check = await checkCatalog(new Request("https://tabletalk.test/api/flynet/discovery", { method: "POST", headers: { origin: "https://tabletalk.test" } }));
+    assert.equal(check.status, 200);
+    await state();
+    assert.equal(requests, 1);
+  } finally {
+    globalThis.fetch = savedFetch;
+    cookieJar.set("tt_session", session);
+  }
+});
+test("concurrent cold requests acquire only one catalog refresh lease", async () => {
+  const savedFetch = globalThis.fetch;
+  sql.prepare("DELETE FROM catalog_cache").run();
+  let requests = 0;
+  let release;
+  const gate = new Promise((resolve) => { release = resolve; });
+  globalThis.fetch = async () => {
+    requests++;
+    await gate;
+    return Response.json({ locations: [location], pagination });
+  };
+  try {
+    const first = publicCatalog(false);
+    await new Promise((resolve) => setImmediate(resolve));
+    const others = await Promise.all([publicCatalog(false), publicCatalog(false)]);
+    assert.equal(requests, 1);
+    assert.ok(others.every((x) => x.syncedAt === null));
+    release();
+    assert.deepEqual((await first).locationIds, [locationId]);
+  } finally { release(); globalThis.fetch = savedFetch; }
+});
+test("stale catalog remains public during background refresh and provider failures back off", async () => {
+  const savedFetch = globalThis.fetch;
+  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging'").get().synced_at;
+  sql.prepare("UPDATE catalog_cache SET next_attempt_at=0").run();
+  let requests = 0;
+  globalThis.fetch = async () => { requests++; return new Response(null, { status: 403 }); };
+  try {
+    const cached = await publicCatalog();
+    assert.deepEqual(cached.locationIds, [locationId]);
+    assert.equal(cached.syncedAt, old);
+    await Promise.all(backgroundTasks.splice(0));
+    const after = await publicCatalog();
+    assert.equal(after.syncedAt, old);
+    assert.deepEqual(after.locationIds, [locationId]);
+    assert.equal(requests, 1);
+    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging'").get().next_attempt_at > Date.now());
+  } finally { globalThis.fetch = savedFetch; }
 });
 test.after(() => {
   globalThis.fetch = realFetch;

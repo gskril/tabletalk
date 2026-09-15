@@ -47,6 +47,7 @@ export type DiningList = {
   saves: number;
 };
 export type State = {
+  catalog?: { locationIds: string[]; syncedAt: number | null } | null;
   me: Person | null;
   venues: Venue[];
   people: Person[];

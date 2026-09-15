@@ -145,13 +145,16 @@ export async function syncDiscovery() {
   });
   let page: number | undefined = 0,
     count = 0;
+  const locationIds = new Set<string>();
   for (let n = 0; n < 40 && page !== undefined; n++) {
     const result = await client.locations.listLocations({ page, pageSize: 50 });
     const locations = result.locations.filter(isNYC);
     if (locations.length) await db().batch(locations.map(upsertVenue));
+    for (const location of locations) locationIds.add(location.id);
     count += locations.length;
     const next = result.pagination.nextPage;
-    if (next === null || next === undefined) return { count, complete: true };
+    if (next === null || next === undefined)
+      return { count: locationIds.size, complete: true, locationIds: [...locationIds] };
     if (next <= page)
       throw new AppError(
         "Flynet pagination did not advance. Please retry later.",
@@ -159,7 +162,7 @@ export async function syncDiscovery() {
       );
     page = next;
   }
-  return { count, complete: false };
+  return { count, complete: false, locationIds: [...locationIds] };
 }
 export async function syncVisits(userId: string, accessToken: string) {
   const client = new FlynetMemberClient({

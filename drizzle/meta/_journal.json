@@ -15,6 +15,13 @@
       "when": 1789455980441,
       "tag": "0001_handy_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789502254207,
+      "tag": "0002_smiling_alex_power",
+      "breakpoints": true
     }
   ]
 }

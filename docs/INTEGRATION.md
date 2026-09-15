@@ -25,7 +25,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 1. Open a public restaurant/list page in an incognito browser; it must render without authentication.
 2. Click Connect with Blackbird, approve only the requested scopes, and land on `/me?connected=1`.
 3. Confirm the profile uses the authenticated member and no token appears in HTML, browser storage, network DTOs or logs.
-4. Refresh Discovery from the configured app or POST `/api/flynet/discovery` from a signed-in same-origin session; inspect live NYC location records.
+4. Open Explore signed out; the catalog populates automatically from Discovery. The same-origin `POST /api/flynet/discovery` checks this shared cache without requiring sign-in and cannot bypass the refresh interval.
 5. Import visits from My profile; verify actual NYC check-ins appear only in Private passport.
 6. Attempt a review before importing: expect 403. Import visits, then write/edit a public review for an imported venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm private history remains absent.
@@ -33,6 +33,8 @@ For local development set `.env`. For hosting use Sites environment variables an
 9. After provider token expiry, importing requests reconnect. Existing app reviews/lists remain usable. Refresh tokens are deliberately discarded in this MVP to avoid storing an additional credential or racing single-use rotation.
 
 ## Operational notes
+- Public restaurant data is mirrored in D1. The first uncached request waits for import; later requests serve the saved snapshot. After six hours the next visitor triggers a background refresh. A database lease prevents simultaneous refreshes across Workers; failed imports preserve the last complete snapshot and wait five minutes before retrying. A stopped Worker's lease expires after two minutes. No scheduled refresh occurs while the site is idle.
+- Snapshot membership is published only after all Discovery pages finish. Incomplete/failed imports never replace the visible catalog. Old venue rows remain for saved lists and historical reviews; they are excluded from Explore when absent from the latest snapshot. Member check-ins never enter this shared cache.
 - Discovery and visit imports process up to 40 pages of 50 rows per request. A `complete:false` result means the bound was reached; do not claim a full history import.
 - Imports upsert by physical location ID. Brand-level restaurant IDs are not interchangeable with location IDs.
 - Staging records are visibly distinguished from live production participation.

@@ -47,6 +47,7 @@ export default function WebMCP() {
             const r = await fetch("/api/state");
             if (!r.ok) throw new Error("Restaurant data is unavailable");
             const d = (await r.json()) as {
+              catalog?: { locationIds: string[] } | null;
               venues: {
                 id: string;
                 name: string;
@@ -56,7 +57,9 @@ export default function WebMCP() {
               }[];
             };
             const q = input.query.toLowerCase();
+            const catalogIds = d.catalog ? new Set(d.catalog.locationIds) : null;
             return d.venues
+              .filter((v) => !catalogIds || catalogIds.has(v.id))
               .filter((v) =>
                 `${v.name} ${v.cuisine} ${v.neighborhood}`
                   .toLowerCase()

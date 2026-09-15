@@ -497,7 +497,11 @@ export default function Tabletalk() {
   const active = path.split("/")[1] || "explore";
   let content: React.ReactNode;
   if (path === "/") {
-    const filtered = d.venues
+    const catalogIds = d.catalog ? new Set(d.catalog.locationIds) : null;
+    const catalogVenues = catalogIds
+      ? d.venues.filter((v) => catalogIds.has(v.id))
+      : d.venues;
+    const filtered = catalogVenues
       .filter(
         (v) =>
           (!query ||
@@ -551,13 +555,13 @@ export default function Tabletalk() {
             value={neighborhood}
             onChange={setNeighborhood}
             placeholder="Neighborhood"
-            values={[...new Set(d.venues.map((v) => v.neighborhood))].sort()}
+            values={[...new Set(catalogVenues.map((v) => v.neighborhood))].sort()}
           />
           <Filter
             value={cuisine}
             onChange={setCuisine}
             placeholder="Cuisine"
-            values={[...new Set(d.venues.map((v) => v.cuisine))].sort()}
+            values={[...new Set(catalogVenues.map((v) => v.cuisine))].sort()}
           />
           <Filter
             value={price}
@@ -610,8 +614,8 @@ export default function Tabletalk() {
         </div>
         {!filtered.length ? (
           <Empty
-            title="Nothing on this corner, yet"
-            body="Try another neighborhood or loosen your filters."
+            title={d.catalog && !d.catalog.syncedAt ? "The restaurant catalog is being prepared" : "Nothing on this corner, yet"}
+            body={d.catalog && !d.catalog.syncedAt ? "Please reload in a moment. No sign-in is needed to explore." : "Try another neighborhood or loosen your filters."}
             action={
               <button className="btn" onClick={reset}>
                 Clear filters
@@ -624,8 +628,10 @@ export default function Tabletalk() {
           <div className="cards">{filtered.map(card)}</div>
         )}
         <p className="note">
-          {d.integration.discovery
-            ? "Live Flynet venues are marked “On Blackbird”. Sample spots remain labeled."
+          {d.catalog?.syncedAt
+            ? `${d.integration.environment === "production" ? "Blackbird NYC restaurants" : "Blackbird staging restaurants"} · Updated ${new Date(d.catalog.syncedAt).toLocaleDateString()} · Open to everyone.`
+            : d.integration.discovery
+              ? "The Blackbird restaurant catalog refreshes automatically."
             : "Demo catalog · Sample prices · Reviews require Blackbird check-ins."}
         </p>
         <div className="section-head">
@@ -1280,9 +1286,11 @@ export default function Tabletalk() {
         <p>
           Lists, reviews, follows and saved places are stored on our server and
           survive a page reload. Public lists can be opened by anyone with the
-          link. The starter catalog, prices and editorial lists are sample
-          content. They do not establish current Blackbird participation or
-          restaurant availability.
+          link. The NYC restaurant catalog is saved from Blackbird and available
+          to everyone without signing in. We check for updates every six hours
+          when the site is visited and keep the last saved catalog if Blackbird
+          is unavailable. Any remaining sample lists and their restaurants are
+          labeled as sample content.
         </p>
         <p>
           Sign in with Blackbird to save places, create lists and follow diners.
@@ -1313,7 +1321,7 @@ export default function Tabletalk() {
             Flynet docs
           </a>
         </p>
-        {d.integration.discovery && me && !me.demo && (
+        {d.integration.discovery && (
           <button
             className="btn"
             disabled={busy}
@@ -1331,7 +1339,7 @@ export default function Tabletalk() {
                 if (!r.ok) throw new Error(b.error);
                 await load();
                 toast.success(
-                  `Updated ${b.count} NYC spots${b.complete ? "" : ". More pages remain; import limit reached"}.`,
+                  `${b.count} NYC spots available to everyone.`,
                 );
               } catch (e) {
                 toast.error((e as Error).message);
@@ -1340,7 +1348,7 @@ export default function Tabletalk() {
               }
             }}
           >
-            Refresh Blackbird restaurants
+            Check restaurant catalog
           </button>
         )}
         <h2>Photo credits</h2>

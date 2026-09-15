@@ -3,7 +3,7 @@
 ## Scope and confidence
 Reviewed the installed official `@flynetdev/core` **0.8.1** implementation, generated inbound schemas, and current official member, location, authentication and pagination documentation. The lockfile fixes the tested dependency version. Fixtures exercise the real SDK parser and actual application handlers; only the upstream HTTP responses and local database adapter are controlled.
 
-Production Discovery is now verified with issued credentials: all 34 pages (1,675 locations, including 782 matching the app's NYC filter) parsed successfully through SDK 0.8.1. The same key was rejected by staging, confirming it must use production. The public database still requires catalog refresh through the app. Member profile/check-in responses, token exchange and account-specific history remain unverified until the owner completes sign-in.
+Production Discovery is now verified with issued credentials: all 34 pages (1,675 locations, including 782 matching the app's NYC filter) parsed successfully through SDK 0.8.1. The same key was rejected by staging, confirming it must use production. The public database now populates automatically through the shared catalog cache. Member profile/check-in responses, token exchange and account-specific history remain unverified until the owner completes sign-in.
 
 The production OAuth gateway accepted a PKCE authorization request without `audience` and redirected to `passport.flynet.org`. The current official OAuth guide also omits audience. The app now treats it as optional and strips the SDK's empty parameter; an explicitly configured audience is still passed. Eight integration tests pass, including both configurations. This redirect alone does not establish successful consent or token exchange.
 

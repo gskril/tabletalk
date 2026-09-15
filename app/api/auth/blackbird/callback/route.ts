@@ -3,7 +3,9 @@ import { FlynetMemberClient } from "@flynetdev/core";
 import { oauth, settings, encryptToken } from "@/lib/flynet";
 import { db, now } from "@/lib/data";
 import { hash, makeSession } from "@/lib/auth";
+import { authDiagnostic } from "@/lib/auth-diagnostics";
 export async function GET(req: Request) {
+  let phase = "state";
   const clear =
     "tt_oauth=; Path=/api/auth/blackbird; HttpOnly; SameSite=Lax; Max-Age=0";
   try {
@@ -13,6 +15,7 @@ export async function GET(req: Request) {
       cookie = (await cookies()).get("tt_oauth")?.value;
     if (!state || !code || state !== cookie || u.searchParams.has("error"))
       throw new Error("Invalid OAuth state");
+    phase = "expired";
     // DELETE RETURNING consumes state atomically, so replayed/concurrent callbacks cannot exchange twice.
     const pending = await db()
       .prepare(
@@ -21,10 +24,16 @@ export async function GET(req: Request) {
       .bind(await hash(state), Date.now())
       .first<{ verifier: string; return_to: string }>();
     if (!pending) throw new Error("Expired OAuth state");
+    phase = "token";
     const tokens = await oauth().exchangeCode({
       code,
       codeVerifier: pending.verifier,
     });
+    phase = "token_response";
+    if (typeof tokens.access_token !== "string" || !tokens.access_token ||
+        typeof tokens.expires_in !== "number" || !Number.isFinite(tokens.expires_in) || tokens.expires_in <= 0)
+      throw new Error("Invalid token response");
+    phase = "profile";
     const member = new FlynetMemberClient({
       accessToken: tokens.access_token,
       environment: settings().environment,
@@ -32,6 +41,7 @@ export async function GET(req: Request) {
     });
     const profile = await member.getProfile();
     if (!profile.id) throw new Error("Missing member identity");
+    phase = "account";
     const externalId = settings().environment + ":" + profile.id;
     const candidate = crypto.randomUUID();
     await db()
@@ -52,6 +62,7 @@ export async function GET(req: Request) {
       .bind(externalId)
       .first<{ id: string }>();
     if (!account) throw new Error("Missing account");
+    phase = "session";
     // Deliberately do not retain the refresh token: reconnect after access expiry, avoiding rotating-token races.
     const headers = new Headers({
       Location: new URL("/me?connected=1", req.url).toString(),
@@ -68,11 +79,13 @@ export async function GET(req: Request) {
       ),
     );
     return new Response(null, { status: 302, headers });
-  } catch {
+  } catch (error) {
+    const reference = crypto.randomUUID().slice(0, 8);
+    console.error("Blackbird sign-in failed", { reference, phase, ...authDiagnostic(error) });
     return new Response(null, {
       status: 302,
       headers: {
-        Location: new URL("/me?auth_error=connection", req.url).toString(),
+        Location: new URL(`/me?auth_error=${phase}&auth_ref=${reference}`, req.url).toString(),
         "Set-Cookie": clear,
         "Cache-Control": "no-store",
       },

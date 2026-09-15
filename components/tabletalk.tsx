@@ -168,8 +168,19 @@ export default function Tabletalk() {
     load();
   }, [load]);
   useEffect(() => {
-    if (params.get("auth_error"))
-      toast.error("Blackbird connection did not complete. Please reconnect.");
+    const authError = params.get("auth_error");
+    if (authError) {
+      const messages: Record<string, string> = {
+        state: "The sign-in session could not be verified. Start again in the same browser.",
+        expired: "This sign-in link has expired or was already used. Please reconnect.",
+        token: "Blackbird could not complete the sign-in exchange. Please reconnect.",
+        token_response: "Blackbird returned an unexpected sign-in response. Please try again.",
+        profile: "We couldn't load your Blackbird profile. Please reconnect.",
+      };
+      const reference = params.get("auth_ref");
+      toast.error((messages[authError] || "Blackbird connection did not complete. Please reconnect.") +
+        (reference && /^[a-f0-9]{8}$/.test(reference) ? ` Reference: ${reference}.` : ""), { duration: 15000 });
+    }
     if (params.get("connected"))
       toast.success("Blackbird connected. Import visits from your passport.");
   }, [params]);

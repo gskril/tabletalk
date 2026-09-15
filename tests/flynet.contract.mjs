@@ -5,6 +5,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { env, backgroundTasks } from "./runtime-mock.mjs";
 import { publicCatalog } from "../lib/catalog-cache.ts";
 import { POST as checkCatalog } from "../app/api/flynet/discovery/route.ts";
+import { authDiagnostic } from "../lib/auth-diagnostics.ts";
 import { cookieJar } from "./headers-mock.mjs";
 import { GET as start } from "../app/api/auth/blackbird/start/route.ts";
 import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
@@ -619,6 +620,15 @@ test("stale catalog remains public during background refresh and provider failur
     assert.equal(requests, 1);
     assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging'").get().next_attempt_at > Date.now());
   } finally { globalThis.fetch = savedFetch; }
+});
+test("OAuth diagnostics omit provider payloads, tokens and unrecognized error strings", () => {
+  const secret = "private-token-and-member-data";
+  const diagnostic = authDiagnostic({ kind: "unknown", status: null, code: "SDKValidationError", message: secret,
+    raw: { rawValue: { access_token: secret, email: secret }, cause: { issues: [{ path: ["email"], message: secret }, { path: [secret] }] } },
+  });
+  assert.deepEqual(diagnostic, { kind: "unknown", status: null, code: "SDKValidationError", invalidFields: ["email"] });
+  assert.equal(JSON.stringify(diagnostic).includes(secret), false);
+  assert.deepEqual(authDiagnostic({ kind: secret, code: secret, message: secret }), { kind: "unknown", status: null, code: null, invalidFields: [] });
 });
 test.after(() => {
   globalThis.fetch = realFetch;

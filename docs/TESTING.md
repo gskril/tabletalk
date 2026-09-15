@@ -32,6 +32,12 @@ Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the 
 - Development preview instability during simultaneous build/testing: final regression ran against the production Worker after building.
 - Repeated test runs left earlier review text in the local database: review assertions now use unique content. Local test data is not part of the deployment archive.
 
+## Published site smoke test
+- Version 1 deployed successfully to https://your-app.example.
+- Anonymous production API returned 12 sample venues, 3 public lists, no authenticated member, and an explicitly unconfigured Flynet status.
+- Read-only Playwright exploration passed against the deployed site, including filters, map selection, restaurant navigation and mobile overflow check.
+- The sample “Downtown, after dark” list renders in a fresh browser without authentication.
+
 ## Explicitly not verified
 Live Blackbird OAuth, real Discovery, and real member history require partner-issued credentials and redirect registration. No real credentials were supplied. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the exact live smoke test and access request.
 

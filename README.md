@@ -1,5 +1,9 @@
 # Tabletalk
 
+**Live app:** https://your-app.example
+
+Choose **Join the table → Try the demo** to start. Public lists are readable without signing in. Live Blackbird access still requires partner credentials; see `docs/INTEGRATION.md`.
+
 An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse restaurants, map a meal, write reviews, rank your favorites, follow diners, and share public lists without a login wall.
 
 ## What works

@@ -15,7 +15,7 @@ An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse
 - Official `@flynetdev/core` discovery and member check-in adapters, encrypted provider tokens, PKCE/state/replay protections, private check-in imports and verified-review badges.
 
 ## Important status
-Production Discovery has been validated through the official SDK: 1,675 locations, including 808 matching the NYC filter. A shared D1 catalog snapshot populates automatically for guests and refreshes after six hours of age on the next visit. Warm requests use the database; a refresh failure retains the previous catalog. Explore shows the current Blackbird catalog; older sample lists and their venues remain labeled. Real Blackbird sign-in, canonical member profile creation, and automatic private check-in import are confirmed in production.
+Production Discovery has been validated through the official SDK: 1,675 locations, including 808 matching the NYC filter. A shared D1 catalog snapshot populates automatically for guests and refreshes after six hours of age on the next visit. Warm requests use the database; a refresh failure retains the previous catalog. Explore shows the current Blackbird catalog. Legacy sample users, lists, and venues are excluded from app responses and direct routes; page loads never seed fixtures. Real Blackbird sign-in, canonical member profile creation, and automatic private check-in import are confirmed in production.
 
 Only Blackbird-authenticated accounts can save places, curate lists, follow diners or publish reviews. A matching imported Blackbird check-in is required to post or edit; old unverified examples are excluded from public feeds and scores. Wallet balances are out of scope.
 

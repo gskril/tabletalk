@@ -707,3 +707,44 @@ test.after(() => {
   globalThis.fetch = realFetch;
   sql.close();
 });
+
+test("legacy fixtures are hidden while empty Blackbird accounts remain visible", async () => {
+  const oldKey = env.FLYNET_API_KEY;
+  const oldSession = cookieJar.get("tt_session");
+  env.FLYNET_API_KEY = "";
+  cookieJar.delete("tt_session");
+  sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#ed563d',0,?,?)")
+    .run("empty-real", "New member", "production:new-member", at);
+  sql.prepare("INSERT INTO venues SELECT 'legacy-place',name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'demo',updated_at FROM venues WHERE id=?").run(locationId);
+  for (const [list, owner] of [["legacy-list", "demo-member"], ["real-list", "empty-real"]]) {
+    sql.prepare("INSERT INTO lists(id,user_id,title,description,visibility,color,created_at) VALUES(?,?,'Test list','','public','#fff',?)").run(list, owner, at);
+    sql.prepare("INSERT INTO list_items VALUES(?,?,0)").run(list, locationId);
+  }
+  const count = sql.prepare("SELECT count(*) AS n FROM profiles").get().n;
+  try {
+    const data = await (await state()).json();
+    assert(data.people.some(p => p.id === "empty-real"));
+    assert(!data.people.some(p => p.demo || p.id === "platform-member"));
+    assert(data.lists.some(l => l.id === "real-list"));
+    assert(!data.lists.some(l => l.id === "legacy-list"));
+    assert(!data.items.some(i => i.list_id === "legacy-list"));
+    assert(!data.venues.some(v => v.source === "demo"));
+    assert.equal(sql.prepare("SELECT count(*) AS n FROM profiles").get().n, count);
+    const cookie = await makeSession("empty-real", new Request("https://tabletalk.test"));
+    cookieJar.set("tt_session", cookie.split(";")[0].split("=")[1]);
+    for (const payload of [
+      {action:"follow", targetId:"demo-member", active:true},
+      {action:"follow", targetId:"platform-member", active:true},
+      {action:"saveList", listId:"legacy-list", active:true},
+      {action:"bookmark", venueId:"legacy-place", active:true},
+    ]) {
+      const result = await action(new Request("https://tabletalk.test/api/action", {
+        method:"POST", headers:{Origin:"https://tabletalk.test","Content-Type":"application/json"}, body:JSON.stringify(payload),
+      }));
+      assert.equal(result.status, 404);
+    }
+  } finally {
+    env.FLYNET_API_KEY = oldKey;
+    if (oldSession) cookieJar.set("tt_session", oldSession); else cookieJar.delete("tt_session");
+  }
+});

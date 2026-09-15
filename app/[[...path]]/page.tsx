@@ -1,5 +1,5 @@
 import Tabletalk from "@/components/tabletalk";
-import { db, seed } from "@/lib/data";
+import { db, memberProfileIds, memberListIds } from "@/lib/data";
 import { currentUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props) {
       const u = await currentUser();
       const l = await db()
         .prepare(
-          "SELECT title,description FROM lists WHERE id=? AND (visibility='public' OR user_id=?)",
+          `SELECT title,description FROM lists WHERE id IN (${memberListIds}) AND id=? AND (visibility='public' OR user_id=?)`,
         )
         .bind(path[1], u?.id || "")
         .first<{ title: string; description: string }>();
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props) {
     }
     if (path[0] === "restaurants" && path[1]) {
       const v = await db()
-        .prepare("SELECT name,neighborhood FROM venues WHERE id=?")
+        .prepare("SELECT name,neighborhood FROM venues WHERE id=? AND source!='demo'")
         .bind(path[1])
         .first<{ name: string; neighborhood: string }>();
       if (v)
@@ -53,19 +53,20 @@ export default async function Page({ params }: Props) {
   if (path[1]) {
     let found = true;
     try {
-      await seed();
       const u = await currentUser();
       if (path[0] === "lists")
         found = !!(await db()
           .prepare(
-            "SELECT id FROM lists WHERE id=? AND (visibility='public' OR user_id=?)",
+            `SELECT id FROM lists WHERE id IN (${memberListIds}) AND id=? AND (visibility='public' OR user_id=?)`,
           )
           .bind(path[1], u?.id || "")
           .first());
       else if (path[0] === "restaurants" || path[0] === "profile")
         found = !!(await db()
           .prepare(
-            `SELECT id FROM ${path[0] === "restaurants" ? "venues" : "profiles"} WHERE id=?`,
+            path[0] === "restaurants"
+              ? "SELECT id FROM venues WHERE id=? AND source!='demo'"
+              : `SELECT id FROM profiles WHERE id=? AND id IN (${memberProfileIds})`,
           )
           .bind(path[1])
           .first());

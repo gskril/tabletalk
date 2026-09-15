@@ -66,3 +66,8 @@ The browser suite provisions synthetic Blackbird-like sessions directly in the l
 - Fourteen contract tests pass, including OAuth-to-automatic-sync, concurrent import deduplication, no repeated calls while fresh, guest privacy, retry and expired/revoked access.
 - Targeted browser checks for notebook behavior, Blackbird-only auth, and automatic passport/recovery states pass. The local Worker stopped during the first passport browser attempt; the isolated rerun passed after restart.
 - The first live automatic visit sync completed successfully; a real visit-backed review has not been published.
+
+## Placeholder retirement
+- Fifteen contract tests pass. Legacy demo/platform accounts, their lists/items, and demo venues are excluded from state. Real Blackbird members remain visible even with no posts or visits. Attempts to follow/save/bookmark retired fixtures return 404.
+- Direct profile/list/venue routes and metadata use the same visibility rules. Production page loads no longer create sample records.
+- Historical rows are retained in D1, hidden from the app; no real account or user-authored data is deleted. Browser tests provision their own synthetic catalog explicitly in the local database only.

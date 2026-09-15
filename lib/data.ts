@@ -1,52 +1,13 @@
 import { env } from "cloudflare:workers";
-import { sampleVenues, samplePeople, sampleLists } from "./sample-data";
 export function db() {
   if (!env.DB) throw new Error("Dining notebook is temporarily unavailable.");
   return env.DB;
 }
 export const now = () => new Date().toISOString();
-export async function seed() {
-  const d = db();
-  if (await d.prepare("SELECT id FROM profiles WHERE id='demo-maya'").first())
-    return;
-  const at = "2026-09-14T12:00:00.000Z";
-  const statements: D1PreparedStatement[] = [];
-  for (const [id, name, bio, color] of samplePeople)
-    statements.push(
-      d
-        .prepare(
-          "INSERT OR IGNORE INTO profiles(id,name,bio,color,demo,created_at) VALUES(?,?,?,?,1,?)",
-        )
-        .bind(id, name, bio, color, at),
-    );
-  for (const v of sampleVenues)
-    statements.push(
-      d
-        .prepare(
-          "INSERT OR IGNORE INTO venues(id,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        )
-        .bind(...v.slice(0, 11), JSON.stringify(v[11]), "demo", at),
-    );
-  for (const l of sampleLists) {
-    statements.push(
-      d
-        .prepare(
-          "INSERT OR IGNORE INTO lists(id,user_id,title,description,visibility,color,created_at) VALUES(?,?,?,?,?,?,?)",
-        )
-        .bind(...l.slice(0, 6), at),
-    );
-    l[6].forEach((id, i) =>
-      statements.push(
-        d
-          .prepare(
-            "INSERT OR IGNORE INTO list_items(list_id,venue_id,position) VALUES(?,?,?)",
-          )
-          .bind(l[0], id, i),
-      ),
-    );
-  }
-  await d.batch(statements);
-}
+// Public identities must have completed Blackbird sign-in. Legacy fixtures stay
+// stored for reference but are never returned or available for new interactions.
+export const memberProfileIds = "SELECT id FROM profiles WHERE demo=0 AND (external_id LIKE 'staging:_%' OR external_id LIKE 'production:_%')";
+export const memberListIds = `SELECT id FROM lists WHERE user_id IN (${memberProfileIds})`;
 export async function all<T = Record<string, unknown>>(
   sql: string,
   ...args: unknown[]

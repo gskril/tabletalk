@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { localSession } from "./local-session";
+import { localSession, localCatalog } from "./local-session";
 async function join(page: Page, name: string) {
   await localSession(page.context(), baseURL, name);
   await page.reload();
@@ -7,6 +7,7 @@ async function join(page: Page, name: string) {
 }
 const baseURL = process.env.TEST_BASE_URL || "http://localhost:5173";
 const headers = { Origin: baseURL };
+test.beforeAll(() => localCatalog(baseURL));
 test("anonymous exploration, filters, map, detail, and mobile layout", async ({
   page,
 }) => {

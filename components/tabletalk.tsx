@@ -1303,15 +1303,15 @@ export default function Tabletalk() {
           spots, write honest reviews, share a list without a login wall, and
           follow people whose taste you trust.
         </p>
-        <h2>What is real in this demo?</h2>
+        <h2>Your dining notebook.</h2>
         <p>
           Lists, reviews, follows and saved places are stored on our server and
           survive a page reload. Public lists can be opened by anyone with the
           link. The NYC restaurant catalog is saved from Blackbird and available
           to everyone without signing in. We check for updates every six hours
           when the site is visited and keep the last saved catalog if Blackbird
-          is unavailable. Any remaining sample lists and their restaurants are
-          labeled as sample content.
+          is unavailable. Diners and lists come from people who have signed in
+          with Blackbird.
         </p>
         <p>
           Sign in with Blackbird to save places, create lists and follow diners.

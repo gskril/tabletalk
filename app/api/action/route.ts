@@ -1,6 +1,6 @@
 import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
-import { db, now } from "@/lib/data";
+import { db, now, memberProfileIds, memberListIds } from "@/lib/data";
 import { currentUser, sameOrigin, failure, AppError } from "@/lib/auth";
 import { verifiedVisitFrom } from "@/lib/review-eligibility";
 const id = z.string().min(1).max(100);
@@ -49,9 +49,12 @@ export async function POST(req: Request) {
     const d = db();
     await rateLimit("write:" + u.id, 120, 60000);
     const exists = async (table: string, key: string, value: string) => {
+      const visible = table === "profiles" ? ` AND id IN (${memberProfileIds})`
+        : table === "venues" ? " AND source!='demo'"
+        : table === "reviews" ? ` AND EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=reviews.user_id AND v.venue_id=reviews.venue_id)` : "";
       if (
         !(await d
-          .prepare(`SELECT 1 FROM ${table} WHERE ${key}=?`)
+          .prepare(`SELECT 1 FROM ${table} WHERE ${key}=?${visible}`)
           .bind(value)
           .first())
       )
@@ -99,7 +102,7 @@ export async function POST(req: Request) {
         if (
           !(await d
             .prepare(
-              "SELECT 1 FROM lists WHERE id=? AND (visibility='public' OR user_id=?)",
+              `SELECT 1 FROM lists WHERE id IN (${memberListIds}) AND id=? AND (visibility='public' OR user_id=?)`,
             )
             .bind(b.listId, u.id)
             .first())
@@ -126,7 +129,7 @@ export async function POST(req: Request) {
           .first();
         if (!visit)
           throw new AppError(
-            "A Blackbird check-in at this location is required to post or edit a review. Connect Blackbird and import your visits from your passport.",
+            "A Blackbird check-in at this location is required to post or edit a review. Check your passport for visit sync status.",
             403,
           );
         await d

@@ -38,15 +38,16 @@ Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the 
 
 ## Published site smoke test
 - Current site: https://your-app.example.
-- Production Discovery: all 34 pages parsed through SDK 0.8.1; 1,675 locations, 782 matching NYC.
-- Live shared D1 cache: first import completed in approximately 16 seconds; repeat public state request returned in approximately one second with the same snapshot timestamp. Anonymous users see all 782 production locations; private visits are absent.
-- Live browser: 782-spot count, search, real restaurant detail, and 390px mobile overflow checks passed with no browser errors.
-- Shared-cache contract checks cover fresh requests making no API calls, concurrent requests sharing one refresh lease, and stale data surviving provider failure with retry backoff.
-- Sign-in reaches Blackbird Passport and returns an authorization code. The owner reported callback failure. Diagnostic reference 1c4afbe5 identified a token-endpoint 403. Controlled tests reproduced 403 with an empty User-Agent and a normal OAuth 400 invalid_grant with a Tabletalk identifier. Token exchange now supplies that documented header; full member sign-in and history still need a fresh real-account attempt. Diagnostics expose only allowlisted phase/status/reference metadata.
-- The local regression passed five suites; the Worker runtime stopped during the sixth. The interrupted WebMCP check passed after restart, alongside the callback rejection check. No application fix was required for that runtime failure.
+- Production Discovery: all 34 pages parsed through SDK 0.8.1; 1,675 locations, 808 matching NYC after including Queens postal city names. Westbury remains excluded.
+- Live shared D1 cache serves the complete catalog to guests. Anonymous state returns no current member, passport, or private visits.
+- Live browser search, real restaurant detail, and 390px mobile overflow checks passed with no browser errors on the preceding catalog release.
+- Real Blackbird sign-in and canonical profile creation are confirmed. The OAuth token exchange supplies the documented User-Agent and uses Workers-supported manual redirects.
+- Production passport sync is ready with complete history import and persisted private visits. No additional Connect or Import action is required.
+- Fourteen contract tests pass, including NYC postal coverage, SDK schemas, review authorization, shared catalog concurrency/failure, automatic passport concurrency/privacy/recovery, and OAuth handlers.
+- The production build and TypeScript checks pass. Browser coverage includes public exploration, lists, reviews, social actions, Blackbird-only auth, automatic passport states, and WebMCP. Interrupted local Worker scenarios passed after server restart.
 
 ## Explicitly not verified
-Successful live Blackbird token exchange, canonical member profile, real private check-in import, and a public review backed by that real import. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the remaining live smoke test.
+No real member review has been published in production. Existing sample reviews remain hidden; create/edit authorization is verified with controlled integration and browser tests. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the repeatable live smoke test.
 
 ## Reproduce
 Build, apply all four local migrations once, start the local Worker with an explicitly empty test environment file (do not use production credentials for the synthetic suite), then:
@@ -57,11 +58,11 @@ npm run test:contract
 npm run typecheck
 ```
 
-The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Live Blackbird sign-in is configured but its reported callback failure remains under investigation.
+The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Real Blackbird sign-in and automatic private history import are now confirmed.
 
 ## Automatic passport update
 - Successful real Blackbird sign-in is now confirmed by the owner and a persisted production profile.
 - Authenticated page loads start private visit sync automatically, including existing sessions; the browser polls only while syncing. Normal use has no Connect/Import controls. Retry appears after sync errors; Reconnect appears only when provider access is unavailable.
-- Thirteen contract tests pass, including OAuth-to-automatic-sync, concurrent import deduplication, no repeated calls while fresh, guest privacy, retry and expired/revoked access.
+- Fourteen contract tests pass, including OAuth-to-automatic-sync, concurrent import deduplication, no repeated calls while fresh, guest privacy, retry and expired/revoked access.
 - Targeted browser checks for notebook behavior, Blackbird-only auth, and automatic passport/recovery states pass. The local Worker stopped during the first passport browser attempt; the isolated rerun passed after restart.
-- The owner must reload the deployed app to trigger the first live automatic visit sync; a real visit-backed review remains to be verified.
+- The first live automatic visit sync completed successfully; a real visit-backed review has not been published.

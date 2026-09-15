@@ -3,7 +3,7 @@
 ## Scope and confidence
 Reviewed the installed official `@flynetdev/core` **0.8.1** implementation, generated inbound schemas, and current official member, location, authentication and pagination documentation. The lockfile fixes the tested dependency version. Fixtures exercise the real SDK parser and actual application handlers; only the upstream HTTP responses and local database adapter are controlled.
 
-Production Discovery is now verified with issued credentials: all 34 pages (1,675 locations, including 782 matching the app's NYC filter) parsed successfully through SDK 0.8.1. The same key was rejected by staging, confirming it must use production. The public database now populates automatically through the shared catalog cache. Member profile/check-in responses, token exchange and account-specific history remain unverified until the owner completes sign-in.
+Production Discovery is now verified with issued credentials: all 34 pages (1,675 locations, including 808 matching the app's NYC filter) parsed successfully through SDK 0.8.1. The same key was rejected by staging, confirming it must use production. The public database now populates automatically through the shared catalog cache. Real token exchange, canonical member profile creation, and a complete automatic private history import are confirmed in production. No real member review has been published; review authorization and create/edit behavior are covered by controlled integration and browser tests.
 
 The production OAuth gateway accepted a PKCE authorization request without `audience` and redirected to `passport.flynet.org`. The current official OAuth guide also omits audience. The app now treats it as optional and strips the SDK's empty parameter; an explicitly configured audience is still passed. Eight integration tests pass, including both configurations. This redirect alone does not establish successful consent or token exchange.
 
@@ -31,8 +31,8 @@ Verification proves attendance at the location according to the imported Blackbi
 - [Pagination/errors](https://docs.flynet.org/concepts/pagination-errors)
 - Installed source: `node_modules/@flynetdev/core/dist/client.js`, `dist/auth/flynet-oauth.js`, and `dist/generated/models/{user,check-in,location,restaurant,pagination}.js`.
 
-## When credentials arrive
-Follow `INTEGRATION.md`: exact callback and scopes, canonical profile, discovery, private import, successful review at an imported location, rejection elsewhere, and a second browser's public-data privacy check. Staging is visibly labeled; production access is separate.
+## Live verification
+`INTEGRATION.md` contains the repeatable smoke test. Discovery, sign-in, canonical profile, automatic private import, and guest privacy have been checked live; publishing a real member review remains optional manual validation. Staging is visibly labeled; production access is separate.
 
 ## NYC postal address coverage
 The city-name-only filter omitted 26 real Queens locations whose postal cities are Astoria, Long Island City, Forest Hills, Glendale or Ridgewood. Discovery and private visit sync now share a filter that also recognizes NYC ZIP ranges with a New York state check. Mixed Queens/Nassau ZIPs require an explicit borough city name; broad “New York, NY” region labels alone do not establish NYC location (Westbury is excluded). Coverage is based on the [NYC Department of Finance postal-range reference](https://home4.nyc.gov/assets/finance/downloads/pdf/25pdf/business_tax_forms/nyc-2-instr_2025.pdf). Catalog cache keys include the filter version so the deployment refreshes old snapshots.

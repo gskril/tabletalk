@@ -3,6 +3,7 @@ export type Person = {
   name: string;
   bio: string;
   color: string;
+  avatar?: string;
   demo: number;
   visited_count?: number;
 };
@@ -33,6 +34,7 @@ export type Review = {
   created_at: string;
   name: string;
   color: string;
+  avatar?: string;
   demo: number;
   verified: number;
   likes: number;

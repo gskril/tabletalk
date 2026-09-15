@@ -438,3 +438,27 @@ test("guest profiles show verified places and full reviews without private check
   await page.goto('/lists');
   await expect(page.getByText('Ranked by the creator’s distinct verified places visited.',{exact:true})).toBeVisible();
 });
+
+
+test("Blackbird avatar images render and fall back to initials on failure", async ({page}) => {
+  localPublicProfile(baseURL);
+  let photo = 'https://avatars.example.test/member.png';
+  await page.route('https://avatars.example.test/**', async route => {
+    if(route.request().url().endsWith('broken.png')) return route.abort();
+    await route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aK1cAAAAASUVORK5CYII=','base64')});
+  });
+  await page.route('**/api/state', async route => {
+    const response=await route.fetch();
+    const data=await response.json();
+    data.people.find((p:{id:string})=>p.id==='e2e-public-diner').avatar=photo;
+    await route.fulfill({response,json:data});
+  });
+  await page.goto('/profile/e2e-public-diner');
+  const avatar=page.locator('.profile-hero .avatar');
+  await expect(avatar.locator('img')).toHaveAttribute('src',photo);
+  await expect.poll(()=>avatar.locator('img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);
+  photo='https://avatars.example.test/broken.png';
+  await page.reload();
+  await expect(avatar).toHaveText('PE');
+  await expect(avatar.locator('img')).toHaveCount(0);
+});

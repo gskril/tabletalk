@@ -15,6 +15,7 @@ export const profiles = sqliteTable(
     bio: text("bio").notNull().default(""),
     color: text("color").notNull().default("#ed563d"),
     demo: integer("demo").notNull().default(0),
+    avatar: text("avatar").notNull().default(""),
     externalId: text("external_id"),
     createdAt: text("created_at").notNull(),
   },

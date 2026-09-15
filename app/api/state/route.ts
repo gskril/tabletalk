@@ -26,9 +26,9 @@ export async function GET() {
       publicVisits,
     ] = await Promise.all([
       all("SELECT * FROM venues WHERE source!='demo' ORDER BY source DESC,name"),
-      all<Person>(`SELECT id,name,bio,color,demo FROM profiles WHERE id IN (${memberProfileIds})`),
+      all<Person>(`SELECT id,name,bio,color,avatar,demo FROM profiles WHERE id IN (${memberProfileIds})`),
       all(
-        `SELECT r.*,p.name,p.color,p.demo,1 AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id AND l.user_id IN (${memberProfileIds})) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id WHERE EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=r.user_id AND v.venue_id=r.venue_id) ORDER BY r.created_at DESC`,
+        `SELECT r.*,p.name,p.color,p.avatar,p.demo,1 AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id AND l.user_id IN (${memberProfileIds})) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id WHERE EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=r.user_id AND v.venue_id=r.venue_id) ORDER BY r.created_at DESC`,
       ),
       all(
         `SELECT l.*,(SELECT count(*) FROM saved_lists s WHERE s.list_id=l.id AND s.user_id IN (${memberProfileIds})) AS saves FROM lists l WHERE l.id IN (${memberListIds}) AND (l.visibility='public' OR l.user_id=?) ORDER BY l.created_at DESC`,

@@ -79,3 +79,6 @@ The browser suite provisions synthetic Blackbird-like sessions directly in the l
 
 ## Public visited places and community ordering
 The current product policy makes verified visited locations public on every Blackbird profile. `/api/state.publicVisits` contains only app profile and venue IDs; check-in timestamps remain in the authenticated owner's `visits` array. Profiles show full reviews and visited restaurant names. Diners and public lists rank by the number of distinct verified locations visited by the diner/creator, descending, with deterministic ties. Repeat visits to one location do not increase this measure. Seventeen contract tests pass, including guest access, ranking, absence of raw dates, and rejection of demo/cross-environment proofs. This supersedes earlier notes that described all visited locations as private.
+
+## Profile photos
+Eighteen contract tests pass, including sign-in avatar persistence, canonical member matching, missing photos, and invalid URL rejection. Browser coverage checks successful image loading and initials after image failure. The additive avatar column defaults to empty for existing profiles; photos populate on their next authenticated sync or sign-in.

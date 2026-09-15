@@ -2,7 +2,7 @@ import { waitUntil } from "cloudflare:workers";
 import { cookies } from "next/headers";
 import { db } from "./data";
 import { hash } from "./auth";
-import { decryptToken, syncVisits } from "./flynet";
+import { decryptToken, syncVisits, syncMemberAvatar } from "./flynet";
 import { authDiagnostic } from "./auth-diagnostics";
 import type { Passport } from "./types";
 
@@ -34,7 +34,12 @@ export async function memberPassport(userId: string, retry = false): Promise<Pas
     const encrypted = session.token;
     waitUntil((async () => {
       try {
-        const result = await syncVisits(userId, await decryptToken(encrypted));
+        const accessToken = await decryptToken(encrypted);
+        const [result] = await Promise.all([
+          syncVisits(userId, accessToken),
+          // A photo outage must not prevent importing verified visits.
+          syncMemberAvatar(userId, accessToken).catch(() => undefined),
+        ]);
         const finished = Date.now();
         await db().prepare(
           "UPDATE passport_syncs SET status='ready',synced_at=?,next_attempt_at=?,lease_token='',complete=? WHERE user_id=? AND lease_token=?",

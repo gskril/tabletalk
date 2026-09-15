@@ -1,3 +1,4 @@
+import { avatarUrl } from "./avatar";
 import { env } from "cloudflare:workers";
 import {
   FlynetDiscoveryClient,
@@ -240,4 +241,13 @@ export async function syncVisits(userId: string, accessToken: string) {
     page = next;
   }
   return { count: seen.size, complete: false };
+}
+
+
+/** Refresh only the authenticated member's photo; preserve locally edited names. */
+export async function syncMemberAvatar(userId: string, accessToken: string) {
+  const c = settings();
+  const member = await new FlynetMemberClient({accessToken, environment:c.environment, timeoutMs:15000}).getProfile();
+  await db().prepare("UPDATE profiles SET avatar=? WHERE id=? AND external_id=?")
+    .bind(avatarUrl(member.avatar),userId,c.environment+":"+member.id).run();
 }

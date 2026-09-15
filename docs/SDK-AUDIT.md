@@ -36,3 +36,6 @@ Verification proves attendance at the location according to the imported Blackbi
 
 ## NYC postal address coverage
 The city-name-only filter omitted 26 real Queens locations whose postal cities are Astoria, Long Island City, Forest Hills, Glendale or Ridgewood. Discovery and private visit sync now share a filter that also recognizes NYC ZIP ranges with a New York state check. Mixed Queens/Nassau ZIPs require an explicit borough city name; broad “New York, NY” region labels alone do not establish NYC location (Westbury is excluded). Coverage is based on the [NYC Department of Finance postal-range reference](https://home4.nyc.gov/assets/finance/downloads/pdf/25pdf/business_tax_forms/nyc-2-instr_2025.pdf). Catalog cache keys include the filter version so the deployment refreshes old snapshots.
+
+## Member avatars
+SDK 0.8.1 `User.avatar` is an optional nullable profile-image URL. The app persists safe HTTPS URLs at sign-in and refreshes them during authenticated visit sync. Existing app names are retained. An external-ID match prevents another member's response from updating the account. Missing, malformed, or failed images show initials. A profile-photo lookup failure does not block visit imports.

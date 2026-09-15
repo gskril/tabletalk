@@ -20,6 +20,7 @@ import { FlynetMemberClient } from "@flynetdev/core";
 import {
   syncVisits,
   syncDiscovery,
+  syncMemberAvatar,
   upsertVenue,
   isNYC,
   encryptToken,
@@ -147,6 +148,7 @@ globalThis.fetch = async (input, init) => {
     return Response.json({
       id,
       object: "user",
+      avatar: "https://images.example.test/member.png",
       first_name: "Real",
       last_name: "Member",
       email: "private@example.com",
@@ -218,6 +220,7 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
     .split("=")[1];
   cookieJar.set("tt_session", session);
   const stored = sql.prepare("SELECT * FROM sessions").get();
+  assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(stored.user_id).avatar, "https://images.example.test/member.png");
   assert.notEqual(stored.token, "valid-provider-token");
   assert.equal(await decryptToken(stored.token), "valid-provider-token");
   assert.ok(!JSON.stringify(stored).includes("not-retained"));
@@ -801,4 +804,28 @@ test("public places and community ranking use only verified distinct locations",
     env.FLYNET_API_KEY=oldKey;
     if(oldSession) cookieJar.set('tt_session',oldSession);
   }
+});
+
+
+test("avatar refresh matches the canonical member and rejects unsafe URLs", async () => {
+  const user = sql.prepare("SELECT id FROM profiles WHERE external_id=?").get("staging:"+id);
+  const original = globalThis.fetch;
+  let photo = "https://images.example.test/new.png";
+  let memberId = id;
+  globalThis.fetch = async () => Response.json({id:memberId,object:"user",first_name:"Real",last_name:"Member",email:"private@example.com",avatar:photo,account_status:"ok",created_at:at,updated_at:at});
+  try {
+    await syncMemberAvatar(user.id,"valid-provider-token");
+    assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(user.id).avatar,photo);
+    memberId="99999999-9999-4999-8999-999999999999";
+    photo="https://images.example.test/wrong-account.png";
+    await syncMemberAvatar(user.id,"valid-provider-token");
+    assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(user.id).avatar,"https://images.example.test/new.png");
+    memberId=id;
+    photo="javascript:alert(1)";
+    await syncMemberAvatar(user.id,"valid-provider-token");
+    assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(user.id).avatar,"");
+    photo=null;
+    await syncMemberAvatar(user.id,"valid-provider-token");
+    assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(user.id).avatar,"");
+  } finally {globalThis.fetch=original;}
 });

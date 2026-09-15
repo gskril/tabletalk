@@ -1,3 +1,4 @@
+import { avatarUrl } from "@/lib/avatar";
 import { cookies } from "next/headers";
 import { FlynetMemberClient } from "@flynetdev/core";
 import { exchangeAuthorizationCode, settings, encryptToken } from "@/lib/flynet";
@@ -59,6 +60,8 @@ export async function GET(req: Request) {
       .bind(externalId)
       .first<{ id: string }>();
     if (!account) throw new Error("Missing account");
+    await db().prepare("UPDATE profiles SET avatar=? WHERE id=?")
+      .bind(avatarUrl(profile.avatar), account.id).run();
     // A fresh connection restores access; the first authenticated page load
     // automatically synchronizes visits using the new session's token.
     await db().prepare("DELETE FROM passport_syncs WHERE user_id=?").bind(account.id).run();

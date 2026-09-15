@@ -5,6 +5,7 @@ export type User = {
   name: string;
   bio: string;
   color: string;
+  avatar: string;
   demo: number;
 };
 export const hash = async (s: string) =>
@@ -19,7 +20,7 @@ export async function currentUser(): Promise<User | null> {
   if (token) {
     const u = await db()
       .prepare(
-        "SELECT p.id,p.name,p.bio,p.color,p.demo FROM sessions s JOIN profiles p ON p.id=s.user_id WHERE s.hash=? AND s.expires_at>? AND p.demo=0 AND (p.external_id LIKE 'staging:_%' OR p.external_id LIKE 'production:_%')",
+        "SELECT p.id,p.name,p.bio,p.color,p.avatar,p.demo FROM sessions s JOIN profiles p ON p.id=s.user_id WHERE s.hash=? AND s.expires_at>? AND p.demo=0 AND (p.external_id LIKE 'staging:_%' OR p.external_id LIKE 'production:_%')",
       )
       .bind(await hash(token), Date.now())
       .first<User>();

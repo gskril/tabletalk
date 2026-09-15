@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast, Toaster } from "sonner";
+import { avatarUrl } from "@/lib/avatar";
 import type { State, Venue, Person, Review, DiningList } from "@/lib/types";
 import DiningMap from "@/components/dining-map";
 import ConfirmDialog from "@/components/confirm-dialog";
@@ -72,16 +73,21 @@ function Avatar({
   person,
   large = false,
 }: {
-  person: Pick<Person, "name" | "color">;
+  person: Pick<Person, "name" | "color" | "avatar">;
   large?: boolean;
 }) {
+  const [failedUrl, setFailedUrl] = useState("");
+  const photo = avatarUrl(person.avatar);
   return (
     <span
       className={`avatar ${large ? "large" : ""}`}
       style={{ background: person.color }}
       aria-hidden="true"
     >
-      {initials(person.name)}
+      {photo && failedUrl !== photo ? <img
+        src={photo} alt="" loading="lazy" referrerPolicy="no-referrer"
+        onError={() => setFailedUrl(photo)}
+      /> : initials(person.name)}
     </span>
   );
 }

@@ -22,7 +22,7 @@ The production OAuth gateway accepted a PKCE authorization request without `audi
 ## Review authorization
 A matching imported visit must belong to the current Blackbird member and exact location, in the same staging/production environment. This is checked for both insert and edit. Fake client `verified`/`userId` fields grant nothing. Demo/platform identities are rejected even if an erroneous visit row exists. Public reviews and score calculations exclude legacy unverified rows. Imported visit history remains private.
 
-Verification proves attendance at the location according to the imported Blackbird record, not the accuracy of a review's text or manually selected meal date. Existing imported proof remains usable after OAuth access expires; reconnect is needed to import newer history.
+Verification proves attendance at the location according to the imported Blackbird record, not the accuracy of a review's text or manually selected meal date. Existing imported proof remains usable after OAuth access expires; access is renewed automatically to import newer history when a refresh token is available.
 
 ## Source references
 - [Member check-ins](https://docs.flynet.org/api-reference/users/list-check-ins)
@@ -45,3 +45,6 @@ The current docs index, published OpenAPI at https://flynet-dev-portal.mintlify.
 
 ## Restaurant media
 Store the SDK's actual `asset.preview1x` URL separately from `asset.web2x`; never infer URLs or use full3x. Compact visit/list/picker images load the preview; larger cards use web2x with a mobile preview source. Lazy loading, asynchronous decoding and fixed-size slots limit transfers and layout shifts. Missing/broken assets retain an explicit fallback.
+
+## Automatic token renewal
+The official OAuth guide and SDK document single-use rotating refresh tokens, valid up to 30 days. Both credentials are encrypted in D1; renewal uses the same User-Agent and manual-redirect handling as code exchange. A per-session lease serializes refreshes, and an atomic update replaces access/refresh tokens together. Invalid grants require reconnect; transient failures back off. Logout prevents a pending refresh from recreating the session. Legacy sessions have no saved refresh token and require one new sign-in. This supersedes the earlier MVP decision not to retain refresh tokens.

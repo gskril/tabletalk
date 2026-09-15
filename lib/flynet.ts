@@ -71,6 +71,17 @@ export async function exchangeAuthorizationCode(code: string, codeVerifier: stri
     code,
     code_verifier: codeVerifier,
   });
+  return postOAuthToken(form);
+}
+export async function exchangeRefreshToken(refreshToken: string) {
+  const c = settings();
+  return postOAuthToken(new URLSearchParams({
+    grant_type: "refresh_token", refresh_token: refreshToken,
+    client_id: c.clientId, client_secret: c.clientSecret,
+  }));
+}
+async function postOAuthToken(form: URLSearchParams) {
+  const c = settings();
   let response: Response;
   try {
     // SDK 0.8.1's OAuth helper omits User-Agent. Workers do not supply a default;

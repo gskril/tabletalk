@@ -30,7 +30,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 6. Attempt a review without a verified visit: expect 403. Once automatic syncing finishes, write/edit a public review for a verified venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm raw check-in timestamps, private lists and bookmarks remain absent.
 8. Exercise logout and reconnect; repeat sign-in should recover the same Blackbird account.
-9. After provider token expiry, importing requests reconnect. Existing app reviews/lists remain usable. Refresh tokens are deliberately discarded in this MVP to avoid storing an additional credential or racing single-use rotation.
+9. Provider access renews automatically using an encrypted rotating refresh token. Per-session leases prevent simultaneous refreshes; both replacement credentials are saved atomically. Legacy sessions created before refresh-token support need one reconnect. Expired/revoked refresh grants also require reconnect.
 
 ## Operational notes
 - Public restaurant data is mirrored in D1. The first uncached request waits for import; later requests serve the saved snapshot. After six hours the next visitor triggers a background refresh. A database lease prevents simultaneous refreshes across Workers; failed imports preserve the last complete snapshot and wait five minutes before retrying. A stopped Worker's lease expires after two minutes. No scheduled refresh occurs while the site is idle.
@@ -40,7 +40,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 - Staging records are visibly distinguished from live production participation.
 - Member history sync is automatic after sign-in. Verified location attendance is public; raw timestamps remain private. Authenticated page loads check every 15 minutes while provider access is valid; failures preserve saved visits and retry after five minutes. A per-member lease prevents overlapping syncs. No raw user history is inferred from the anonymized venue check-in feed.
 - Blackbird is the only accepted identity. Legacy demo/platform sessions are rejected; their records are not merged into Blackbird accounts.
-- Sessions last 30 days. Provider access is usable only until its issued expiry. Deleting a local session on logout removes its encrypted provider token.
+- Sessions last 30 days. Access tokens renew near expiry when member data is needed. The browser checks on focus and every 15 minutes while visible; there is no cron while the app is closed. Deleting a session on logout removes both encrypted provider tokens.
 - No FLY transfer, reward issuance or onchain signature is performed by the app.
 
 ## Review policy and balances

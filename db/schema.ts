@@ -29,6 +29,9 @@ export const sessions = sqliteTable("sessions", {
   expiresAt: integer("expires_at").notNull(),
   token: text("token"),
   tokenExpiresAt: integer("token_expires_at"),
+  refreshToken: text("refresh_token"),
+  refreshLease: text("refresh_lease").notNull().default(""),
+  refreshLeaseUntil: integer("refresh_lease_until").notNull().default(0),
 });
 export const oauthStates = sqliteTable("oauth_states", {
   hash: text("hash").primaryKey(),

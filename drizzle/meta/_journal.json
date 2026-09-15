@@ -43,6 +43,13 @@
       "when": 1789508922299,
       "tag": "0005_silent_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1789511274884,
+      "tag": "0006_colossal_star_brand",
+      "breakpoints": true
     }
   ]
 }

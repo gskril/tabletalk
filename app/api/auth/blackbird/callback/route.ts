@@ -66,7 +66,7 @@ export async function GET(req: Request) {
     // automatically synchronizes visits using the new session's token.
     await db().prepare("DELETE FROM passport_syncs WHERE user_id=?").bind(account.id).run();
     phase = "session";
-    // Deliberately do not retain the refresh token: reconnect after access expiry, avoiding rotating-token races.
+    // Both provider credentials remain encrypted on the server.
     const headers = new Headers({
       Location: new URL("/me?connected=1", req.url).toString(),
       "Cache-Control": "no-store",
@@ -79,6 +79,7 @@ export async function GET(req: Request) {
         req,
         await encryptToken(tokens.access_token),
         Date.now() + tokens.expires_in * 1000,
+        typeof tokens.refresh_token === "string" && tokens.refresh_token ? await encryptToken(tokens.refresh_token) : null,
       ),
     );
     return new Response(null, { status: 302, headers });

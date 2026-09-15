@@ -18,7 +18,7 @@
 - OAuth authorize URL uses exact scopes and S256 PKCE; audience is optional and included only when configured.
 - Cookie-bound state, invalid-state rejection, expiry and atomic one-use callback consumption.
 - Token exchange uses client secret and verifier; canonical member profile determines identity.
-- AES-GCM ciphertext storage and tamper rejection; provider refresh token is not retained.
+- AES-GCM ciphertext storage and tamper rejection for provider access and refresh tokens.
 - No provider email or raw token is exposed as profile data.
 - Member-scoped import writes private visit records and no public review; repeated imports deduplicate.
 - Expired provider access requires reconnect.
@@ -85,3 +85,8 @@ Eighteen contract tests pass, including sign-in avatar persistence, canonical me
 
 ## Restaurant media and want-to-go API review
 The build and 18 contract tests pass with image preview persistence. Four browser scenarios pass: exploration/map/mobile, notebook/list interactions, public profiles/reviews, and thumbnail versus mobile picture-source selection. Restaurant photos now appear in visit rows, review cards, list covers/rows and pickers; images load lazily except the detail hero and retain fixed slots. The Blackbird want-to-go import is not implemented because the current official docs, OpenAPI and latest SDK expose no read endpoint. See SDK-AUDIT.md for the required provider clarification.
+
+## Existing-account avatar diagnosis
+
+## Token-renewal verification
+Twenty-one contract tests pass. New cases cover encrypted refresh-token retention at callback, consecutive rotations with new visit/photo imports, per-session concurrency, revoked grants, transient upstream failure, malformed refresh responses, and logout while refresh is in progress. Real rotation requires one new provider sign-in because previously issued refresh tokens were discarded. The profile exposes reconnect recovery directly.

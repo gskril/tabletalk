@@ -372,6 +372,9 @@ test("passport updates automatically and only offers recovery actions when neede
   await page.reload();
   await expect(page.getByRole("link", { name: "Reconnect Blackbird", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Retry sync", exact: true })).toHaveCount(0);
+  await page.goto("/me");
+  await expect(page.getByRole("link", {name:"Reconnect Blackbird",exact:true})).toBeVisible();
+  await expect(page.getByText("Reconnect to update your profile photo and latest visits. Your saved data is still here.")).toBeVisible();
 });
 test("WebMCP tool contract validates input and reads the same restaurant state", async ({
   page,

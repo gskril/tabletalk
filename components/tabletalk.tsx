@@ -175,6 +175,13 @@ export default function Tabletalk() {
     load();
   }, [load]);
   useEffect(() => {
+    if (!data?.me?.id) return;
+    const refresh = () => { if (document.visibilityState === "visible") void load(); };
+    const timer = window.setInterval(refresh, 15 * 60 * 1000);
+    window.addEventListener("focus", refresh);
+    return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); };
+  }, [data?.me?.id, load]);
+  useEffect(() => {
     if (data?.passport?.status !== "syncing") return;
     const timer = window.setTimeout(load, 1500);
     return () => window.clearTimeout(timer);
@@ -496,7 +503,7 @@ export default function Tabletalk() {
                   : d.passport?.status === "error"
                     ? "We couldn’t update your visits. Your saved visits are still here."
                     : d.passport?.status === "reconnect"
-                      ? "Reconnect to keep your visits up to date. Your saved visits are still here."
+                      ? "Reconnect to update your profile photo and latest visits. Your saved data is still here."
                       : d.passport?.complete === false
                         ? "Your visited places synced. Some older visits may still be missing."
                         : "Visited places appear on your public profile. Visit dates are only visible to you."}
@@ -1187,6 +1194,7 @@ export default function Tabletalk() {
             </div>
           </div>
         </div>
+        {own && (d.passport?.status === "reconnect" || d.passport?.status === "error") && passportBanner()}
         {own && <Link className="btn" style={{marginBottom:24}} href="/saved?tab=visits">View my visit details in My notebook</Link>}
         <Tabs value={profileTab} onValueChange={setProfileTab}>
           <TabsList variant="line" className="tabs-list">

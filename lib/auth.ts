@@ -33,11 +33,12 @@ export async function makeSession(
   request: Request,
   token: string | null = null,
   tokenExpiresAt: number | null = null,
+  refreshToken: string | null = null,
 ) {
   const secret = crypto.randomUUID() + crypto.randomUUID();
   await db()
     .prepare(
-      "INSERT INTO sessions(hash,user_id,expires_at,token,token_expires_at) VALUES(?,?,?,?,?)",
+      "INSERT INTO sessions(hash,user_id,expires_at,token,token_expires_at,refresh_token) VALUES(?,?,?,?,?,?)",
     )
     .bind(
       await hash(secret),
@@ -45,6 +46,7 @@ export async function makeSession(
       Date.now() + 30 * 86400000,
       token,
       tokenExpiresAt,
+      refreshToken,
     )
     .run();
   return `tt_session=${secret}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000${new URL(request.url).protocol === "https:" ? "; Secure" : ""}`;

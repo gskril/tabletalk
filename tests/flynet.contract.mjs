@@ -1,3 +1,4 @@
+import { sessionAccess, RefreshPending, ReconnectRequired } from "../lib/session-access.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
@@ -13,7 +14,7 @@ import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
 import { POST as sync } from "../app/api/flynet/sync/route.ts";
 import { POST as action } from "../app/api/action/route.ts";
 import { GET as state } from "../app/api/state/route.ts";
-import { makeSession, currentUser } from "../lib/auth.ts";
+import { makeSession, currentUser, hash } from "../lib/auth.ts";
 import { POST as demoSignup } from "../app/api/auth/demo/route.ts";
 import { requestHeaders } from "./headers-mock.mjs";
 import { FlynetMemberClient } from "@flynetdev/core";
@@ -136,7 +137,7 @@ globalThis.fetch = async (input, init) => {
       access_token: "valid-provider-token",
       token_type: "Bearer",
       expires_in: 3600,
-      refresh_token: "not-retained",
+      refresh_token: "initial-refresh-token",
     });
   }
   assert.equal(
@@ -223,7 +224,8 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
   assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(stored.user_id).avatar, "https://images.example.test/member.png");
   assert.notEqual(stored.token, "valid-provider-token");
   assert.equal(await decryptToken(stored.token), "valid-provider-token");
-  assert.ok(!JSON.stringify(stored).includes("not-retained"));
+  assert.ok(!JSON.stringify(stored).includes("initial-refresh-token"));
+  assert.equal(await decryptToken(stored.refresh_token), "initial-refresh-token");
   assert.ok(
     !JSON.stringify(sql.prepare("SELECT * FROM profiles").get()).includes(
       "private@example.com",
@@ -259,7 +261,7 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
   );
   assert.equal(again.status, 200);
   assert.equal(sql.prepare("SELECT count(*) AS n FROM visits").get().n, 1);
-  sql.prepare("UPDATE sessions SET token_expires_at=0").run();
+  sql.prepare("UPDATE sessions SET token_expires_at=0,refresh_token=NULL").run();
   assert.equal(
     (
       await sync(
@@ -829,5 +831,100 @@ test("avatar refresh matches the canonical member and rejects unsafe URLs", asyn
     photo=null;
     await syncMemberAvatar(user.id,"valid-provider-token");
     assert.equal(sql.prepare("SELECT avatar FROM profiles WHERE id=?").get(user.id).avatar,"");
+  } finally {globalThis.fetch=original;}
+});
+
+
+test("expired member access renews automatically and persists rotated credentials", async () => {
+  const oldCookie=cookieJar.get('tt_session'), original=globalThis.fetch;
+  const user='renew-member', memberId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,'Renew','','#fff',0,?,?)").run(user,'staging:'+memberId,at);
+  const cookie=await makeSession(user,new Request('https://tabletalk.test'),await encryptToken('old-access'),0,await encryptToken('refresh-0'));
+  const secret=cookie.split(';')[0].split('=')[1], key=await hash(secret);
+  cookieJar.set('tt_session',secret);
+  let count=0, revoke=false;
+  globalThis.fetch=async(input,init)=>{
+    const request=new Request(input,init), path=new URL(request.url).pathname;
+    if(path.endsWith('/oauth/token')) {
+      const form=await request.formData();
+      assert.equal(form.get('grant_type'),'refresh_token');
+      assert.equal(form.get('client_secret'),'test-secret');
+      assert.equal(form.get('refresh_token'),'refresh-'+count);
+      assert.equal(request.redirect,'manual');
+      assert.match(request.headers.get('User-Agent'),/^Tabletalk/);
+      if(revoke) return Response.json({error:'invalid_grant'},{status:400});
+      count++;
+      return Response.json({access_token:'access-'+count,refresh_token:'refresh-'+count,expires_in:3600});
+    }
+    assert.equal(request.headers.get('Authorization'),'Bearer access-'+count);
+    if(path.endsWith('/users/me')) return Response.json({id:memberId,object:'user',first_name:'Renew',last_name:'',email:'private@example.com',avatar:'https://example.com/photo.png',account_status:'ok',created_at:at,updated_at:at});
+    return Response.json({check_ins:[{id:'renew-check',object:'check_in',location,blackbird_pay_enabled:false,created_at:at}],pagination});
+  };
+  try {
+    for(let cycle=1;cycle<=2;cycle++) {
+      sql.prepare('UPDATE sessions SET token_expires_at=0 WHERE hash=?').run(key);
+      const statuses=await Promise.all([memberPassport(user),memberPassport(user)]);
+      assert(statuses.every(s=>s.status==='syncing'));
+      await Promise.all(backgroundTasks.splice(0));
+      assert.equal(count,cycle);
+      const stored=sql.prepare('SELECT * FROM sessions WHERE hash=?').get(key);
+      assert.equal(await decryptToken(stored.token),'access-'+cycle);
+      assert.equal(await decryptToken(stored.refresh_token),'refresh-'+cycle);
+      assert.equal(stored.refresh_lease,'');
+      assert(stored.token_expires_at>Date.now());
+      assert.equal((await memberPassport(user)).status,'ready');
+    }
+    assert.equal(sql.prepare('SELECT avatar FROM profiles WHERE id=?').get(user).avatar,'https://example.com/photo.png');
+    const dto=await(await state()).json();
+    assert.equal(dto.visits.length,1);
+    assert(!JSON.stringify(dto).includes('refresh-2'));
+    assert(!JSON.stringify(dto).includes('access-2'));
+    revoke=true;
+    sql.prepare('UPDATE sessions SET token_expires_at=0 WHERE hash=?').run(key);
+    await memberPassport(user);
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal((await memberPassport(user)).status,'reconnect');
+    assert.equal(sql.prepare('SELECT refresh_token FROM sessions WHERE hash=?').get(key).refresh_token,null);
+  } finally {
+    globalThis.fetch=original;
+    if(oldCookie) cookieJar.set('tt_session',oldCookie);else cookieJar.delete('tt_session');
+  }
+});
+
+test("refresh leases prevent token reuse and cannot resurrect a logged-out session", async () => {
+  const original=globalThis.fetch, user='renew-member';
+  const cookie=await makeSession(user,new Request('https://tabletalk.test'),await encryptToken('old-access'),0,await encryptToken('leased-refresh'));
+  const key=await hash(cookie.split(';')[0].split('=')[1]);
+  let release, entered;
+  const gate=new Promise(resolve=>{release=resolve}), started=new Promise(resolve=>{entered=resolve});
+  let calls=0;
+  globalThis.fetch=async()=>{calls++;entered();await gate;return Response.json({access_token:'new-access',refresh_token:'new-refresh',expires_in:3600});};
+  try {
+    const first=sessionAccess(key,user);
+    await started;
+    await assert.rejects(sessionAccess(key,user),RefreshPending);
+    sql.prepare('DELETE FROM sessions WHERE hash=?').run(key);
+    release();
+    await assert.rejects(first,ReconnectRequired);
+    assert.equal(calls,1);
+    assert.equal(sql.prepare('SELECT hash FROM sessions WHERE hash=?').get(key),undefined);
+  } finally {release();globalThis.fetch=original;}
+});
+
+test("refresh failure preserves usable credentials and malformed rotation fails closed", async () => {
+  const original=globalThis.fetch, user='renew-member';
+  const cookie=await makeSession(user,new Request('https://tabletalk.test'),await encryptToken('old-access'),0,await encryptToken('retry-refresh'));
+  const key=await hash(cookie.split(';')[0].split('=')[1]);
+  try {
+    globalThis.fetch=async()=>new Response(null,{status:503});
+    await assert.rejects(sessionAccess(key,user));
+    let stored=sql.prepare('SELECT * FROM sessions WHERE hash=?').get(key);
+    assert.equal(await decryptToken(stored.refresh_token),'retry-refresh');
+    assert.equal(stored.refresh_lease,'');
+    globalThis.fetch=async()=>Response.json({access_token:'partial',expires_in:3600});
+    await assert.rejects(sessionAccess(key,user),ReconnectRequired);
+    stored=sql.prepare('SELECT * FROM sessions WHERE hash=?').get(key);
+    assert.equal(stored.refresh_token,null);
+    assert.equal(stored.token_expires_at,0);
   } finally {globalThis.fetch=original;}
 });

@@ -2,6 +2,7 @@ import { extraPhotos } from "@/lib/sample-data";
 import { all, seed } from "@/lib/data";
 import { currentUser, failure } from "@/lib/auth";
 import { integrationStatus } from "@/lib/flynet";
+import { verifiedVisitFrom } from "@/lib/review-eligibility";
 export const dynamic = "force-dynamic";
 export async function GET() {
   try {
@@ -23,7 +24,7 @@ export async function GET() {
       all("SELECT * FROM venues ORDER BY source DESC,name"),
       all("SELECT id,name,bio,color,demo FROM profiles"),
       all(
-        `SELECT r.*,p.name,p.color,p.demo,EXISTS(SELECT 1 FROM visits v WHERE v.user_id=r.user_id AND v.venue_id=r.venue_id) AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id ORDER BY r.created_at DESC`,
+        `SELECT r.*,p.name,p.color,p.demo,1 AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id WHERE EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=r.user_id AND v.venue_id=r.venue_id) ORDER BY r.created_at DESC`,
       ),
       all(
         "SELECT l.*,(SELECT count(*) FROM saved_lists s WHERE s.list_id=l.id) AS saves FROM lists l WHERE l.visibility='public' OR l.user_id=? ORDER BY l.created_at DESC",
@@ -41,7 +42,10 @@ export async function GET() {
       all("SELECT venue_id FROM bookmarks WHERE user_id=?", uid),
       all("SELECT target_id FROM follows WHERE user_id=?", uid),
       all("SELECT review_id FROM likes WHERE user_id=?", uid),
-      all("SELECT venue_id,visited_at FROM visits WHERE user_id=?", uid),
+      all(
+        `SELECT v.venue_id,v.visited_at ${verifiedVisitFrom} AND v.user_id=?`,
+        uid,
+      ),
     ]);
     return Response.json(
       {

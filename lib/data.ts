@@ -45,64 +45,6 @@ export async function seed() {
       ),
     );
   }
-  const samples = [
-    [
-      "demo-r1",
-      "demo-maya",
-      "rubirosa",
-      9.2,
-      "The kind of dinner where everyone reaches for the last slice. Come with friends and order a salad too.",
-      "Tie-dye pizza",
-    ],
-    [
-      "demo-r2",
-      "demo-sam",
-      "thai-diner",
-      9.0,
-      "A very happy lunch. Big flavors, a lively room, and plenty to come back for.",
-      "Pad Thai",
-    ],
-    [
-      "demo-r3",
-      "demo-jules",
-      "binx",
-      8.8,
-      "One round turned into dinner. Sharing plates is definitely the move.",
-      "Pasta",
-    ],
-    [
-      "demo-r4",
-      "demo-jules",
-      "lilia",
-      9.4,
-      "A pasta-centered night is always a good idea. This one made the personal shortlist.",
-      "Mafaldini",
-    ],
-    [
-      "demo-r5",
-      "demo-maya",
-      "via-carota",
-      9.1,
-      "For a slow catch-up and an extra plate for the table.",
-      "Seasonal vegetables",
-    ],
-    [
-      "demo-r6",
-      "demo-sam",
-      "golden-diner",
-      8.7,
-      "My kind of weekend pit stop. Already planning the next visit.",
-      "Pancakes",
-    ],
-  ];
-  for (const r of samples)
-    statements.push(
-      d
-        .prepare(
-          "INSERT OR IGNORE INTO reviews(id,user_id,venue_id,rating,body,dish,visited_at,created_at) VALUES(?,?,?,?,?,?,?,?)",
-        )
-        .bind(...r, "2026-09-12", at),
-    );
   await d.batch(statements);
 }
 export async function all<T = Record<string, unknown>>(

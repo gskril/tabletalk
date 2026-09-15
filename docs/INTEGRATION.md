@@ -27,7 +27,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 3. Confirm the profile uses the authenticated member and no token appears in HTML, browser storage, network DTOs or logs.
 4. Refresh Discovery from the configured app or POST `/api/flynet/discovery` from a signed-in same-origin session; inspect live NYC location records.
 5. Import visits from My profile; verify actual NYC check-ins appear only in Private passport.
-6. Write a public review for an imported venue. Verify its badge corresponds to that member + location; a client-supplied `verified` flag must never grant a badge.
+6. Attempt a review before importing: expect 403. Import visits, then write/edit a public review for an imported venue. Check that another location of the same restaurant brand, another member’s visit, and a demo account all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm private history remains absent.
 8. Exercise logout and reconnect; repeat sign-in should recover the same Blackbird account.
 9. After provider token expiry, importing requests reconnect. Existing app reviews/lists remain usable. Refresh tokens are deliberately discarded in this MVP to avoid storing an additional credential or racing single-use rotation.
@@ -40,3 +40,6 @@ For local development set `.env`. For hosting use Sites environment variables an
 - Demo, platform and Blackbird identities are separate. Connecting Blackbird does not merge a demo's data into a real member account.
 - Sessions last 30 days. Provider access is usable only until its issued expiry. Deleting a local session on logout removes its encrypted provider token.
 - No FLY transfer, reward issuance or onchain signature is performed by the app.
+
+## Review policy and balances
+Reviews require an imported member check-in for the exact location; saves and lists remain available without a visit. The UI and API both enforce this. Demo reviews are no longer published, and legacy unverified rows are hidden from public feeds and averages. Staging proofs are labeled staging and cannot authorize a production location. Wallet balances are intentionally omitted; `read:wallets` is not requested.

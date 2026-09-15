@@ -3,12 +3,12 @@
 ## Passing checks
 - **TypeScript:** `npm run typecheck` — passed.
 - **Production build:** Sites build helper / Vinext Worker build — passed.
-- **Browser E2E:** five Playwright suites against the built Worker at `http://127.0.0.1:5173` — **5 passed in 22.1 seconds**.
-- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **3 passed**.
+- **Browser E2E:** five Playwright suites against the built Worker at `http://127.0.0.1:5173` — all five passed. Four passed in the full run; one encountered a local Worker restart mid-request and passed when rerun after the watcher settled.
+- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **6 passed**.
 
 ### Browser coverage
 1. Anonymous restaurant search, empty results/reset, neighborhood filter, zoomable map selection, venue navigation, directions, mobile width.
-2. Demo signup, bookmark persistence after reload, review creation/edit/delete, personal score ranking, ordered list creation and reordering, public list in another browser, second-account list saving, follow/feed and likes.
+2. Demo signup, bookmark persistence, review gate and forged-verification rejection, ordered list creation/reordering, public list in another browser, second-account list saving, and follow/feed controls. Verified review CRUD is covered by actual-handler contract tests; live OAuth browser verification remains pending.
 3. Anonymous write rejection; cross-origin rejection; private-list 404 and exclusion from public DTOs; second-account edit/save rejection; invalid rating/date rejection; idempotent bookmarks; logout.
 4. Unconfigured Blackbird sign-in explains the unavailable integration; forged callback does not create an authenticated session.
 5. WebMCP registration contract, valid query and invalid-input rejection using a test implementation of the proposed browser registry. Native browser WebMCP support was not available; this is a contract harness, not native interoperability certification.
@@ -22,6 +22,9 @@
 - Member-scoped import writes private visit records and no public review; repeated imports deduplicate.
 - Expired provider access requires reconnect.
 - Discovery sends API-key auth and excludes non-NYC addresses.
+- Review create/edit requires the current Blackbird member’s imported visit at the exact location. Demo/platform identities, other members, sibling locations, mismatched environments and client-supplied verification all fail. Unverified legacy reviews are excluded from public data and scores.
+- SDK parser handles wire naming, optional/null fields, image/coordinate mapping, Date conversion, repeated visits and multiple pages. Empty history succeeds; malformed payloads, empty-body 401/403 and broken pagination fail without fabricated proof.
+- See `SDK-AUDIT.md` for source-level findings and confidence limits.
 
 ## Visual checks
 Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the browser. No horizontal overflow at 390px. Map has visible OpenStreetMap attribution, zoom controls, keyboard-accessible markers and a separate restaurant picker.

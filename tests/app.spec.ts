@@ -63,11 +63,10 @@ test("anonymous exploration, filters, map, detail, and mobile layout", async ({
   });
   expect(errors).toEqual([]);
 });
-test("notebook: save, review CRUD, ordered public list across browsers, follow and like", async ({
+test("notebook: review gate, ordered public list across browsers, saves and follows", async ({
   page,
   browser,
 }) => {
-  const uniqueReview = `A terrific test dinner ${Date.now()}.`;
   await page.goto("/");
   await join(page, "E2E Diner");
   await page
@@ -82,19 +81,33 @@ test("notebook: save, review CRUD, ordered public list across browsers, follow a
     page.getByRole("heading", { name: "Rubirosa", exact: true }),
   ).toBeVisible();
   await page.goto("/restaurants/rubirosa");
-  await page.getByRole("button", { name: "Write a review" }).click();
-  await page.getByRole("spinbutton").fill("9.3");
   await page
-    .getByLabel("The honest take")
-    .fill(uniqueReview + " The crust was crisp and the company was excellent.");
-  await page.getByLabel("What should we order?").fill("Tie-dye pizza");
-  await page.getByRole("button", { name: "Publish review" }).click();
-  await expect(page.getByRole("dialog")).toBeHidden();
-  await expect(page.getByText(uniqueReview, { exact: false })).toBeVisible();
-  await page.getByRole("button", { name: "Edit review", exact: true }).click();
-  await page.getByRole("spinbutton").fill("9.5");
-  await page.getByRole("button", { name: "Save review", exact: true }).click();
-  await expect(page.getByRole("dialog")).toBeHidden();
+    .getByRole("button", { name: "Write a review", exact: true })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "A visit comes first" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Publish review" }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Close", exact: true })
+    .click();
+  const denied = await page.request.post("/api/action", {
+    headers,
+    data: {
+      action: "review",
+      venueId: "rubirosa",
+      rating: 9,
+      body: "Forged verification",
+      dish: "",
+      visitedAt: "2026-09-01",
+      verified: true,
+    },
+  });
+  expect(denied.status()).toBe(403);
   await page.goto("/lists");
   await page
     .getByRole("button", { name: "Create a list", exact: true })
@@ -146,27 +159,11 @@ test("notebook: save, review CRUD, ordered public list across browsers, follow a
     .first()
     .click();
   await page.getByRole("tab", { name: "Following", exact: true }).click();
-  await expect(page.locator(".review")).not.toHaveCount(0);
-  await page
-    .locator(".review")
-    .first()
-    .getByRole("button", { name: /Like review by/ })
-    .click();
   await expect(
-    page
-      .locator(".review")
-      .first()
-      .getByRole("button", { name: /Unlike review by/ }),
+    page.getByRole("button", { name: "Following", exact: true }),
   ).toBeVisible();
   await page.goto("/me");
-  await expect(page.locator(".list-row").first()).toContainText("9.5");
-  await page.goto("/restaurants/rubirosa");
-  await page.getByRole("button", { name: "Delete", exact: true }).click();
-  await page
-    .getByRole("alertdialog")
-    .getByRole("button", { name: "Delete", exact: true })
-    .click();
-  await expect(page.getByText(uniqueReview, { exact: false })).toHaveCount(0);
+  await expect(page.getByText("9.5", { exact: true })).toHaveCount(0);
   await other.close();
 });
 test("server authorization, private lists, validation, persistence, logout", async ({

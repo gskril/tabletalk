@@ -8,7 +8,7 @@ An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse
 
 ## What works
 - NYC restaurant discovery with search, cuisine/neighborhood/price/occasion filters and a zoomable OpenStreetMap view.
-- Restaurant pages, directions, review creation/edit/delete, 1–10 ratings and personal rankings.
+- Restaurant pages, directions, review creation/edit/delete restricted to Blackbird-verified visits, 1–10 ratings and personal rankings.
 - Ordered public/private lists, edits, sharing, saving other people's lists, and a personal Want to try collection.
 - Public profiles, follows, community/following feeds and review likes.
 - D1 persistence, isolated demo accounts, optional platform sign-in and real Blackbird OAuth integration.
@@ -16,6 +16,8 @@ An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse
 
 ## Important status
 The default catalog and fictional diners are labeled demo. Credentials were not supplied, so live Blackbird sign-in, discovery and import have **not** been tested against a provisioned Blackbird account. Controlled contract tests cover the actual callback and sync handlers with the installed SDK. A working demo is not evidence of hackathon API eligibility; finish the live smoke test once access arrives.
+
+Demo accounts can save places and curate lists, but cannot post reviews. A matching imported Blackbird check-in is required to post or edit; old unverified examples are excluded from public feeds and scores. Wallet balances are out of scope.
 
 A demo account is identified by a 30-day HttpOnly browser cookie. It persists across reloads, but cannot be recovered on another device or after sign-out. Public lists are readable across browsers. Use Blackbird or platform sign-in for recoverable identity.
 

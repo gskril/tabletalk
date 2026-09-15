@@ -2,6 +2,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 import { db, now } from "@/lib/data";
 import { currentUser, sameOrigin, failure, AppError } from "@/lib/auth";
+import { verifiedVisitFrom } from "@/lib/review-eligibility";
 const id = z.string().min(1).max(100);
 const text = (max: number) => z.string().trim().max(max);
 const schema = z.discriminatedUnion("action", [
@@ -116,6 +117,17 @@ export async function POST(req: Request) {
         )
           throw new AppError(
             "Choose a valid visit date that is not in the future.",
+          );
+        const visit = await d
+          .prepare(
+            `SELECT 1 ${verifiedVisitFrom} AND v.user_id=? AND v.venue_id=?`,
+          )
+          .bind(u.id, b.venueId)
+          .first();
+        if (!visit)
+          throw new AppError(
+            "A Blackbird check-in at this location is required to post or edit a review. Connect Blackbird and import your visits from your passport.",
+            403,
           );
         await d
           .prepare(

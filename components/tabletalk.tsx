@@ -626,7 +626,7 @@ export default function Tabletalk() {
         <p className="note">
           {d.integration.discovery
             ? "Live Flynet venues are marked “On Blackbird”. Sample spots remain labeled."
-            : "Demo catalog · Sample reviews and prices · Current Blackbird participation is not verified."}
+            : "Demo catalog · Sample prices · Reviews require Blackbird check-ins."}
         </p>
         <div className="section-head">
           <h2>Pass a good list around.</h2>
@@ -710,7 +710,7 @@ export default function Tabletalk() {
             ) : (
               <Empty
                 title="Your take belongs here"
-                body="Be the first to leave a review for this spot."
+                body="Only diners with a Blackbird check-in at this location can review it."
                 action={
                   <button
                     className="btn primary"
@@ -1152,7 +1152,7 @@ export default function Tabletalk() {
               <h3>Your Blackbird passport</h3>
               <p>
                 {d.integration.configured
-                  ? "Import your visits privately. Reviews stay yours to publish."
+                  ? "Import your visits privately to unlock reviews for those locations."
                   : "Blackbird connection awaits partner access. Your notebook already works."}
               </p>
             </div>
@@ -1280,9 +1280,9 @@ export default function Tabletalk() {
         <p>
           Lists, reviews, follows and saved places are stored on our server and
           survive a page reload. Public lists can be opened by anyone with the
-          link. The starter catalog, prices and fictional diner reviews are
-          sample content. They do not establish current Blackbird participation
-          or restaurant availability.
+          link. The starter catalog, prices and editorial lists are sample
+          content. They do not establish current Blackbird participation or
+          restaurant availability.
         </p>
         <p>
           A demo account is tied to this browser's cookie. Clearing it or
@@ -1298,8 +1298,8 @@ export default function Tabletalk() {
           {d.integration.configured
             ? "The integration is configured."
             : "This deployment is awaiting that access."}{" "}
-          Imported check-ins can verify a visit; they are never published
-          automatically.
+          An imported Blackbird check-in at the exact location is required to
+          post or edit a review. Raw check-ins stay private.
         </p>
         <p>
           <a
@@ -1572,7 +1572,8 @@ function ModalBody({
                 <strong className="small">Just taking a look?</strong>
                 <p className="form-help">
                   Try your own demo account. It stays with this browser; public
-                  reviews and lists are visible to everyone.
+                  lists are visible to everyone. Reviews require a Blackbird
+                  check-in.
                 </p>
               </div>
               <label>
@@ -1601,6 +1602,34 @@ function ModalBody({
           <p className="form-help">
             Browsing and public lists are always open. No account needed.
           </p>
+        </div>
+      </>
+    );
+  if (
+    modal.type === "review" &&
+    !data.visits.some((v) => v.venue_id === modal.venue.id)
+  )
+    return (
+      <>
+        {head("A visit comes first", modal.venue.name)}
+        <div className="form-stack">
+          <p>
+            Reviews are reserved for diners with a Blackbird check-in at this
+            exact location.
+          </p>
+          <p className="form-help">
+            {data.integration.configured
+              ? "Connect your Blackbird account, then import your visits from your private passport. Demo accounts cannot post reviews."
+              : "Blackbird connection is awaiting partner access. You can still save places and share lists; reviews will unlock after your Blackbird visit is imported."}
+          </p>
+          {data.integration.configured && (
+            <a className="btn primary" href="/api/auth/blackbird/start">
+              Connect Blackbird
+            </a>
+          )}
+          <a className="btn" href="/me">
+            Open my passport
+          </a>
         </div>
       </>
     );
@@ -1674,10 +1703,8 @@ function ModalBody({
             />
           </label>
           <p className="form-help">
-            Your review is public.{" "}
-            {data.me?.demo
-              ? "It will be marked as a demo review."
-              : "Visit verification comes from your connected Blackbird history."}
+            Your review is public. Your imported Blackbird history verifies that
+            you visited this location.
           </p>
           {error && (
             <p className="form-error" role="alert">

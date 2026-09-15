@@ -7,7 +7,16 @@ import { cookieJar } from "./headers-mock.mjs";
 import { GET as start } from "../app/api/auth/blackbird/start/route.ts";
 import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
 import { POST as sync } from "../app/api/flynet/sync/route.ts";
-import { syncDiscovery, encryptToken, decryptToken } from "../lib/flynet.ts";
+import { POST as action } from "../app/api/action/route.ts";
+import { GET as state } from "../app/api/state/route.ts";
+import { makeSession } from "../lib/auth.ts";
+import { FlynetMemberClient } from "@flynetdev/core";
+import {
+  syncVisits,
+  syncDiscovery,
+  encryptToken,
+  decryptToken,
+} from "../lib/flynet.ts";
 const sql = new DatabaseSync(":memory:");
 for (const file of readdirSync("drizzle")
   .filter((x) => x.endsWith(".sql"))
@@ -99,6 +108,7 @@ const pagination = {
   next_page: null,
   page_size: 50,
 };
+let upstreamOverride;
 const calls = [];
 const realFetch = globalThis.fetch;
 globalThis.fetch = async (input, init) => {
@@ -120,6 +130,7 @@ globalThis.fetch = async (input, init) => {
     req.headers.get("Authorization"),
     p.endsWith("/locations") ? null : "Bearer valid-provider-token",
   );
+  if (upstreamOverride) return upstreamOverride(req);
   if (p.endsWith("/users/me"))
     return Response.json({
       id,
@@ -241,7 +252,11 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
 test("discovery uses API key and excludes non-NYC locations", async () => {
   const result = await syncDiscovery();
   assert.equal(result.count, 1);
-  assert.equal(sql.prepare("SELECT count(*) AS n FROM venues").get().n, 1);
+  assert.equal(
+    sql.prepare("SELECT count(*) AS n FROM venues WHERE source='staging'").get()
+      .n,
+    1,
+  );
 });
 test("expired state cannot exchange; ciphertext tampering fails", async () => {
   const r = await start(
@@ -264,6 +279,234 @@ test("expired state cannot exchange; ciphertext tampering fails", async () => {
   await assert.rejects(() =>
     decryptToken(encrypted.slice(0, 8) + "AAAA" + encrypted.slice(12)),
   );
+});
+
+const post = (data) =>
+  action(
+    new Request("https://tabletalk.test/api/action", {
+      method: "POST",
+      headers: {
+        origin: "https://tabletalk.test",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }),
+  );
+const review = {
+  action: "review",
+  venueId: locationId,
+  rating: 9.2,
+  body: "A verified dinner",
+  dish: "Pasta",
+  visitedAt: "2026-09-01",
+};
+
+test("reviews require the same Blackbird member and exact location, including edits and public visibility", async () => {
+  const member = sql
+    .prepare("SELECT id FROM profiles WHERE external_id=?")
+    .get("staging:" + id).id;
+  const originalSession = cookieJar.get("tt_session");
+  const proof = sql.prepare("SELECT * FROM visits WHERE user_id=?").get(member);
+  sql.prepare("DELETE FROM visits WHERE user_id=?").run(member);
+  assert.equal(
+    (await post({ ...review, verified: true, userId: member })).status,
+    403,
+  );
+  assert.equal(sql.prepare("SELECT count(*) AS n FROM reviews").get().n, 0);
+  // Only a successful member import establishes the proof; restore that imported record.
+  sql
+    .prepare("INSERT INTO visits VALUES(?,?,?)")
+    .run(proof.user_id, proof.venue_id, proof.visited_at);
+  assert.equal((await post(review)).status, 200);
+  assert.equal((await post({ ...review, rating: 9.5 })).status, 200);
+  const published = (await (await state()).json()).reviews;
+  assert.equal(published.length, 1);
+  assert.equal(published[0].verified, 1);
+  assert.equal(published[0].rating, 9.5);
+  const secondLocation = "other-location-same-brand";
+  sql
+    .prepare(
+      "INSERT INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at FROM venues WHERE id=?",
+    )
+    .run(secondLocation, locationId);
+  assert.equal(
+    (await post({ ...review, venueId: secondLocation })).status,
+    403,
+  );
+  sql.prepare("DELETE FROM venues WHERE id=?").run(secondLocation);
+  for (const [other, demo, external] of [
+    ["other-member", 0, "staging:other"],
+    ["demo-member", 1, null],
+    ["platform-member", 0, null],
+    ["wrong-environment", 0, "production:other"],
+  ]) {
+    sql
+      .prepare(
+        "INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?, '', '#ed563d',?,?,?)",
+      )
+      .run(other, other, demo, external, at);
+    const cookie = await makeSession(
+      other,
+      new Request("https://tabletalk.test"),
+    );
+    cookieJar.set("tt_session", cookie.split(";")[0].split("=")[1]);
+    assert.equal(
+      (await post({ ...review, userId: member, verified: true })).status,
+      403,
+    );
+    if (other !== "other-member") {
+      // Even a stray proof row cannot make a demo/platform or cross-environment identity eligible.
+      sql
+        .prepare("INSERT INTO visits VALUES(?,?,?)")
+        .run(other, locationId, at);
+      assert.equal((await post(review)).status, 403);
+    }
+  }
+  cookieJar.set("tt_session", originalSession);
+  sql.prepare("DELETE FROM visits WHERE user_id=?").run(member);
+  assert.equal(
+    (await post({ ...review, body: "Cannot edit without proof" })).status,
+    403,
+  );
+  assert.equal((await (await state()).json()).reviews.length, 0);
+  assert.equal(sql.prepare("SELECT body FROM reviews").get().body, review.body);
+  // Removing one's own review remains possible even if its proof is unavailable.
+  assert.equal(
+    (await post({ action: "deleteReview", reviewId: published[0].id })).status,
+    200,
+  );
+  sql.prepare("INSERT INTO visits VALUES(?,?,?)").run(member, locationId, at);
+});
+
+test("SDK wire schemas, optional fields, date conversion and multiple pages match imported data", async () => {
+  const member = sql
+    .prepare("SELECT id FROM profiles WHERE external_id=?")
+    .get("staging:" + id).id;
+  const pages = [];
+  upstreamOverride = (req) => {
+    const url = new URL(req.url);
+    const page = Number(url.searchParams.get("page"));
+    pages.push(page);
+    assert.equal(url.pathname, "/flynet/v1/users/me/check_ins");
+    assert.equal(url.searchParams.get("page_size"), "50");
+    const rich = {
+      ...location,
+      name: null,
+      coordinate: { latitude: 40.72, longitude: -73.99 },
+      phone_number: null,
+      restaurant: {
+        ...location.restaurant,
+        price: 3,
+        website_url: "https://example.com",
+        asset: {
+          preview_1x: null,
+          web_2x: "https://example.com/food.jpg",
+          full_3x: null,
+        },
+      },
+    };
+    return Response.json({
+      check_ins: [
+        {
+          id: "check-" + page,
+          object: "check_in",
+          location: rich,
+          blackbird_pay_enabled: false,
+          created_at: page === 0 ? "2026-09-10T12:00:00Z" : at,
+          ended_at: null,
+        },
+      ],
+      pagination: {
+        ...pagination,
+        current_page: page,
+        next_page: page === 0 ? 1 : null,
+        total_pages: 2,
+        total_count: 2,
+      },
+    });
+  };
+  try {
+    const result = await syncVisits(member, "valid-provider-token");
+    assert.deepEqual(pages, [0, 1]);
+    assert.deepEqual(result, { count: 1, complete: true });
+    const place = sql
+      .prepare("SELECT * FROM venues WHERE id=?")
+      .get(locationId);
+    assert.equal(place.name, "Test brand");
+    assert.equal(place.lat, 40.72);
+    assert.equal(place.lng, -73.99);
+    assert.equal(place.image, "https://example.com/food.jpg");
+    assert.equal(place.website, "https://example.com");
+    assert.equal(place.price, 3);
+    assert.equal(
+      sql
+        .prepare("SELECT visited_at FROM visits WHERE user_id=? AND venue_id=?")
+        .get(member, locationId).visited_at,
+      "2026-09-10T12:00:00.000Z",
+    );
+    upstreamOverride = () =>
+      Response.json({
+        check_ins: [],
+        pagination: { ...pagination, total_count: 0, total_pages: 0 },
+      });
+    assert.deepEqual(await syncVisits(member, "valid-provider-token"), {
+      count: 0,
+      complete: true,
+    });
+  } finally {
+    upstreamOverride = undefined;
+  }
+});
+
+test("invalid API shapes and empty auth errors fail closed without creating visit proofs", async () => {
+  const before = sql.prepare("SELECT count(*) AS n FROM visits").get().n;
+  const client = new FlynetMemberClient({
+    accessToken: "valid-provider-token",
+    environment: "staging",
+    retryConfig: { strategy: "none" },
+  });
+  try {
+    for (const status of [401, 403]) {
+      upstreamOverride = () =>
+        new Response(null, {
+          status,
+          headers: { "WWW-Authenticate": 'Bearer error="insufficient_scope"' },
+        });
+      await assert.rejects(() =>
+        client.listCheckIns({ page: 0, pageSize: 50 }),
+      );
+    }
+    upstreamOverride = () =>
+      Response.json({
+        check_ins: [
+          {
+            id: "incomplete",
+            object: "check_in",
+            location: { id: locationId },
+            created_at: at,
+          },
+        ],
+        pagination,
+      });
+    await assert.rejects(() =>
+      syncVisits("other-member", "valid-provider-token"),
+    );
+    assert.equal(
+      sql.prepare("SELECT count(*) AS n FROM visits").get().n,
+      before,
+    );
+    upstreamOverride = () =>
+      Response.json({
+        check_ins: [],
+        pagination: { ...pagination, next_page: 0 },
+      });
+    await assert.rejects(
+      () => syncVisits("other-member", "valid-provider-token"),
+      /did not advance/,
+    );
+  } finally {
+    upstreamOverride = undefined;
+  }
 });
 test.after(() => {
   globalThis.fetch = realFetch;

@@ -82,7 +82,8 @@ export async function exchangeAuthorizationCode(code: string, codeVerifier: stri
         "User-Agent": "Tabletalk/1.0 (+https://your-app.example)",
       },
       body: form.toString(),
-      redirect: "error",
+      // Workers supports manual/follow; manual keeps credentials on this endpoint.
+      redirect: "manual",
       signal: AbortSignal.timeout(15000),
     });
   } catch (error) {

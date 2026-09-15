@@ -1219,3 +1219,18 @@ svg {
 .leaflet-map .leaflet-tile {
   max-width: none !important;
 }
+
+.notebook-description { color: #596451; margin: 0 0 24px; }
+.notebook-section { margin: 32px 0 40px; }
+.notebook-section > h2 { font-size: 24px; letter-spacing: -0.5px; }
+.notebook-section > p { margin: 6px 0 20px; }
+.visit-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; border-bottom: 1px solid #d9dfd0; }
+.visit-row h2 { font-size: 26px; line-height: 1.2; letter-spacing: -0.5px; }
+.visit-row p { margin-top: 6px; }
+.visit-row .row-info { min-width: 0; }
+.visit-row .actions { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .visit-row { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .visit-row h2 { font-size: 24px; }
+  .tabs-list { gap: 18px !important; overflow-x: auto; }
+}

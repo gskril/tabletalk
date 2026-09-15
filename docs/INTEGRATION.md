@@ -26,7 +26,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 2. Click Connect with Blackbird, approve only the requested scopes, and land on `/me?connected=1`.
 3. Confirm the profile uses the authenticated member and no token appears in HTML, browser storage, network DTOs or logs.
 4. Open Explore signed out; the catalog populates automatically from Discovery. The same-origin `POST /api/flynet/discovery` checks this shared cache without requiring sign-in and cannot bypass the refresh interval.
-5. Open My profile; verify visits sync automatically and actual NYC check-ins appear only in Private passport. Existing signed-in sessions also start syncing when they next load a page.
+5. Open My notebook → Been there; verify visits sync automatically and actual NYC check-ins appear privately. Existing signed-in sessions also start syncing when they next load a page.
 6. Attempt a review without a verified visit: expect 403. Once automatic syncing finishes, write/edit a public review for a verified venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm private history remains absent.
 8. Exercise logout and reconnect; repeat sign-in should recover the same Blackbird account.

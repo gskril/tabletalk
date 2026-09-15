@@ -71,3 +71,8 @@ The browser suite provisions synthetic Blackbird-like sessions directly in the l
 - Fifteen contract tests pass. Legacy demo/platform accounts, their lists/items, and demo venues are excluded from state. Real Blackbird members remain visible even with no posts or visits. Attempts to follow/save/bookmark retired fixtures return 404.
 - Direct profile/list/venue routes and metadata use the same visibility rules. Production page loads no longer create sample records.
 - Historical rows are retained in D1, hidden from the app; no real account or user-authored data is deleted. Browser tests provision their own synthetic catalog explicitly in the local database only.
+
+## Notebook navigation
+- My notebook groups Saved places, Been there (private Blackbird visits, newest first), and Lists. Created and saved-from-other collections share one tab without duplicates. Tab selection survives reload through the URL.
+- Profiles show reviews and public lists, with an owner-only link to private visits in the notebook.
+- Imported venue titles prefer the restaurant name, falling back to the location name only when needed. The catalog snapshot version refreshes existing names. Sixteen integration tests cover this mapping and existing authorization rules.

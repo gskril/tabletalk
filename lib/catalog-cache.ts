@@ -17,7 +17,8 @@ export async function publicCatalog(background = true) {
   const { apiKey, environment } = settings();
   if (!apiKey) return null;
   // Invalidate older city-name-only snapshots when the coverage rules change.
-  const cacheKey = `${environment}:nyc-postal-v2`;
+  const previousKey = `${environment}:nyc-postal-v2`;
+  const cacheKey = `${environment}:restaurant-names-v3`;
   let saved = await snapshot(cacheKey);
   const time = Date.now();
   if (!saved || saved.next_attempt_at <= time) {
@@ -51,7 +52,7 @@ export async function publicCatalog(background = true) {
     } else saved = await snapshot(cacheKey);
   }
   // Keep the last successful older snapshot available if the first new import fails.
-  if (!saved?.synced_at) saved = await snapshot(environment);
+  if (!saved?.synced_at) saved = await snapshot(previousKey) || await snapshot(environment);
   return {
     locationIds: JSON.parse(saved?.location_ids || "[]") as string[],
     syncedAt: saved?.synced_at || null,

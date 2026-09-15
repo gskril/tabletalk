@@ -20,6 +20,7 @@ import { FlynetMemberClient } from "@flynetdev/core";
 import {
   syncVisits,
   syncDiscovery,
+  upsertVenue,
   isNYC,
   encryptToken,
   decryptToken,
@@ -619,7 +620,7 @@ test("concurrent cold requests acquire only one catalog refresh lease", async ()
 });
 test("stale catalog remains public during background refresh and provider failures back off", async () => {
   const savedFetch = globalThis.fetch;
-  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging:nyc-postal-v2'").get().synced_at;
+  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging:restaurant-names-v3'").get().synced_at;
   sql.prepare("UPDATE catalog_cache SET next_attempt_at=0").run();
   let requests = 0;
   globalThis.fetch = async () => { requests++; return new Response(null, { status: 403 }); };
@@ -632,7 +633,7 @@ test("stale catalog remains public during background refresh and provider failur
     assert.equal(after.syncedAt, old);
     assert.deepEqual(after.locationIds, [locationId]);
     assert.equal(requests, 1);
-    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging:nyc-postal-v2'").get().next_attempt_at > Date.now());
+    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging:restaurant-names-v3'").get().next_attempt_at > Date.now());
   } finally { globalThis.fetch = savedFetch; }
 });
 test("OAuth diagnostics omit provider payloads, tokens and unrecognized error strings", () => {
@@ -747,4 +748,15 @@ test("legacy fixtures are hidden while empty Blackbird accounts remain visible",
     env.FLYNET_API_KEY = oldKey;
     if (oldSession) cookieJar.set("tt_session", oldSession); else cookieJar.delete("tt_session");
   }
+});
+
+
+test("restaurant name takes precedence over the location label", async () => {
+  const client = new FlynetMemberClient({accessToken:"valid-provider-token", environment:"staging"});
+  const result = await client.listCheckIns();
+  const l = result.checkIns[0].location;
+  await upsertVenue({...l, name:"Nolita", restaurant:{...l.restaurant, name:"Restaurant Name"}}).run();
+  assert.equal(sql.prepare("SELECT name FROM venues WHERE id=?").get(l.id).name, "Restaurant Name");
+  await upsertVenue({...l, name:"Location fallback", restaurant:{...l.restaurant, name:" "}}).run();
+  assert.equal(sql.prepare("SELECT name FROM venues WHERE id=?").get(l.id).name, "Location fallback");
 });

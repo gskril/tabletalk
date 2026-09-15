@@ -155,7 +155,7 @@ export function upsertVenue(l: Location) {
     )
     .bind(
       l.id,
-      l.name || r.name,
+      r.name?.trim() || l.name,
       r.cuisine?.join(", ") || "Restaurant",
       l.neighborhood?.name || addr?.city || "New York",
       [addr?.street, addr?.city, addr?.state].filter(Boolean).join(", "),

@@ -150,7 +150,7 @@ test("notebook: review gate, ordered public list across browsers, saves and foll
   await join(p2, "E2E Friend");
   await p2.getByRole("button", { name: "Save list", exact: true }).click();
   await p2.goto("/saved");
-  await p2.getByRole("tab", { name: "Saved lists", exact: true }).click();
+  await p2.getByRole("tab", { name: "Lists", exact: true }).click();
   await expect(
     p2.getByRole("heading", { name: "E2E Downtown evening" }),
   ).toBeVisible();
@@ -342,14 +342,29 @@ test("passport updates automatically and only offers recovery actions when neede
     const body = await response.json();
     reads++;
     const status = mode === "syncing" && reads > 1 ? "ready" : mode;
-    await route.fulfill({ response, json: { ...body, passport: { status, syncedAt: status === "ready" ? Date.now() : null, complete: true } } });
+    await route.fulfill({ response, json: { ...body, visits: [{venue_id:"rubirosa", visited_at:"2026-09-01T18:00:00Z"}], passport: { status, syncedAt: status === "ready" ? Date.now() : null, complete: true } } });
   });
-  await page.goto("/me");
+  await page.goto("/saved?tab=visits");
   await expect(page.getByText("Syncing visits…", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Import visits", exact: true })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Connect Blackbird", exact: true })).toHaveCount(0);
   await expect(page.getByText("Visits synced", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Reconnect Blackbird", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("tab", { name: "Been there (1)" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".visit-row h2")).toHaveText("Rubirosa");
+  await expect(page.locator(".visit-row")).toContainText("Last visited Sep 1, 2026");
+  await page.getByRole("tab", { name: "Lists", exact:true }).click();
+  await expect(page.getByRole("heading", { name: "Created by you", exact:true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Saved from others", exact:true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("tab", { name: "Lists", exact:true })).toHaveAttribute("aria-selected", "true");
+  await page.goto("/me");
+  await expect(page.getByRole("tab", { name: "Private passport" })).toHaveCount(0);
+  await page.getByRole("link", {name:"View my private visits in My notebook"}).click();
+  await expect(page.locator(".visit-row h2")).toHaveText("Rubirosa");
+  await page.setViewportSize({width:390, height:844});
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({path:"test-results/notebook-been-there.png",fullPage:true});
   mode = "error";
   await page.reload();
   await expect(page.getByRole("button", { name: "Retry sync", exact: true })).toBeVisible();

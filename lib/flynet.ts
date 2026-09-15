@@ -28,7 +28,6 @@ export function integrationStatus() {
       c.clientId &&
       c.clientSecret &&
       c.redirectUri &&
-      c.audience &&
       c.encryptionKey
     ),
     discovery: !!c.apiKey,
@@ -46,6 +45,17 @@ export function oauth() {
     ...c,
     scopes: ["read:profile", "read:user_checkins"],
   });
+}
+export async function authorizationRequest() {
+  const request = await oauth().getAuthorizeUrl();
+  // The live gateway and OAuth guide support requests without an audience.
+  // SDK 0.8.1 always serializes it, so omit it when the portal issues none.
+  if (!settings().audience) {
+    const url = new URL(request.url);
+    url.searchParams.delete("audience");
+    request.url = url.toString();
+  }
+  return request;
 }
 async function encryptionKey() {
   const secret = settings().encryptionKey;

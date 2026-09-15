@@ -14,7 +14,8 @@ The official guide also suggests asking for expedited access in Runtime Discord.
 ## Environment
 - `FLYNET_ENVIRONMENT`: `staging` (default) or explicitly `production`.
 - `FLYNET_API_KEY`: Discovery key for the chosen environment.
-- `FLYNET_CLIENT_ID`, `FLYNET_CLIENT_SECRET`, `FLYNET_AUDIENCE`: values issued by Blackbird. The SDK requires an explicit audience; don't guess it.
+- `FLYNET_CLIENT_ID`, `FLYNET_CLIENT_SECRET`: values issued by Blackbird.
+- `FLYNET_AUDIENCE`: optional; leave blank unless Blackbird supplies it. Although SDK 0.8.1 requires a string, the current OAuth guide omits this parameter and the production gateway accepts its omission. The app removes the SDK's empty audience parameter.
 - `FLYNET_REDIRECT_URI`: `https://your-app.example/api/auth/blackbird/callback`. Exact matching matters. Ask Blackbird to register this path, not the platform-reserved `/callback`.
 - `TOKEN_ENCRYPTION_KEY`: at least 32 random characters generated securely; encrypts stored access tokens with AES-GCM. Rotating it requires Blackbird reconnect for existing sessions.
 

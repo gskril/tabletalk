@@ -531,6 +531,23 @@ test("only a Blackbird identity can authenticate; retired signup never writes", 
   cookieJar.set("tt_session", session);
   assert.ok(await currentUser());
 });
+test("portal credentials without audience still produce a PKCE authorization request", async () => {
+  const audience = env.FLYNET_AUDIENCE;
+  delete env.FLYNET_AUDIENCE;
+  try {
+    const response = await start(new Request("https://tabletalk.test/api/auth/blackbird/start"));
+    assert.equal(response.status, 302);
+    const url = new URL(response.headers.get("location"));
+    assert.equal(url.pathname, "/oauth/authorize");
+    assert.equal(url.searchParams.has("audience"), false);
+    assert.equal(url.searchParams.get("code_challenge_method"), "S256");
+    assert.ok(url.searchParams.get("state"));
+    assert.ok(url.searchParams.get("code_challenge"));
+    assert.equal(url.searchParams.get("scope"), "read:profile read:user_checkins");
+  } finally {
+    env.FLYNET_AUDIENCE = audience;
+  }
+});
 test.after(() => {
   globalThis.fetch = realFetch;
   sql.close();

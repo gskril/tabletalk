@@ -1,11 +1,11 @@
-import { oauth, integrationStatus } from "@/lib/flynet";
+import { authorizationRequest, integrationStatus } from "@/lib/flynet";
 import { db } from "@/lib/data";
 import { hash } from "@/lib/auth";
 export async function GET(req: Request) {
   if (!integrationStatus().configured)
     return Response.redirect(new URL("/about?connection=unavailable", req.url));
   try {
-    const { url, state, codeVerifier } = await oauth().getAuthorizeUrl();
+    const { url, state, codeVerifier } = await authorizationRequest();
     await db()
       .prepare("DELETE FROM oauth_states WHERE expires_at<?")
       .bind(Date.now())

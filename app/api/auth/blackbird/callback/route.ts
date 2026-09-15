@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { FlynetMemberClient } from "@flynetdev/core";
-import { oauth, settings, encryptToken } from "@/lib/flynet";
+import { exchangeAuthorizationCode, settings, encryptToken } from "@/lib/flynet";
 import { db, now } from "@/lib/data";
 import { hash, makeSession } from "@/lib/auth";
 import { authDiagnostic } from "@/lib/auth-diagnostics";
@@ -25,10 +25,7 @@ export async function GET(req: Request) {
       .first<{ verifier: string; return_to: string }>();
     if (!pending) throw new Error("Expired OAuth state");
     phase = "token";
-    const tokens = await oauth().exchangeCode({
-      code,
-      codeVerifier: pending.verifier,
-    });
+    const tokens = await exchangeAuthorizationCode(code, pending.verifier);
     phase = "token_response";
     if (typeof tokens.access_token !== "string" || !tokens.access_token ||
         typeof tokens.expires_in !== "number" || !Number.isFinite(tokens.expires_in) || tokens.expires_in <= 0)

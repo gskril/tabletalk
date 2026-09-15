@@ -42,7 +42,7 @@ Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the 
 - Live shared D1 cache: first import completed in approximately 16 seconds; repeat public state request returned in approximately one second with the same snapshot timestamp. Anonymous users see all 782 production locations; private visits are absent.
 - Live browser: 782-spot count, search, real restaurant detail, and 390px mobile overflow checks passed with no browser errors.
 - Shared-cache contract checks cover fresh requests making no API calls, concurrent requests sharing one refresh lease, and stale data surviving provider failure with retry backoff.
-- Sign-in reaches Blackbird Passport and returns an authorization code. The owner reported callback failure; successful live sign-in and member history are not yet verified. The callback now emits an allowlisted phase/status/reference diagnostic without tokens, raw responses, or personal data. A second attempt is needed to identify the exact failing step.
+- Sign-in reaches Blackbird Passport and returns an authorization code. The owner reported callback failure. Diagnostic reference 1c4afbe5 identified a token-endpoint 403. Controlled tests reproduced 403 with an empty User-Agent and a normal OAuth 400 invalid_grant with a Tabletalk identifier. Token exchange now supplies that documented header; full member sign-in and history still need a fresh real-account attempt. Diagnostics expose only allowlisted phase/status/reference metadata.
 - The local regression passed five suites; the Worker runtime stopped during the sixth. The interrupted WebMCP check passed after restart, alongside the callback rejection check. No application fix was required for that runtime failure.
 
 ## Explicitly not verified

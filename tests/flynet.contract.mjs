@@ -121,6 +121,10 @@ globalThis.fetch = async (input, init) => {
   calls.push(req.clone());
   const p = new URL(req.url).pathname;
   if (p.endsWith("/oauth/token")) {
+    assert.equal(req.method, "POST");
+    assert.match(req.headers.get("User-Agent") || "", /^Tabletalk\/1\.0 /);
+    assert.equal(req.headers.get("Content-Type"), "application/x-www-form-urlencoded");
+    assert.equal(req.redirect, "error");
     const form = await req.formData();
     assert.equal(form.get("client_secret"), "test-secret");
     assert.ok(String(form.get("code_verifier")).length >= 43);

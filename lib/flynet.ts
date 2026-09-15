@@ -3,6 +3,9 @@ import {
   FlynetDiscoveryClient,
   FlynetMemberClient,
   FlynetOAuth,
+  AUTH_BASE_BY_ENV,
+  shapeFlynetError,
+  networkFlynetError,
 } from "@flynetdev/core";
 import { db, now } from "./data";
 import { AppError } from "./auth";
@@ -56,6 +59,37 @@ export async function authorizationRequest() {
     request.url = url.toString();
   }
   return request;
+}
+export async function exchangeAuthorizationCode(code: string, codeVerifier: string) {
+  const c = settings();
+  const form = new URLSearchParams({
+    grant_type: "authorization_code",
+    client_id: c.clientId,
+    client_secret: c.clientSecret,
+    redirect_uri: c.redirectUri,
+    code,
+    code_verifier: codeVerifier,
+  });
+  let response: Response;
+  try {
+    // SDK 0.8.1's OAuth helper omits User-Agent. Workers do not supply a default;
+    // Blackbird's edge rejects that request with 403 before OAuth handles it.
+    response = await fetch(`${AUTH_BASE_BY_ENV[c.environment]}/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        "User-Agent": "Tabletalk/1.0 (+https://your-app.example)",
+      },
+      body: form.toString(),
+      redirect: "error",
+      signal: AbortSignal.timeout(15000),
+    });
+  } catch (error) {
+    throw networkFlynetError(error);
+  }
+  if (!response.ok) throw await shapeFlynetError(response);
+  return response.json() as Promise<Awaited<ReturnType<FlynetOAuth["exchangeCode"]>>>;
 }
 async function encryptionKey() {
   const secret = settings().encryptionKey;

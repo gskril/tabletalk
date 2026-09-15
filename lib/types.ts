@@ -4,6 +4,7 @@ export type Person = {
   bio: string;
   color: string;
   demo: number;
+  visited_count?: number;
 };
 export type Venue = {
   id: string;
@@ -65,6 +66,7 @@ export type State = {
   following: string[];
   likes: string[];
   visits: { venue_id: string; visited_at: string }[];
+  publicVisits: { user_id: string; venue_id: string }[];
   integration: {
     configured: boolean;
     discovery: boolean;

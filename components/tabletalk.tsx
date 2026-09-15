@@ -150,7 +150,7 @@ export default function Tabletalk() {
     [mapView, setMapView] = useState(false),
     [feedTab, setFeedTab] = useState("everyone"),
     [savedTab, setSavedTab] = useState(["places", "visits", "lists"].includes(params.get("tab") || "") ? params.get("tab")! : "places"),
-    [profileTab, setProfileTab] = useState("rankings");
+    [profileTab, setProfileTab] = useState("visits");
   const load = useCallback(async () => {
     try {
       const r = await fetch("/api/state");
@@ -257,6 +257,7 @@ export default function Tabletalk() {
     me = d.me;
   const venue = (id: string) => d.venues.find((v) => v.id === id);
   const person = (id: string) => d.people.find((p) => p.id === id);
+  const publicVisits = d.publicVisits || [];
   const listVenues = (id: string) =>
     d.items
       .filter((i) => i.list_id === id)
@@ -394,7 +395,8 @@ export default function Tabletalk() {
         <div className="byline">
           {p && <Avatar person={p} />}
           <span>
-            {p?.name || "A diner"} · {vs.length} spots{" "}
+            {p?.name || "A diner"} · {vs.length} spots<br />
+            {p?.visited_count || 0} verified places visited{" "}
             {p?.demo ? <span className="demo-tag">Demo</span> : null}
           </span>
         </div>
@@ -492,17 +494,17 @@ export default function Tabletalk() {
     return (
           <div className="banner" style={{ margin: "0 0 25px" }}>
             <div>
-              <h3>{d.passport?.status === "reconnect" ? "Your private visits" : "Blackbird connected"}</h3>
+              <h3>{d.passport?.status === "reconnect" ? "Your Blackbird visits" : "Blackbird connected"}</h3>
               <p>
                 {d.passport?.status === "syncing"
-                  ? "Finding the places you’ve been. Your visits stay private."
+                  ? "Finding the places you’ve been for your public profile."
                   : d.passport?.status === "error"
                     ? "We couldn’t update your visits. Your saved visits are still here."
                     : d.passport?.status === "reconnect"
                       ? "Reconnect to keep your visits up to date. Your saved visits are still here."
                       : d.passport?.complete === false
-                        ? "Your visits synced privately. Some older visits may still be missing."
-                        : "Your visits sync automatically and stay private. Review any verified spot."}
+                        ? "Your visited places synced. Some older visits may still be missing."
+                        : "Visited places appear on your public profile. Visit dates are only visible to you."}
               </p>
             </div>
             <div className="actions">
@@ -561,7 +563,7 @@ export default function Tabletalk() {
             <button className="btn" onClick={() => setModal({type:"review", venue:v})}>{review ? "Edit review" : "Write a review"}</button>
           </div>
         </article>;
-      })}</div> : <Empty title="Your visits, just for you" body={d.passport?.status === "syncing" ? "Your Blackbird visits will appear here as they sync." : "No NYC visits synced yet. Your Blackbird check-ins appear here privately."} />}
+      })}</div> : <Empty title="Your places, verified" body={d.passport?.status === "syncing" ? "Your Blackbird visits will appear here as they sync." : "No NYC visits synced yet. Your Blackbird places will also appear on your public profile."} />}
     </>;
   }
   function row(v: Venue, i: number) {
@@ -742,8 +744,7 @@ export default function Tabletalk() {
           <div>
             <h3>A dining history with good taste.</h3>
             <p>
-              Connect Blackbird to bring your visits into your own private
-              notebook.
+              Connect Blackbird to show the places you’ve visited on your profile.
             </p>
           </div>
           <button
@@ -898,7 +899,8 @@ export default function Tabletalk() {
             <h1>
               Good taste <span className="serif">travels.</span>
             </h1>
-            <p>Lists to borrow, places to try, friends to thank later.</p>
+            <p>Lists from the community, with the most widely explored diners first.</p>
+            <p className="small muted">Ranked by the creator’s distinct verified places visited.</p>
           </div>
           <button
             className="btn primary"
@@ -1047,6 +1049,7 @@ export default function Tabletalk() {
           </div>
           <aside className="panel" style={{ alignSelf: "start" }}>
             <h3>Taste worth following</h3>
+            <p className="small muted">Most verified places visited first.</p>
             <div className="people" style={{ marginTop: 23 }}>
               {d.people
                 .filter((p) => p.id !== me?.id)
@@ -1060,7 +1063,7 @@ export default function Tabletalk() {
                       <Link href={`/profile/${p.id}`}>
                         <strong>{p.name}</strong>
                       </Link>
-                      <small>{p.demo ? "Demo diner" : "NYC diner"}</small>
+                      <small>{p.visited_count || 0} verified places visited</small>
                     </div>
                     <button
                       className="btn"
@@ -1136,6 +1139,9 @@ export default function Tabletalk() {
   } else if (active === "me" || active === "profile") {
     const p = active === "me" ? me : person(path.split("/")[2]);
     const own = p?.id === me?.id;
+    const visited = publicVisits.filter(v => v.user_id === p?.id)
+      .map(v => venue(v.venue_id)).filter((v): v is Venue => !!v)
+      .sort((a,b) => a.name.localeCompare(b.name) || a.neighborhood.localeCompare(b.neighborhood) || a.id.localeCompare(b.id));
     const ranked = d.reviews
       .filter((r) => r.user_id === p?.id)
       .sort((a, b) => b.rating - a.rating);
@@ -1167,11 +1173,7 @@ export default function Tabletalk() {
               <div>
                 <strong>{ls.length}</strong>Lists
               </div>
-              {own && (
-                <div>
-                  <strong>{d.visits.length}</strong>Verified spots
-                </div>
-              )}
+              <div><strong>{visited.length}</strong>Verified places visited</div>
             </div>
             <div className="actions" style={{ marginTop: 18 }}>
               {p.demo ? <span className="demo-tag">Demo diner</span> : null}
@@ -1199,41 +1201,29 @@ export default function Tabletalk() {
             </div>
           </div>
         </div>
-        {own && <Link className="btn" style={{marginBottom:24}} href="/saved?tab=visits">View my private visits in My notebook</Link>}
+        {own && <Link className="btn" style={{marginBottom:24}} href="/saved?tab=visits">View my visit details in My notebook</Link>}
         <Tabs value={profileTab} onValueChange={setProfileTab}>
           <TabsList variant="line" className="tabs-list">
-            <TabsTrigger value="rankings">Reviews</TabsTrigger>
+            <TabsTrigger value="visits">Been there ({visited.length})</TabsTrigger>
+            <TabsTrigger value="rankings">Reviews ({ranked.length})</TabsTrigger>
             <TabsTrigger value="lists">Public lists</TabsTrigger>
           </TabsList>
         </Tabs>
-        {profileTab === "rankings" ? (
+        {profileTab === "visits" ? (
+          visited.length ? <>
+            <p className="notebook-description">Places visited, verified by Blackbird check-ins.</p>
+            <div className="public-visits">{visited.map(v => <article className="visit-row" key={v.id}>
+              <div className="row-info"><Link href={`/restaurants/${v.id}`}><h2>{v.name}</h2></Link><p className="muted">{v.neighborhood} · {v.cuisine}</p></div>
+              <span className="verified"><CheckCircle2 size={16} /> Visited</span>
+            </article>)}</div>
+          </> : <Empty title="No verified visits yet" body={own ? "Your Blackbird places appear here after your visits sync." : "Places will appear here when this diner syncs Blackbird visits."} />
+        ) : profileTab === "rankings" ? (
           ranked.length ? (
-            ranked.map((r, i) => (
-              <div key={r.id} className="list-row">
-                <span className="rank">{i + 1}</span>
-                <div className="row-info">
-                  <Link href={`/restaurants/${r.venue_id}`}>
-                    <h3>{venue(r.venue_id)?.name}</h3>
-                  </Link>
-                  <p className="small muted">{r.dish || r.body.slice(0, 80)}</p>
-                </div>
-                <span className="score">{r.rating.toFixed(1)}</span>
-                {own && venue(r.venue_id) && (
-                  <button
-                    className="btn"
-                    onClick={() =>
-                      setModal({ type: "review", venue: venue(r.venue_id)! })
-                    }
-                  >
-                    Edit
-                  </button>
-                )}
-              </div>
-            ))
+            <div className="stack">{ranked.map(r => reviewCard(r, true))}</div>
           ) : (
             <Empty
               title="Every good notebook has a first page"
-              body="Review a restaurant to start your personal ranking."
+              body={own ? "Review a restaurant you’ve visited to share your experience." : "This diner hasn’t published a review yet."}
               action={
                 <Link href="/" className="btn primary">
                   Explore NYC
@@ -1286,8 +1276,8 @@ export default function Tabletalk() {
         <p>
           Sign in with Blackbird to save places, create lists and follow diners.
           Anything you publish as a review, profile or public list is visible to
-          other visitors. Private lists, bookmarks and imported dining history
-          stay private.
+          other visitors. Verified places you’ve visited also appear on your profile.
+          Visit dates, private lists and bookmarks stay private.
         </p>
         <h2>Blackbird, connected thoughtfully.</h2>
         <p>
@@ -1539,7 +1529,7 @@ function ModalBody({
             </p>
           )}
           <p className="form-help">
-            Browsing and public lists are always open. No account needed.
+            Your verified visited places appear on your public profile. Check-in dates stay private. Browsing is always open.
           </p>
         </div>
       </>

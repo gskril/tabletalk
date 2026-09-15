@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { localSession, localCatalog } from "./local-session";
+import { localSession, localCatalog, localPublicProfile } from "./local-session";
 async function join(page: Page, name: string) {
   await localSession(page.context(), baseURL, name);
   await page.reload();
@@ -360,7 +360,7 @@ test("passport updates automatically and only offers recovery actions when neede
   await expect(page.getByRole("tab", { name: "Lists", exact:true })).toHaveAttribute("aria-selected", "true");
   await page.goto("/me");
   await expect(page.getByRole("tab", { name: "Private passport" })).toHaveCount(0);
-  await page.getByRole("link", {name:"View my private visits in My notebook"}).click();
+  await page.getByRole("link", {name:"View my visit details in My notebook"}).click();
   await expect(page.locator(".visit-row h2")).toHaveText("Rubirosa");
   await page.setViewportSize({width:390, height:844});
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -416,4 +416,25 @@ test("WebMCP tool contract validates input and reads the same restaurant state",
   expect(result.failed).toBe(true);
   expect(result.data).toMatchObject([{ id: "rubirosa", name: "Rubirosa" }]);
   expect(result.annotations).toMatchObject({ readOnlyHint: true });
+});
+
+
+test("guest profiles show verified places and full reviews without private check-in dates", async ({page}) => {
+  localPublicProfile(baseURL);
+  await page.goto('/profile/e2e-public-diner');
+  await expect(page.getByRole('heading',{name:'Public explorer',exact:true})).toBeVisible();
+  await expect(page.locator('.public-visits .visit-row')).toHaveCount(3);
+  await expect(page.locator('.public-visits h2')).toHaveText(['BINX','Rubirosa','Thai Diner']);
+  await expect(page.getByText(/Last visited/)).toHaveCount(0);
+  await expect(page.getByRole('link',{name:'View my visit details in My notebook'})).toHaveCount(0);
+  await page.getByRole('tab',{name:'Reviews (1)',exact:true}).click();
+  await expect(page.getByText('A full review visible on the public profile.',{exact:true})).toBeVisible();
+  await expect(page.locator('.review a[href="/restaurants/rubirosa"]')).toContainText('Rubirosa');
+  const data = await (await page.request.get('/api/state')).json();
+  expect(data.visits).toEqual([]);
+  expect(data.people.find((p:{id:string})=>p.id==='e2e-public-diner').visited_count).toBe(3);
+  await page.goto('/feed');
+  await expect(page.getByText('Most verified places visited first.',{exact:true})).toBeVisible();
+  await page.goto('/lists');
+  await expect(page.getByText('Ranked by the creator’s distinct verified places visited.',{exact:true})).toBeVisible();
 });

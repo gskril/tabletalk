@@ -86,3 +86,16 @@ export function localCatalog(baseURL: string) {
     }
   } finally { sql.close(); }
 }
+
+export function localPublicProfile(baseURL: string) {
+  localCatalog(baseURL); // Includes the local-only origin and database checks.
+  const directory = ".wrangler/state/v3/d1/miniflare-D1DatabaseObject";
+  const file = readdirSync(directory).find(f => f.endsWith(".sqlite") && f !== "metadata.sqlite")!;
+  const sql = new DatabaseSync(`${directory}/${file}`);
+  try {
+    sql.exec("PRAGMA busy_timeout=5000");
+    sql.prepare("INSERT OR IGNORE INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES('e2e-public-diner','Public explorer','','#ed563d',0,'staging:public-explorer','2026-09-01')").run();
+    for(const id of ['rubirosa','binx','thai-diner']) sql.prepare("INSERT OR REPLACE INTO visits VALUES('e2e-public-diner',?,'2026-09-07T18:45:00Z')").run(id);
+    sql.prepare("INSERT OR REPLACE INTO reviews(id,user_id,venue_id,rating,body,dish,visited_at,created_at) VALUES('e2e-public-review','e2e-public-diner','rubirosa',9.2,'A full review visible on the public profile.','Pizza','2026-09-07','2026-09-08')").run();
+  } finally {sql.close();}
+}

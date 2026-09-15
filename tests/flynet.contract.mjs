@@ -760,3 +760,45 @@ test("restaurant name takes precedence over the location label", async () => {
   await upsertVenue({...l, name:"Location fallback", restaurant:{...l.restaurant, name:" "}}).run();
   assert.equal(sql.prepare("SELECT name FROM venues WHERE id=?").get(l.id).name, "Location fallback");
 });
+
+
+test("public places and community ranking use only verified distinct locations", async () => {
+  const oldKey = env.FLYNET_API_KEY;
+  const oldSession = cookieJar.get("tt_session");
+  env.FLYNET_API_KEY = "";
+  cookieJar.delete("tt_session");
+  for (const [user, count] of [["rank-explorer", 3], ["rank-new", 1]]) {
+    sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#fff',0,?,?)")
+      .run(user,user,"staging:"+user,at);
+    for (let i=0;i<count;i++) {
+      const venue = "rank-place-"+i;
+      sql.prepare("INSERT OR IGNORE INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'staging',updated_at FROM venues WHERE id=?").run(venue,locationId);
+      sql.prepare("INSERT OR REPLACE INTO visits VALUES(?,?,?)").run(user,venue,at);
+    }
+    sql.prepare("INSERT INTO lists(id,user_id,title,description,visibility,color,created_at) VALUES(?,?,'Ranking list','','public','#fff',?)")
+      .run(user+"-list",user,user === "rank-new" ? "2099-01-01" : at);
+  }
+  // Repeat visits update the same proof, not the diner's distinct-place count.
+  sql.prepare("UPDATE visits SET visited_at='2026-09-12T18:00:00Z' WHERE user_id='rank-explorer'").run();
+  // A fixture identity and cross-environment location must not add public proof.
+  sql.prepare("INSERT OR IGNORE INTO visits VALUES('demo-member','rank-place-0',?)").run(at);
+  sql.prepare("INSERT OR IGNORE INTO visits VALUES('wrong-environment','rank-place-0',?)").run(at);
+  try {
+    const response = await state();
+    assert.equal(response.status,200);
+    const data = await response.json();
+    assert.equal(data.people.find(p=>p.id==='rank-explorer').visited_count,3);
+    assert.equal(data.people.find(p=>p.id==='rank-new').visited_count,1);
+    assert(data.people.findIndex(p=>p.id==='rank-explorer') < data.people.findIndex(p=>p.id==='rank-new'));
+    assert(data.lists.findIndex(l=>l.id==='rank-explorer-list') < data.lists.findIndex(l=>l.id==='rank-new-list'));
+    assert.equal(data.publicVisits.filter(v=>v.user_id==='rank-explorer').length,3);
+    assert(!data.publicVisits.some(v=>v.user_id==='demo-member' || v.user_id==='wrong-environment'));
+    for (const visit of data.publicVisits) assert.deepEqual(Object.keys(visit).sort(),['user_id','venue_id']);
+    assert.deepEqual(data.visits,[]);
+    assert.equal(data.passport,null);
+    assert(!data.people.some(p=>'external_id' in p || 'email' in p));
+  } finally {
+    env.FLYNET_API_KEY=oldKey;
+    if(oldSession) cookieJar.set('tt_session',oldSession);
+  }
+});

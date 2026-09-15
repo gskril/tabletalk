@@ -4,6 +4,7 @@ import { integrationStatus } from "@/lib/flynet";
 import { verifiedVisitFrom } from "@/lib/review-eligibility";
 import { publicCatalog } from "@/lib/catalog-cache";
 import { memberPassport } from "@/lib/passport";
+import type { Person } from "@/lib/types";
 export const dynamic = "force-dynamic";
 export async function GET() {
   try {
@@ -22,9 +23,10 @@ export async function GET() {
       following,
       likes,
       visits,
+      publicVisits,
     ] = await Promise.all([
       all("SELECT * FROM venues WHERE source!='demo' ORDER BY source DESC,name"),
-      all(`SELECT id,name,bio,color,demo FROM profiles WHERE id IN (${memberProfileIds})`),
+      all<Person>(`SELECT id,name,bio,color,demo FROM profiles WHERE id IN (${memberProfileIds})`),
       all(
         `SELECT r.*,p.name,p.color,p.demo,1 AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id AND l.user_id IN (${memberProfileIds})) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id WHERE EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=r.user_id AND v.venue_id=r.venue_id) ORDER BY r.created_at DESC`,
       ),
@@ -48,21 +50,33 @@ export async function GET() {
         `SELECT v.venue_id,v.visited_at ${verifiedVisitFrom} AND v.user_id=?`,
         uid,
       ),
+      all<{user_id:string; venue_id:string}>(
+        `SELECT v.user_id,v.venue_id ${verifiedVisitFrom} ORDER BY v.user_id,v.venue_id`,
+      ),
     ]);
+    const visitCounts = new Map<string, number>();
+    for (const visit of publicVisits)
+      visitCounts.set(visit.user_id, (visitCounts.get(visit.user_id) || 0) + 1);
+    const rankedPeople = people.map(p => ({...p, visited_count: visitCounts.get(String(p.id)) || 0}))
+      .sort((a,b) => b.visited_count - a.visited_count || String(a.name).localeCompare(String(b.name)) || String(a.id).localeCompare(String(b.id)));
+    const rankedLists = [...lists].sort((a,b) =>
+      (visitCounts.get(String(b.user_id)) || 0) - (visitCounts.get(String(a.user_id)) || 0)
+      || String(b.created_at).localeCompare(String(a.created_at)) || String(a.id).localeCompare(String(b.id)));
     return Response.json(
       {
         me,
         passport,
         venues,
-        people,
+        people: rankedPeople,
         reviews,
-        lists,
+        lists: rankedLists,
         items,
         saved: saved.map((x) => x.list_id),
         bookmarks: bookmarks.map((x) => x.venue_id),
         following: following.map((x) => x.target_id),
         likes: likes.map((x) => x.review_id),
         visits,
+        publicVisits,
         integration: integrationStatus(),
         catalog,
       },

@@ -170,3 +170,11 @@ export const catalogCache = sqliteTable("catalog_cache", {
   nextAttemptAt: integer("next_attempt_at").notNull().default(0),
   leaseToken: text("lease_token").notNull().default(""),
 });
+export const passportSyncs = sqliteTable("passport_syncs", {
+  userId: text("user_id").primaryKey().references(() => profiles.id, { onDelete: "cascade" }),
+  status: text("status").notNull().default("syncing"),
+  syncedAt: integer("synced_at"),
+  nextAttemptAt: integer("next_attempt_at").notNull().default(0),
+  leaseToken: text("lease_token").notNull().default(""),
+  complete: integer("complete").notNull().default(1),
+});

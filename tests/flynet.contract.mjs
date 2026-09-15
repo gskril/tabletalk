@@ -6,6 +6,7 @@ import { env, backgroundTasks } from "./runtime-mock.mjs";
 import { publicCatalog } from "../lib/catalog-cache.ts";
 import { POST as checkCatalog } from "../app/api/flynet/discovery/route.ts";
 import { authDiagnostic } from "../lib/auth-diagnostics.ts";
+import { memberPassport } from "../lib/passport.ts";
 import { cookieJar } from "./headers-mock.mjs";
 import { GET as start } from "../app/api/auth/blackbird/start/route.ts";
 import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
@@ -193,8 +194,8 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
   );
   assert.equal(url.searchParams.get("audience"), "test-audience");
   assert.ok(url.searchParams.get("code_challenge"));
-  const state = url.searchParams.get("state");
-  cookieJar.set("tt_oauth", state);
+  const oauthState = url.searchParams.get("state");
+  cookieJar.set("tt_oauth", oauthState);
   const forged = await callback(
     new Request(
       "https://tabletalk.test/api/auth/blackbird/callback?state=wrong&code=fake",
@@ -204,7 +205,7 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
   assert.equal(calls.length, 0);
   const cbUrl =
     "https://tabletalk.test/api/auth/blackbird/callback?state=" +
-    state +
+    oauthState +
     "&code=one-use-code";
   const good = await callback(new Request(cbUrl));
   assert.match(good.headers.get("location"), /connected=1/);
@@ -227,6 +228,14 @@ test("PKCE, browser state, exchange, encrypted token, private check-in import an
   const replay = await callback(new Request(cbUrl));
   assert.match(replay.headers.get("location"), /auth_error/);
   assert.equal(calls.length, before);
+  // Landing after sign-in starts private sync without an explicit import action.
+  const landing = await (await state()).json();
+  assert.equal(landing.passport.status, "syncing");
+  await Promise.all(backgroundTasks.splice(0));
+  const ready = await (await state()).json();
+  assert.equal(ready.passport.status, "ready");
+  assert.equal(ready.visits.length, 1);
+  assert.ok(!JSON.stringify(ready).includes("valid-provider-token"));
   const imported = await sync(
     new Request("https://tabletalk.test/api/flynet/sync", {
       method: "POST",
@@ -633,6 +642,56 @@ test("OAuth diagnostics omit provider payloads, tokens and unrecognized error st
   assert.deepEqual(diagnostic, { kind: "unknown", status: null, code: "SDKValidationError", invalidFields: ["email"] });
   assert.equal(JSON.stringify(diagnostic).includes(secret), false);
   assert.deepEqual(authDiagnostic({ kind: secret, code: secret, message: secret }), { kind: "unknown", status: null, code: null, invalidFields: [] });
+});
+test("automatic passport sync deduplicates requests, stays private, and preserves visits on failure", async () => {
+  const user = await currentUser();
+  const sessionCookie = cookieJar.get("tt_session");
+  sql.prepare("UPDATE sessions SET token_expires_at=? WHERE user_id=?").run(Date.now() + 3600000, user.id);
+  sql.prepare("DELETE FROM passport_syncs WHERE user_id=?").run(user.id);
+  const original = globalThis.fetch;
+  let requests = 0;
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  let markEntered;
+  const entered = new Promise(resolve => { markEntered = resolve; });
+  globalThis.fetch = async (input, init) => {
+    const request = new Request(input, init);
+    assert.ok(new URL(request.url).pathname.endsWith("/users/me/check_ins"));
+    assert.equal(request.headers.get("Authorization"), "Bearer valid-provider-token");
+    requests++;
+    markEntered();
+    await gate;
+    return Response.json({ check_ins: [], pagination });
+  };
+  try {
+    assert.equal((await memberPassport(user.id)).status, "syncing");
+    assert.equal((await memberPassport(user.id)).status, "syncing");
+    await entered;
+    assert.equal(requests, 1);
+    cookieJar.delete("tt_session");
+    const guest = await (await state()).json();
+    assert.equal(guest.passport, null);
+    assert.deepEqual(guest.visits, []);
+    cookieJar.set("tt_session", sessionCookie);
+    release();
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal((await memberPassport(user.id)).status, "ready");
+    assert.equal(requests, 1);
+    const visitsBefore = sql.prepare("SELECT count(*) AS n FROM visits WHERE user_id=?").get(user.id).n;
+    sql.prepare("UPDATE passport_syncs SET next_attempt_at=0 WHERE user_id=?").run(user.id);
+    globalThis.fetch = async () => new Response(null, { status: 403 });
+    await memberPassport(user.id);
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal((await memberPassport(user.id)).status, "error");
+    assert.equal(sql.prepare("SELECT count(*) AS n FROM visits WHERE user_id=?").get(user.id).n, visitsBefore);
+    globalThis.fetch = async () => new Response(null, { status: 401 });
+    assert.equal((await memberPassport(user.id, true)).status, "syncing");
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal((await memberPassport(user.id)).status, "reconnect");
+  } finally {
+    release(); await Promise.all(backgroundTasks.splice(0));
+    globalThis.fetch = original; cookieJar.set("tt_session", sessionCookie);
+  }
 });
 test.after(() => {
   globalThis.fetch = realFetch;

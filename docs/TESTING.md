@@ -4,7 +4,7 @@
 - **TypeScript:** `npm run typecheck` — passed.
 - **Production build:** Sites build helper / Vinext Worker build — passed.
 - **Browser E2E:** six Playwright suites against the built Worker; includes Blackbird-only UI and rejection of retired authentication methods.
-- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **12 passed**.
+- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **13 passed**.
 
 ### Browser coverage
 1. Anonymous restaurant search, empty results/reset, neighborhood filter, zoomable map selection, venue navigation, directions, mobile width.
@@ -49,7 +49,7 @@ Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the 
 Successful live Blackbird token exchange, canonical member profile, real private check-in import, and a public review backed by that real import. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the remaining live smoke test.
 
 ## Reproduce
-Build, apply all three local migrations once, start the local Worker with an explicitly empty test environment file (do not use production credentials for the synthetic suite), then:
+Build, apply all four local migrations once, start the local Worker with an explicitly empty test environment file (do not use production credentials for the synthetic suite), then:
 
 ```sh
 TEST_BASE_URL=http://127.0.0.1:5173 npm run test:e2e
@@ -58,3 +58,10 @@ npm run typecheck
 ```
 
 The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Live Blackbird sign-in is configured but its reported callback failure remains under investigation.
+
+## Automatic passport update
+- Successful real Blackbird sign-in is now confirmed by the owner and a persisted production profile.
+- Authenticated page loads start private visit sync automatically, including existing sessions; the browser polls only while syncing. Normal use has no Connect/Import controls. Retry appears after sync errors; Reconnect appears only when provider access is unavailable.
+- Thirteen contract tests pass, including OAuth-to-automatic-sync, concurrent import deduplication, no repeated calls while fresh, guest privacy, retry and expired/revoked access.
+- Targeted browser checks for notebook behavior, Blackbird-only auth, and automatic passport/recovery states pass. The local Worker stopped during the first passport browser attempt; the isolated rerun passed after restart.
+- The owner must reload the deployed app to trigger the first live automatic visit sync; a real visit-backed review remains to be verified.

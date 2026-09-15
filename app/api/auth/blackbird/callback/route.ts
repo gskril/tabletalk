@@ -59,6 +59,9 @@ export async function GET(req: Request) {
       .bind(externalId)
       .first<{ id: string }>();
     if (!account) throw new Error("Missing account");
+    // A fresh connection restores access; the first authenticated page load
+    // automatically synchronizes visits using the new session's token.
+    await db().prepare("DELETE FROM passport_syncs WHERE user_id=?").bind(account.id).run();
     phase = "session";
     // Deliberately do not retain the refresh token: reconnect after access expiry, avoiding rotating-token races.
     const headers = new Headers({

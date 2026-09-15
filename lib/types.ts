@@ -46,7 +46,13 @@ export type DiningList = {
   created_at: string;
   saves: number;
 };
+export type Passport = {
+  status: "syncing" | "ready" | "error" | "reconnect";
+  syncedAt: number | null;
+  complete: boolean;
+};
 export type State = {
+  passport?: Passport | null;
   catalog?: { locationIds: string[]; syncedAt: number | null } | null;
   me: Person | null;
   venues: Venue[];

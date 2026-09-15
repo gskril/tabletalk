@@ -26,8 +26,8 @@ For local development set `.env`. For hosting use Sites environment variables an
 2. Click Connect with Blackbird, approve only the requested scopes, and land on `/me?connected=1`.
 3. Confirm the profile uses the authenticated member and no token appears in HTML, browser storage, network DTOs or logs.
 4. Open Explore signed out; the catalog populates automatically from Discovery. The same-origin `POST /api/flynet/discovery` checks this shared cache without requiring sign-in and cannot bypass the refresh interval.
-5. Import visits from My profile; verify actual NYC check-ins appear only in Private passport.
-6. Attempt a review before importing: expect 403. Import visits, then write/edit a public review for an imported venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
+5. Open My profile; verify visits sync automatically and actual NYC check-ins appear only in Private passport. Existing signed-in sessions also start syncing when they next load a page.
+6. Attempt a review without a verified visit: expect 403. Once automatic syncing finishes, write/edit a public review for a verified venue. Check that another location of the same restaurant brand, another member’s visit, and a legacy demo session all remain blocked. A client-supplied `verified` flag must never authorize a review.
 7. View the list/review in a second browser and confirm private history remains absent.
 8. Exercise logout and reconnect; repeat sign-in should recover the same Blackbird account.
 9. After provider token expiry, importing requests reconnect. Existing app reviews/lists remain usable. Refresh tokens are deliberately discarded in this MVP to avoid storing an additional credential or racing single-use rotation.
@@ -38,7 +38,7 @@ For local development set `.env`. For hosting use Sites environment variables an
 - Discovery and visit imports process up to 40 pages of 50 rows per request. A `complete:false` result means the bound was reached; do not claim a full history import.
 - Imports upsert by physical location ID. Brand-level restaurant IDs are not interchangeable with location IDs.
 - Staging records are visibly distinguished from live production participation.
-- Import is explicit and private; no raw user history is inferred from the anonymized venue check-in feed.
+- Member history sync is automatic after sign-in and remains private. Authenticated page loads check every 15 minutes while provider access is valid; failures preserve saved visits and retry after five minutes. A per-member lease prevents overlapping syncs. No raw user history is inferred from the anonymized venue check-in feed.
 - Blackbird is the only accepted identity. Legacy demo/platform sessions are rejected; their records are not merged into Blackbird accounts.
 - Sessions last 30 days. Provider access is usable only until its issued expiry. Deleting a local session on logout removes its encrypted provider token.
 - No FLY transfer, reward issuance or onchain signature is performed by the app.

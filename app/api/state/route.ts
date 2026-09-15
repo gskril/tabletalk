@@ -4,12 +4,14 @@ import { currentUser, failure } from "@/lib/auth";
 import { integrationStatus } from "@/lib/flynet";
 import { verifiedVisitFrom } from "@/lib/review-eligibility";
 import { publicCatalog } from "@/lib/catalog-cache";
+import { memberPassport } from "@/lib/passport";
 export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     await seed();
     const catalog = await publicCatalog();
     const me = await currentUser();
+    const passport = me ? await memberPassport(me.id) : null;
     const uid = me?.id || "";
     const [
       venues,
@@ -52,6 +54,7 @@ export async function GET() {
     return Response.json(
       {
         me,
+        passport,
         venues: venues.map((v) =>
           v.source === "demo" && extraPhotos[String(v.name)]
             ? { ...v, image: extraPhotos[String(v.name)] }

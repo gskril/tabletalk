@@ -168,6 +168,11 @@ export default function Tabletalk() {
     load();
   }, [load]);
   useEffect(() => {
+    if (data?.passport?.status !== "syncing") return;
+    const timer = window.setTimeout(load, 1500);
+    return () => window.clearTimeout(timer);
+  }, [data, load]);
+  useEffect(() => {
     const authError = params.get("auth_error");
     if (authError) {
       const messages: Record<string, string> = {
@@ -182,7 +187,7 @@ export default function Tabletalk() {
         (reference && /^[a-f0-9]{8}$/.test(reference) ? ` Reference: ${reference}.` : ""), { duration: 15000 });
     }
     if (params.get("connected"))
-      toast.success("Blackbird connected. Import visits from your passport.");
+      toast.success("Blackbird connected. Your visits sync automatically.");
   }, [params]);
   async function action(body: Record<string, unknown>) {
     const r = await fetch("/api/action", {
@@ -1166,18 +1171,26 @@ export default function Tabletalk() {
         {own && (
           <div className="banner" style={{ margin: "0 0 25px" }}>
             <div>
-              <h3>Your Blackbird passport</h3>
+              <h3>{d.passport?.status === "reconnect" ? "Your Blackbird passport" : "Blackbird connected"}</h3>
               <p>
-                {d.integration.configured
-                  ? "Import your visits privately to unlock reviews for those locations."
-                  : "Blackbird connection awaits partner access. Your notebook already works."}
+                {d.passport?.status === "syncing"
+                  ? "Finding the places you’ve been. Your visits stay private."
+                  : d.passport?.status === "error"
+                    ? "We couldn’t update your visits. Your saved visits are still here."
+                    : d.passport?.status === "reconnect"
+                      ? "Reconnect to keep your visits up to date. Your saved visits are still here."
+                      : d.passport?.complete === false
+                        ? "Your visits synced privately. Some older visits may still be missing."
+                        : "Your visits sync automatically and stay private. Review any verified spot."}
               </p>
             </div>
             <div className="actions">
-              <a className="btn" href="/api/auth/blackbird/start">
-                Connect Blackbird
-              </a>
-              {d.integration.configured && (
+              {d.passport?.status === "reconnect" && (
+                <a className="btn" href="/api/auth/blackbird/start">Reconnect Blackbird</a>
+              )}
+              {d.passport?.status === "syncing" && <span role="status">Syncing visits…</span>}
+              {d.passport?.status === "ready" && <span className="verified"><CheckCircle2 size={16} /> Visits synced</span>}
+              {d.passport?.status === "error" && (
                 <button
                   className="btn dark"
                   disabled={busy}
@@ -1194,9 +1207,6 @@ export default function Tabletalk() {
                       };
                       if (!r.ok) throw new Error(b.error);
                       await load();
-                      toast.success(
-                        `Imported ${b.count} visited spots privately.${b.complete === false ? " Import limit reached; more history may remain." : ""}`,
-                      );
                     } catch (e) {
                       toast.error((e as Error).message);
                     } finally {
@@ -1204,7 +1214,7 @@ export default function Tabletalk() {
                     }
                   }}
                 >
-                  Import visits
+                  Retry sync
                 </button>
               )}
             </div>
@@ -1261,7 +1271,7 @@ export default function Tabletalk() {
         ) : (
           <Empty
             title="Your visits, just for you"
-            body="Connect Blackbird and import your check-ins to build your private passport."
+            body={d.passport?.status === "syncing" ? "Your Blackbird visits will appear here as they sync." : "No NYC visits synced yet. Your Blackbird check-ins appear here privately."}
           />
         )}
         {own && (
@@ -1578,12 +1588,12 @@ function ModalBody({
           </p>
           <p className="form-help">
             {data.integration.configured
-              ? "Connect your Blackbird account, then import your visits from your private passport. Reviews unlock only for locations in your imported history."
+              ? "Your Blackbird visits sync automatically. Reviews unlock for locations you’ve checked in to. Check your private passport for the sync status."
               : "Blackbird connection is awaiting partner access. You can still browse restaurants and public lists; account features will unlock after Blackbird sign-in is available."}
           </p>
-          {data.integration.configured && (
+          {data.integration.configured && data.passport?.status === "reconnect" && (
             <a className="btn primary" href="/api/auth/blackbird/start">
-              Connect Blackbird
+              Reconnect Blackbird
             </a>
           )}
           <a className="btn" href="/me">

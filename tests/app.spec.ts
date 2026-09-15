@@ -330,6 +330,33 @@ test("only Blackbird sign-in is offered; legacy sessions and platform headers ca
     ).status(),
   ).toBe(410);
 });
+test("passport updates automatically and only offers recovery actions when needed", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "New York, by taste." })).toBeVisible();
+  await localSession(page.context(), baseURL, "Passport diner");
+  let mode = "syncing";
+  let reads = 0;
+  await page.route("**/api/state", async route => {
+    const response = await route.fetch();
+    const body = await response.json();
+    reads++;
+    const status = mode === "syncing" && reads > 1 ? "ready" : mode;
+    await route.fulfill({ response, json: { ...body, passport: { status, syncedAt: status === "ready" ? Date.now() : null, complete: true } } });
+  });
+  await page.goto("/me");
+  await expect(page.getByText("Syncing visits…", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Import visits", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Connect Blackbird", exact: true })).toHaveCount(0);
+  await expect(page.getByText("Visits synced", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Reconnect Blackbird", exact: true })).toHaveCount(0);
+  mode = "error";
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Retry sync", exact: true })).toBeVisible();
+  mode = "reconnect";
+  await page.reload();
+  await expect(page.getByRole("link", { name: "Reconnect Blackbird", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry sync", exact: true })).toHaveCount(0);
+});
 test("WebMCP tool contract validates input and reads the same restaurant state", async ({
   page,
 }) => {

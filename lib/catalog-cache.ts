@@ -16,14 +16,16 @@ async function snapshot(environment: string) {
 export async function publicCatalog(background = true) {
   const { apiKey, environment } = settings();
   if (!apiKey) return null;
-  let saved = await snapshot(environment);
+  // Invalidate older city-name-only snapshots when the coverage rules change.
+  const cacheKey = `${environment}:nyc-postal-v2`;
+  let saved = await snapshot(cacheKey);
   const time = Date.now();
   if (!saved || saved.next_attempt_at <= time) {
     const token = crypto.randomUUID();
     // One refresh across Worker isolates, with recovery if a Worker is stopped.
     const claimed = await db().prepare(
       "INSERT INTO catalog_cache(environment,lease_token,next_attempt_at) VALUES(?,?,?) ON CONFLICT(environment) DO UPDATE SET lease_token=excluded.lease_token,next_attempt_at=excluded.next_attempt_at WHERE catalog_cache.next_attempt_at<=? RETURNING lease_token",
-    ).bind(environment,token,time + LEASE_MS,time).first<{ lease_token: string }>();
+    ).bind(cacheKey,token,time + LEASE_MS,time).first<{ lease_token: string }>();
     if (claimed) {
       const refresh = async () => {
         try {
@@ -32,22 +34,24 @@ export async function publicCatalog(background = true) {
           const completedAt = Date.now();
           await db().prepare(
             "UPDATE catalog_cache SET location_ids=?,synced_at=?,next_attempt_at=?,lease_token='' WHERE environment=? AND lease_token=?",
-          ).bind(JSON.stringify(result.locationIds),completedAt,completedAt + FRESH_MS,environment,token).run();
+          ).bind(JSON.stringify(result.locationIds),completedAt,completedAt + FRESH_MS,cacheKey,token).run();
         } catch {
           // Retain the last complete snapshot and back off during provider outages.
           await db().prepare(
             "UPDATE catalog_cache SET next_attempt_at=?,lease_token='' WHERE environment=? AND lease_token=?",
-          ).bind(Date.now() + RETRY_MS,environment,token).run();
+          ).bind(Date.now() + RETRY_MS,cacheKey,token).run();
           console.warn("Blackbird catalog refresh failed; retaining saved catalog.");
         }
       };
       if (saved?.synced_at && background) waitUntil(refresh());
       else {
         await refresh();
-        saved = await snapshot(environment);
+        saved = await snapshot(cacheKey);
       }
-    } else saved = await snapshot(environment);
+    } else saved = await snapshot(cacheKey);
   }
+  // Keep the last successful older snapshot available if the first new import fails.
+  if (!saved?.synced_at) saved = await snapshot(environment);
   return {
     locationIds: JSON.parse(saved?.location_ids || "[]") as string[],
     syncedAt: saved?.synced_at || null,

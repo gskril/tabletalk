@@ -129,6 +129,11 @@ type Location = Awaited<
   ReturnType<FlynetDiscoveryClient["locations"]["getLocation"]>
 >;
 export function isNYC(l: Location) {
+  if (!["ny", "new york"].includes(l.address?.state?.trim().toLowerCase() || "")) return false;
+  const zip = l.address?.zipcode?.trim() || "";
+  // NYC's published postal ranges also cover Queens neighborhood city names.
+  // Mixed Nassau/Queens ZIPs (11001/11040/11096) need an explicit borough name.
+  const nycZip = /^(?:(?:10[0-4]|11[1-4]|116)\d{2}|11004|11005)(?:-\d{4})?$/.test(zip);
   return (
     [
       "new york",
@@ -138,8 +143,7 @@ export function isNYC(l: Location) {
       "bronx",
       "staten island",
       "manhattan",
-    ].includes(l.address?.city?.toLowerCase() || "") &&
-    ["ny", "new york"].includes(l.address?.state?.toLowerCase() || "")
+    ].includes(l.address?.city?.trim().toLowerCase() || "") || nycZip
   );
 }
 export function upsertVenue(l: Location) {

@@ -20,6 +20,7 @@ import { FlynetMemberClient } from "@flynetdev/core";
 import {
   syncVisits,
   syncDiscovery,
+  isNYC,
   encryptToken,
   decryptToken,
 } from "../lib/flynet.ts";
@@ -618,7 +619,7 @@ test("concurrent cold requests acquire only one catalog refresh lease", async ()
 });
 test("stale catalog remains public during background refresh and provider failures back off", async () => {
   const savedFetch = globalThis.fetch;
-  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging'").get().synced_at;
+  const old = sql.prepare("SELECT synced_at FROM catalog_cache WHERE environment='staging:nyc-postal-v2'").get().synced_at;
   sql.prepare("UPDATE catalog_cache SET next_attempt_at=0").run();
   let requests = 0;
   globalThis.fetch = async () => { requests++; return new Response(null, { status: 403 }); };
@@ -631,7 +632,7 @@ test("stale catalog remains public during background refresh and provider failur
     assert.equal(after.syncedAt, old);
     assert.deepEqual(after.locationIds, [locationId]);
     assert.equal(requests, 1);
-    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging'").get().next_attempt_at > Date.now());
+    assert.ok(sql.prepare("SELECT next_attempt_at FROM catalog_cache WHERE environment='staging:nyc-postal-v2'").get().next_attempt_at > Date.now());
   } finally { globalThis.fetch = savedFetch; }
 });
 test("OAuth diagnostics omit provider payloads, tokens and unrecognized error strings", () => {
@@ -692,6 +693,15 @@ test("automatic passport sync deduplicates requests, stays private, and preserve
     release(); await Promise.all(backgroundTasks.splice(0));
     globalThis.fetch = original; cookieJar.set("tt_session", sessionCookie);
   }
+});
+test("NYC coverage includes Queens postal cities and excludes nearby suburbs", () => {
+  for (const [city, zipcode] of [["Astoria", "11106"], ["Long Island City", "11101"], ["Forest Hills", "11375"], ["Glendale", "11385"], ["Ridgewood", "11385-1234"], ["Jamaica", "11432"], ["Far Rockaway", "11691"], ["Glen Oaks", "11004"]]) {
+    assert.equal(isNYC({ ...location, address: { ...location.address, city, zipcode } }), true, city);
+  }
+  for (const [city, zipcode] of [["Westbury", "11590"], ["New Hyde Park", "11040"], ["Great Neck", "11021"]]) {
+    assert.equal(isNYC({ ...location, address: { ...location.address, city, zipcode } }), false, city);
+  }
+  assert.equal(isNYC({ ...location, address: { ...location.address, city: "Astoria", zipcode: "11106", state: "CA" } }), false);
 });
 test.after(() => {
   globalThis.fetch = realFetch;

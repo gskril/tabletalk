@@ -33,3 +33,6 @@ Verification proves attendance at the location according to the imported Blackbi
 
 ## When credentials arrive
 Follow `INTEGRATION.md`: exact callback and scopes, canonical profile, discovery, private import, successful review at an imported location, rejection elsewhere, and a second browser's public-data privacy check. Staging is visibly labeled; production access is separate.
+
+## NYC postal address coverage
+The city-name-only filter omitted 26 real Queens locations whose postal cities are Astoria, Long Island City, Forest Hills, Glendale or Ridgewood. Discovery and private visit sync now share a filter that also recognizes NYC ZIP ranges with a New York state check. Mixed Queens/Nassau ZIPs require an explicit borough city name; broad “New York, NY” region labels alone do not establish NYC location (Westbury is excluded). Coverage is based on the [NYC Department of Finance postal-range reference](https://home4.nyc.gov/assets/finance/downloads/pdf/25pdf/business_tax_forms/nyc-2-instr_2025.pdf). Catalog cache keys include the filter version so the deployment refreshes old snapshots.

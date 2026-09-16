@@ -93,7 +93,9 @@ export default function DiningMap({
                   map.current?.setView([v.lat, v.lng], 16);
               }}
             >
-              <span className="map-picker-photo"><RestaurantImage venue={v} compact /></span>
+              <span className="map-picker-photo">
+                <RestaurantImage venue={v} compact />
+              </span>
               {i + 1}. {v.name}
             </button>
           ))}
@@ -102,8 +104,7 @@ export default function DiningMap({
       <div>
         {current && card(current)}
         <p className="note">
-          Zoom in or select a spot below the map. Sample coordinates are
-          approximate.
+          Zoom in or select a restaurant to see its details.
         </p>
       </div>
     </div>

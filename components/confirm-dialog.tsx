@@ -27,7 +27,7 @@ export default function ConfirmDialog({
         if (!v && !busy) onClose();
       }}
     >
-      <AlertDialogContent>
+      <AlertDialogContent className="confirmation-modal">
         <AlertDialogTitle>{title}</AlertDialogTitle>
         <AlertDialogDescription>
           This removes it from your notebook and any public pages. This cannot

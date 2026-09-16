@@ -25,7 +25,6 @@ import {
   Plus,
   Search,
   SlidersHorizontal,
-  Sparkles,
   Star,
   Users,
   Utensils,
@@ -80,15 +79,18 @@ function Avatar({
   const [failedUrl, setFailedUrl] = useState("");
   const photo = avatarUrl(person.avatar);
   return (
-    <span
-      className={`avatar ${large ? "large" : ""}`}
-      style={{ background: person.color }}
-      aria-hidden="true"
-    >
-      {photo && failedUrl !== photo ? <img
-        src={photo} alt="" loading="lazy" referrerPolicy="no-referrer"
-        onError={() => setFailedUrl(photo)}
-      /> : initials(person.name)}
+    <span className={`avatar ${large ? "large" : ""}`} aria-hidden="true">
+      {photo && failedUrl !== photo ? (
+        <img
+          src={photo}
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setFailedUrl(photo)}
+        />
+      ) : (
+        initials(person.name)
+      )}
     </span>
   );
 }
@@ -133,7 +135,6 @@ function Empty({
 }) {
   return (
     <div className="empty">
-      <Utensils size={30} style={{ margin: "auto", color: "#78866b" }} />
       <h2>{title}</h2>
       <p>{body}</p>
       {action}
@@ -156,10 +157,17 @@ export default function Tabletalk() {
     [occasion, setOccasion] = useState(""),
     [mapView, setMapView] = useState(false),
     [feedTab, setFeedTab] = useState("everyone"),
-    [savedTab, setSavedTab] = useState(["places", "visits", "lists"].includes(params.get("tab") || "") ? params.get("tab")! : "places"),
+    [savedTab, setSavedTab] = useState(
+      ["places", "visits", "lists"].includes(params.get("tab") || "")
+        ? params.get("tab")!
+        : "places",
+    ),
     [profileTab, setProfileTab] = useState("visits");
   const [visibleCount, setVisibleCount] = useState(24);
-  useEffect(() => setVisibleCount(24), [query, neighborhood, cuisine, price, occasion]);
+  useEffect(
+    () => setVisibleCount(24),
+    [query, neighborhood, cuisine, price, occasion],
+  );
   const load = useCallback(async () => {
     try {
       const [r, catalogResponse] = await Promise.all([
@@ -168,13 +176,20 @@ export default function Tabletalk() {
       ]);
       const d = (await r.json()) as State & { error?: string };
       if (!r.ok) throw new Error(d.error);
-      let catalog = await catalogResponse.json() as Pick<State, "venues" | "catalog"> & { error?: string };
+      let catalog = (await catalogResponse.json()) as Pick<
+        State,
+        "venues" | "catalog"
+      > & { error?: string };
       if (!catalogResponse.ok) throw new Error(catalog.error);
       // A new visit can introduce an older restaurant outside the discovery catalog.
       const known = new Set(catalog.venues.map((v: Venue) => v.id));
-      if ([...d.visits, ...d.publicVisits, ...d.items].some(v => !known.has(v.venue_id))) {
+      if (
+        [...d.visits, ...d.publicVisits, ...d.items].some(
+          (v) => !known.has(v.venue_id),
+        )
+      ) {
         const fresh = await fetch("/api/catalog", { cache: "reload" });
-        if (fresh.ok) catalog = await fresh.json() as typeof catalog;
+        if (fresh.ok) catalog = (await fresh.json()) as typeof catalog;
       }
       setData({ ...d, ...catalog });
       setError("");
@@ -189,10 +204,15 @@ export default function Tabletalk() {
   }, [load]);
   useEffect(() => {
     if (!data?.me?.id) return;
-    const refresh = () => { if (document.visibilityState === "visible") void load(); };
+    const refresh = () => {
+      if (document.visibilityState === "visible") void load();
+    };
     const timer = window.setInterval(refresh, 15 * 60 * 1000);
     window.addEventListener("focus", refresh);
-    return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); };
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+    };
   }, [data?.me?.id, load]);
   useEffect(() => {
     if (data?.passport?.status !== "syncing") return;
@@ -203,15 +223,25 @@ export default function Tabletalk() {
     const authError = params.get("auth_error");
     if (authError) {
       const messages: Record<string, string> = {
-        state: "The sign-in session could not be verified. Start again in the same browser.",
-        expired: "This sign-in link has expired or was already used. Please reconnect.",
-        token: "Blackbird could not complete the sign-in exchange. Please reconnect.",
-        token_response: "Blackbird returned an unexpected sign-in response. Please try again.",
+        state:
+          "The sign-in session could not be verified. Start again in the same browser.",
+        expired:
+          "This sign-in link has expired or was already used. Please reconnect.",
+        token:
+          "Blackbird could not complete the sign-in exchange. Please reconnect.",
+        token_response:
+          "Blackbird returned an unexpected sign-in response. Please try again.",
         profile: "We couldn't load your Blackbird profile. Please reconnect.",
       };
       const reference = params.get("auth_ref");
-      toast.error((messages[authError] || "Blackbird connection did not complete. Please reconnect.") +
-        (reference && /^[a-f0-9]{8}$/.test(reference) ? ` Reference: ${reference}.` : ""), { duration: 15000 });
+      toast.error(
+        (messages[authError] ||
+          "Blackbird connection did not complete. Please reconnect.") +
+          (reference && /^[a-f0-9]{8}$/.test(reference)
+            ? ` Reference: ${reference}.`
+            : ""),
+        { duration: 15000 },
+      );
     }
     if (params.get("connected"))
       toast.success("Blackbird connected. Your visits sync automatically.");
@@ -249,7 +279,10 @@ export default function Tabletalk() {
   function go(to: string) {
     window.location.assign(to);
   }
-  const venueById = useMemo(() => new Map(data?.venues.map(v => [v.id, v])), [data?.venues]);
+  const venueById = useMemo(
+    () => new Map(data?.venues.map((v) => [v.id, v])),
+    [data?.venues],
+  );
   const reviewsByVenue = useMemo(() => {
     const grouped = new Map<string, Review[]>();
     for (const review of data?.reviews || []) {
@@ -347,27 +380,13 @@ export default function Tabletalk() {
             <RestaurantImage venue={v} />
           </Link>
           {bookmark(v)}
-          <span className="image-label">
-            {v.source === "demo" ? (
-              <>
-                <Utensils size={12} /> NYC sample spot
-              </>
-            ) : (
-              <>
-                <CheckCircle2 size={12} />{" "}
-                {v.source === "staging"
-                  ? "Blackbird · staging"
-                  : "On Blackbird"}
-              </>
-            )}
-          </span>
         </div>
         <div className="venue-body">
           <div className="venue-title">
             <Link href={`/restaurants/${v.id}`}>
               <h3>{v.name}</h3>
             </Link>
-            {score(v.id)}
+            {average(v.id) && score(v.id)}
           </div>
           <p className="venue-meta">
             {v.neighborhood} · {v.cuisine} · {"$".repeat(v.price)}
@@ -383,7 +402,7 @@ export default function Tabletalk() {
               >
                 {rev.length
                   ? `${rev.length} ${rev.length === 1 ? "review" : "reviews"}`
-                  : "Be the first to review"}
+                  : "No reviews yet"}
               </span>
             </div>
             <Link
@@ -402,31 +421,32 @@ export default function Tabletalk() {
     const p = person(l.user_id);
     const vs = listVenues(l.id);
     return (
-      <Link
-        href={`/lists/${l.id}`}
-        className={`list-card ${l.color === "#ed563d" ? "red" : ""}`}
-        style={{ background: l.color }}
-        key={l.id}
-      >
-        {vs.length > 0 && <div className="list-cover">{vs.slice(0,3).map(v => <RestaurantImage key={v.id} venue={v} compact />)}</div>}
+      <Link href={`/lists/${l.id}`} className="list-card" key={l.id}>
+        {vs.length > 0 ? (
+          <div className="list-cover">
+            {vs.slice(0, 3).map((v) => (
+              <RestaurantImage key={v.id} venue={v} compact />
+            ))}
+          </div>
+        ) : (
+          <div className="list-cover list-cover-empty" aria-hidden="true">
+            Your next few places.
+          </div>
+        )}
         <div className="eyebrow">
-          {l.visibility === "private"
-            ? "Private collection"
-            : "A good list goes a long way"}
+          {l.visibility === "private" ? "Private collection" : "Public list"}
         </div>
         <h3>{l.title}</h3>
         <p>{l.description}</p>
         <div className="byline">
           {p && <Avatar person={p} />}
           <span>
-            {p?.name || "A diner"} · {vs.length} spots<br />
+            {p?.name || "A diner"} · {vs.length} spots
+            <br />
             {p?.visited_count || 0} verified places visited{" "}
             {p?.demo ? <span className="demo-tag">Demo</span> : null}
           </span>
         </div>
-        <span className="list-number" aria-hidden="true">
-          {String(vs.length).padStart(2, "0")}
-        </span>
       </Link>
     );
   }
@@ -434,7 +454,15 @@ export default function Tabletalk() {
     const v = venue(r.venue_id);
     return (
       <article className="review" key={r.id}>
-        {showVenue && v && <Link className="review-photo" href={`/restaurants/${v.id}`} aria-label={`View ${v.name}`}><RestaurantImage venue={v} /></Link>}
+        {showVenue && v && (
+          <Link
+            className="review-photo"
+            href={`/restaurants/${v.id}`}
+            aria-label={`View ${v.name}`}
+          >
+            <RestaurantImage venue={v} />
+          </Link>
+        )}
         <div className="review-head">
           <Link href={`/profile/${r.user_id}`}>
             <Avatar person={r} />
@@ -517,86 +545,147 @@ export default function Tabletalk() {
   }
   function passportBanner() {
     return (
-          <div className="banner" style={{ margin: "0 0 25px" }}>
-            <div>
-              <h3>{d.passport?.status === "reconnect" ? "Your Blackbird visits" : "Blackbird connected"}</h3>
-              <p>
-                {d.passport?.status === "syncing"
-                  ? "Finding the places you’ve been for your public profile."
-                  : d.passport?.status === "error"
-                    ? "We couldn’t update your visits. Your saved visits are still here."
-                    : d.passport?.status === "reconnect"
-                      ? "Reconnect to update your profile photo and latest visits. Your saved data is still here."
-                      : d.passport?.complete === false
-                        ? "Your visited places synced. Some older visits may still be missing."
-                        : "Visited places appear on your public profile. Visit dates are only visible to you."}
-              </p>
-            </div>
-            <div className="actions">
-              {d.passport?.status === "reconnect" && (
-                <a className="btn" href="/api/auth/blackbird/start">Reconnect Blackbird</a>
-              )}
-              {d.passport?.status === "syncing" && <span role="status">Syncing visits…</span>}
-              {d.passport?.status === "ready" && <span className="verified"><CheckCircle2 size={16} /> Visits synced</span>}
-              {d.passport?.status === "error" && (
-                <button
-                  className="btn dark"
-                  disabled={busy}
-                  onClick={async () => {
-                    setBusy(true);
-                    try {
-                      const r = await fetch("/api/flynet/sync", {
-                        method: "POST",
-                      });
-                      const b = (await r.json()) as {
-                        error?: string;
-                        count?: number;
-                        complete?: boolean;
-                      };
-                      if (!r.ok) throw new Error(b.error);
-                      await load();
-                    } catch (e) {
-                      toast.error((e as Error).message);
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  Retry sync
-                </button>
-              )}
-            </div>
-          </div>
+      <div className="banner" style={{ margin: "0 0 25px" }}>
+        <div>
+          <h3>
+            {d.passport?.status === "reconnect"
+              ? "Your Blackbird visits"
+              : "Blackbird connected"}
+          </h3>
+          <p>
+            {d.passport?.status === "syncing"
+              ? "Finding the places you’ve been for your public profile."
+              : d.passport?.status === "error"
+                ? "We couldn’t update your visits. Your saved visits are still here."
+                : d.passport?.status === "reconnect"
+                  ? "Reconnect to update your profile photo and latest visits. Your saved data is still here."
+                  : d.passport?.complete === false
+                    ? "Your visited places synced. Some older visits may still be missing."
+                    : "Visited places appear on your public profile. Visit dates are only visible to you."}
+          </p>
+        </div>
+        <div className="actions">
+          {d.passport?.status === "reconnect" && (
+            <a className="btn" href="/api/auth/blackbird/start">
+              Reconnect Blackbird
+            </a>
+          )}
+          {d.passport?.status === "syncing" && (
+            <span role="status">Syncing visits…</span>
+          )}
+          {d.passport?.status === "ready" && (
+            <span className="verified">
+              <CheckCircle2 size={16} /> Visits synced
+            </span>
+          )}
+          {d.passport?.status === "error" && (
+            <button
+              className="btn dark"
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                try {
+                  const r = await fetch("/api/flynet/sync", {
+                    method: "POST",
+                  });
+                  const b = (await r.json()) as {
+                    error?: string;
+                    count?: number;
+                    complete?: boolean;
+                  };
+                  if (!r.ok) throw new Error(b.error);
+                  await load();
+                } catch (e) {
+                  toast.error((e as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              Retry sync
+            </button>
+          )}
+        </div>
+      </div>
     );
   }
   function visitedPlaces() {
-    const visits = [...d.visits].sort((a,b) => b.visited_at.localeCompare(a.visited_at));
-    return <>
-      {passportBanner()}
-      {visits.length ? <div className="visited-places">{visits.map(visit => {
-        const v = venue(visit.venue_id);
-        if (!v) return null;
-        const review = d.reviews.find(r => r.user_id === me?.id && r.venue_id === v.id);
-        return <article className="visit-row" key={v.id}>
-          <Link href={`/restaurants/${v.id}`} className="visit-photo"><RestaurantImage venue={v} compact /></Link>
-          <div className="row-info">
-            <Link href={`/restaurants/${v.id}`}><h2>{v.name}</h2></Link>
-            <p className="muted">{v.neighborhood} · {v.cuisine}</p>
-            <p className="small muted">Last visited {new Date(visit.visited_at).toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric", timeZone:"America/New_York"})}</p>
+    const visits = [...d.visits].sort((a, b) =>
+      b.visited_at.localeCompare(a.visited_at),
+    );
+    return (
+      <>
+        {passportBanner()}
+        {visits.length ? (
+          <div className="visited-places">
+            {visits.map((visit) => {
+              const v = venue(visit.venue_id);
+              if (!v) return null;
+              const review = d.reviews.find(
+                (r) => r.user_id === me?.id && r.venue_id === v.id,
+              );
+              return (
+                <article className="visit-row" key={v.id}>
+                  <Link href={`/restaurants/${v.id}`} className="visit-photo">
+                    <RestaurantImage venue={v} compact />
+                  </Link>
+                  <div className="row-info">
+                    <Link href={`/restaurants/${v.id}`}>
+                      <h2>{v.name}</h2>
+                    </Link>
+                    <p className="muted">
+                      {v.neighborhood} · {v.cuisine}
+                    </p>
+                    <p className="small muted">
+                      Last visited{" "}
+                      {new Date(visit.visited_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        timeZone: "America/New_York",
+                      })}
+                    </p>
+                  </div>
+                  <div className="actions">
+                    {review && (
+                      <span
+                        className="score"
+                        aria-label={`Your rating ${review.rating} out of 10`}
+                      >
+                        {review.rating.toFixed(1)}
+                      </span>
+                    )}
+                    <button
+                      className="btn"
+                      onClick={() => setModal({ type: "review", venue: v })}
+                    >
+                      {review ? "Edit review" : "Write a review"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
-          <div className="actions">
-            {review && <span className="score" aria-label={`Your rating ${review.rating} out of 10`}>{review.rating.toFixed(1)}</span>}
-            <button className="btn" onClick={() => setModal({type:"review", venue:v})}>{review ? "Edit review" : "Write a review"}</button>
-          </div>
-        </article>;
-      })}</div> : <Empty title="Your places, verified" body={d.passport?.status === "syncing" ? "Your Blackbird visits will appear here as they sync." : "No NYC visits synced yet. Your Blackbird places will also appear on your public profile."} />}
-    </>;
+        ) : (
+          <Empty
+            title="Your places, verified"
+            body={
+              d.passport?.status === "syncing"
+                ? "Your Blackbird visits will appear here as they sync."
+                : "No NYC visits synced yet. Your Blackbird places will also appear on your public profile."
+            }
+          />
+        )}
+      </>
+    );
   }
   function row(v: Venue, i: number) {
     return (
       <div className="list-row" key={v.id}>
         <span className="rank">{String(i + 1).padStart(2, "0")}</span>
-        <Link href={`/restaurants/${v.id}`} className="row-photo"><RestaurantImage venue={v} compact /></Link>
+        <Link href={`/restaurants/${v.id}`} className="row-photo">
+          <RestaurantImage venue={v} compact />
+        </Link>
         <div className="row-info">
           <Link href={`/restaurants/${v.id}`}>
             <h3>{v.name}</h3>
@@ -643,15 +732,10 @@ export default function Tabletalk() {
     };
     content = (
       <>
-        <div className="intro-line eyebrow">
-          <span /> A LITTLE LOCAL KNOWLEDGE
-        </div>
-        <div className="heading">
+        <div className="heading explore-heading">
           <div>
-            <h1>
-              New York, <span className="serif">by taste.</span>
-            </h1>
-            <p>Good tables. Great company. Your next favorite is out there.</p>
+            <h1>New York, by taste.</h1>
+            <p>Find a restaurant. Save a list. Take a friend.</p>
           </div>
           <span className="location-pill">
             <MapPin size={15} /> New York City
@@ -662,7 +746,7 @@ export default function Tabletalk() {
             <Search size={20} />
             <input
               aria-label="Search restaurants"
-              placeholder="A restaurant, a neighborhood, a craving…"
+              placeholder="Search restaurants, neighborhoods, cuisines…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -671,7 +755,9 @@ export default function Tabletalk() {
             value={neighborhood}
             onChange={setNeighborhood}
             placeholder="Neighborhood"
-            values={[...new Set(catalogVenues.map((v) => v.neighborhood))].sort()}
+            values={[
+              ...new Set(catalogVenues.map((v) => v.neighborhood)),
+            ].sort()}
           />
           <Filter
             value={cuisine}
@@ -700,7 +786,7 @@ export default function Tabletalk() {
               className={`chip ${occasion === t || (!occasion && t === "All spots") ? "active" : ""}`}
               onClick={() => setOccasion(t === "All spots" ? "" : t)}
             >
-              {t === "All spots" && <Sparkles size={13} />} {t}
+              {t}
             </button>
           ))}
           <div className="view-toggle">
@@ -724,14 +810,22 @@ export default function Tabletalk() {
           <h2>
             {query || neighborhood || cuisine || price || occasion
               ? "Find your kind of table"
-              : "On the tip of our tongues"}
+              : "Restaurants in New York"}
           </h2>
           <span className="small muted">{filtered.length} spots</span>
         </div>
         {!filtered.length ? (
           <Empty
-            title={d.catalog && !d.catalog.syncedAt ? "The restaurant catalog is being prepared" : "Nothing on this corner, yet"}
-            body={d.catalog && !d.catalog.syncedAt ? "Please reload in a moment. No sign-in is needed to explore." : "Try another neighborhood or loosen your filters."}
+            title={
+              d.catalog && !d.catalog.syncedAt
+                ? "The restaurant catalog is being prepared"
+                : "Nothing on this corner, yet"
+            }
+            body={
+              d.catalog && !d.catalog.syncedAt
+                ? "Please reload in a moment. No sign-in is needed to explore."
+                : "Try another neighborhood or loosen your filters."
+            }
             action={
               <button className="btn" onClick={reset}>
                 Clear filters
@@ -742,11 +836,21 @@ export default function Tabletalk() {
           <DiningMap venues={filtered} card={card} />
         ) : (
           <>
-            <div className="cards">{filtered.slice(0, visibleCount).map(card)}</div>
+            <div className="cards">
+              {filtered.slice(0, visibleCount).map(card)}
+            </div>
             {visibleCount < filtered.length && (
               <div className="load-more">
-                <p className="small muted">Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} spots</p>
-                <button className="btn" onClick={() => setVisibleCount(n => n + 24)}>Show more restaurants</button>
+                <p className="small muted">
+                  Showing {Math.min(visibleCount, filtered.length)} of{" "}
+                  {filtered.length} spots
+                </p>
+                <button
+                  className="btn"
+                  onClick={() => setVisibleCount((n) => n + 24)}
+                >
+                  Show more restaurants
+                </button>
               </div>
             )}
           </>
@@ -756,10 +860,10 @@ export default function Tabletalk() {
             ? `${d.integration.environment === "production" ? "Blackbird NYC restaurants" : "Blackbird staging restaurants"} · Updated ${new Date(d.catalog.syncedAt).toLocaleDateString()} · Open to everyone.`
             : d.integration.discovery
               ? "The Blackbird restaurant catalog refreshes automatically."
-            : "Demo catalog · Sample prices · Reviews require Blackbird check-ins."}
+              : "Demo catalog · Sample prices · Reviews require Blackbird check-ins."}
         </p>
         <div className="section-head">
-          <h2>Pass a good list around.</h2>
+          <h2>Lists from the community</h2>
           <Link className="text-link" href="/lists">
             All collections <ArrowRight size={16} />
           </Link>
@@ -772,14 +876,17 @@ export default function Tabletalk() {
         </div>
         <div className="banner">
           <div>
-            <h3>A dining history with good taste.</h3>
+            <h3>Your places, all together.</h3>
             <p>
-              Connect Blackbird to show the places you’ve visited on your profile.
+              Connect Blackbird to show the places you’ve visited on your
+              profile.
             </p>
           </div>
           <button
             className="btn dark"
-            onClick={() => (me ? go("/saved?tab=visits") : setModal({ type: "login" }))}
+            onClick={() =>
+              me ? go("/saved?tab=visits") : setModal({ type: "login" })
+            }
           >
             Start your notebook <ArrowRight size={16} />
           </button>
@@ -802,7 +909,7 @@ export default function Tabletalk() {
         </Link>
         <div className="heading">
           <div>
-            <p className="eyebrow" style={{ margin: "0 0 12px" }}>
+            <p className="eyebrow" style={{ margin: "0 0 10px" }}>
               {v.neighborhood} / NEW YORK
             </p>
             <h1>{v.name}</h1>
@@ -825,10 +932,12 @@ export default function Tabletalk() {
         </div>
         <div className="detail-grid">
           <div>
-            <div className="detail-photo"><RestaurantImage venue={v} priority /></div>
-            <p>{v.description}</p>
+            <div className="detail-photo">
+              <RestaurantImage venue={v} priority />
+            </div>
+            <p className="detail-description">{v.description}</p>
             <div className="section-head">
-              <h2>Notes from the table</h2>
+              <h2>Reviews</h2>
               {score(v.id)}
             </div>
             {d.reviews.filter((r) => r.venue_id === v.id).length ? (
@@ -918,14 +1027,14 @@ export default function Tabletalk() {
       <>
         <div className="heading">
           <div>
-            <div className="intro-line eyebrow">
-              SAVE A LITTLE LOCAL KNOWLEDGE
-            </div>
-            <h1>
-              Good taste <span className="serif">travels.</span>
-            </h1>
-            <p>Lists from the community, with the most widely explored diners first.</p>
-            <p className="small muted">Ranked by the creator’s distinct verified places visited.</p>
+            <h1>Lists to keep and share.</h1>
+            <p>
+              Lists from the community, with the most widely explored diners
+              first.
+            </p>
+            <p className="small muted">
+              Ranked by the creator’s distinct verified places visited.
+            </p>
           </div>
           <button
             className="btn primary"
@@ -951,17 +1060,9 @@ export default function Tabletalk() {
         <Link href="/lists" className="back">
           <ArrowLeft size={15} /> All lists
         </Link>
-        <div
-          className="list-hero"
-          style={{
-            background: l.color,
-            color: l.color === "#ed563d" ? "white" : undefined,
-          }}
-        >
+        <div className="list-hero">
           <div className="eyebrow">
-            {l.visibility === "public"
-              ? "A LIST WORTH SHARING"
-              : "YOUR PRIVATE LIST"}
+            {l.visibility === "public" ? "PUBLIC LIST" : "YOUR PRIVATE LIST"}
           </div>
           <h1 style={{ marginTop: 15 }}>{l.title}</h1>
           <p>{l.description}</p>
@@ -1048,10 +1149,7 @@ export default function Tabletalk() {
       <>
         <div className="heading">
           <div>
-            <div className="intro-line eyebrow">WORD OF MOUTH, AT ITS BEST</div>
-            <h1>
-              Around <span className="serif">the table.</span>
-            </h1>
+            <h1>From the community.</h1>
             <p>What people are eating, loving, and going back for.</p>
           </div>
         </div>
@@ -1088,7 +1186,9 @@ export default function Tabletalk() {
                       <Link href={`/profile/${p.id}`}>
                         <strong>{p.name}</strong>
                       </Link>
-                      <small>{p.visited_count || 0} verified places visited</small>
+                      <small>
+                        {p.visited_count || 0} verified places visited
+                      </small>
                     </div>
                     <button
                       className="btn"
@@ -1127,50 +1227,148 @@ export default function Tabletalk() {
     ) : (
       <>
         <div className="heading">
-          <div><h1>My <span className="serif">notebook.</span></h1><p>Places you’ve saved, meals you’ve had, and lists worth keeping.</p></div>
-          <button className="btn primary" onClick={() => setModal({type:"list"})}><Plus size={16} /> New list</button>
+          <div>
+            <h1>My notebook.</h1>
+            <p>
+              Places you’ve saved, meals you’ve had, and lists worth keeping.
+            </p>
+          </div>
+          <button
+            className="btn primary"
+            onClick={() => setModal({ type: "list" })}
+          >
+            <Plus size={16} /> New list
+          </button>
         </div>
-        <Tabs value={savedTab} onValueChange={value => {
-          setSavedTab(value);
-          window.history.replaceState(null, "", `/saved?tab=${value}`);
-        }}>
+        <Tabs
+          value={savedTab}
+          onValueChange={(value) => {
+            setSavedTab(value);
+            window.history.replaceState(null, "", `/saved?tab=${value}`);
+          }}
+        >
           <TabsList variant="line" className="tabs-list">
-            <TabsTrigger value="places">Saved places ({d.bookmarks.length})</TabsTrigger>
-            <TabsTrigger value="visits">Been there ({d.visits.length})</TabsTrigger>
+            <TabsTrigger value="places">
+              Saved places ({d.bookmarks.length})
+            </TabsTrigger>
+            <TabsTrigger value="visits">
+              Been there ({d.visits.length})
+            </TabsTrigger>
             <TabsTrigger value="lists">Lists</TabsTrigger>
           </TabsList>
         </Tabs>
-        {savedTab === "places" ? <>
-          <p className="notebook-description">Your restaurant bookmarks, for a first visit or a return trip. Only you can see these.</p>
-          {d.bookmarks.length ? <div className="cards">{d.venues.filter(v => d.bookmarks.includes(v.id)).map(card)}</div> :
-            <Empty title="Your next great meal starts here" body="Tap the bookmark on a restaurant to save it for later." action={<Link className="btn primary" href="/">Find a spot</Link>} />}
-        </> : savedTab === "visits" ? visitedPlaces() : <>
-          <p className="notebook-description">Collections you’ve created and public lists you’ve saved from other diners.</p>
-          <section className="notebook-section" aria-labelledby="created-lists-heading">
-            <h2 id="created-lists-heading">Created by you</h2>
-            <p className="muted">Choose who can see each list: keep it private or share it publicly.</p>
-            {d.lists.some(l => l.user_id === me.id) ? <div className="cards list-cards">{d.lists.filter(l => l.user_id === me.id).map(listCard)}</div> :
-              <Empty title="Make it a list" body="Gather a few places for an occasion, a neighborhood, or a friend." action={<button className="btn primary" onClick={() => setModal({type:"list"})}>Create your first list</button>} />}
-          </section>
-          <section className="notebook-section" aria-labelledby="saved-lists-heading">
-            <h2 id="saved-lists-heading">Saved from others</h2>
-            <p className="muted">Keep other diners’ collections handy. Their lists stay up to date here.</p>
-            {d.lists.some(l => l.user_id !== me.id && d.saved.includes(l.id)) ? <div className="cards list-cards">{d.lists.filter(l => l.user_id !== me.id && d.saved.includes(l.id)).map(listCard)}</div> :
-              <Empty title="Borrow a little good taste" body="Save a public list to find it here whenever you need it." action={<Link className="btn primary" href="/lists">Explore lists</Link>} />}
-          </section>
-        </>}
+        {savedTab === "places" ? (
+          <>
+            <p className="notebook-description">
+              Your restaurant bookmarks, for a first visit or a return trip.
+              Only you can see these.
+            </p>
+            {d.bookmarks.length ? (
+              <div className="cards">
+                {d.venues.filter((v) => d.bookmarks.includes(v.id)).map(card)}
+              </div>
+            ) : (
+              <Empty
+                title="Your next great meal starts here"
+                body="Tap the bookmark on a restaurant to save it for later."
+                action={
+                  <Link className="btn primary" href="/">
+                    Find a spot
+                  </Link>
+                }
+              />
+            )}
+          </>
+        ) : savedTab === "visits" ? (
+          visitedPlaces()
+        ) : (
+          <>
+            <p className="notebook-description">
+              Collections you’ve created and public lists you’ve saved from
+              other diners.
+            </p>
+            <section
+              className="notebook-section"
+              aria-labelledby="created-lists-heading"
+            >
+              <h2 id="created-lists-heading">Created by you</h2>
+              <p className="muted">
+                Choose who can see each list: keep it private or share it
+                publicly.
+              </p>
+              {d.lists.some((l) => l.user_id === me.id) ? (
+                <div className="cards list-cards">
+                  {d.lists.filter((l) => l.user_id === me.id).map(listCard)}
+                </div>
+              ) : (
+                <Empty
+                  title="Make it a list"
+                  body="Gather a few places for an occasion, a neighborhood, or a friend."
+                  action={
+                    <button
+                      className="btn primary"
+                      onClick={() => setModal({ type: "list" })}
+                    >
+                      Create your first list
+                    </button>
+                  }
+                />
+              )}
+            </section>
+            <section
+              className="notebook-section"
+              aria-labelledby="saved-lists-heading"
+            >
+              <h2 id="saved-lists-heading">Saved from others</h2>
+              <p className="muted">
+                Keep other diners’ collections handy. Their lists stay up to
+                date here.
+              </p>
+              {d.lists.some(
+                (l) => l.user_id !== me.id && d.saved.includes(l.id),
+              ) ? (
+                <div className="cards list-cards">
+                  {d.lists
+                    .filter(
+                      (l) => l.user_id !== me.id && d.saved.includes(l.id),
+                    )
+                    .map(listCard)}
+                </div>
+              ) : (
+                <Empty
+                  title="Borrow a little good taste"
+                  body="Save a public list to find it here whenever you need it."
+                  action={
+                    <Link className="btn primary" href="/lists">
+                      Explore lists
+                    </Link>
+                  }
+                />
+              )}
+            </section>
+          </>
+        )}
       </>
     );
   } else if (active === "me" || active === "profile") {
     const p = active === "me" ? me : person(path.split("/")[2]);
     const own = p?.id === me?.id;
-    const visited = publicVisits.filter(v => v.user_id === p?.id)
-      .map(v => venue(v.venue_id)).filter((v): v is Venue => !!v)
-      .sort((a,b) => a.name.localeCompare(b.name) || a.neighborhood.localeCompare(b.neighborhood) || a.id.localeCompare(b.id));
+    const visited = publicVisits
+      .filter((v) => v.user_id === p?.id)
+      .map((v) => venue(v.venue_id))
+      .filter((v): v is Venue => !!v)
+      .sort(
+        (a, b) =>
+          a.name.localeCompare(b.name) ||
+          a.neighborhood.localeCompare(b.neighborhood) ||
+          a.id.localeCompare(b.id),
+      );
     const ranked = d.reviews
       .filter((r) => r.user_id === p?.id)
       .sort((a, b) => b.rating - a.rating);
-    const ls = d.lists.filter((l) => l.user_id === p?.id && l.visibility === "public");
+    const ls = d.lists.filter(
+      (l) => l.user_id === p?.id && l.visibility === "public",
+    );
     content = !p ? (
       <Empty
         title="Your table is waiting"
@@ -1198,7 +1396,9 @@ export default function Tabletalk() {
               <div>
                 <strong>{ls.length}</strong>Lists
               </div>
-              <div><strong>{visited.length}</strong>Verified places visited</div>
+              <div>
+                <strong>{visited.length}</strong>Verified places visited
+              </div>
             </div>
             <div className="actions" style={{ marginTop: 18 }}>
               {p.demo ? <span className="demo-tag">Demo diner</span> : null}
@@ -1226,31 +1426,80 @@ export default function Tabletalk() {
             </div>
           </div>
         </div>
-        {own && (d.passport?.status === "reconnect" || d.passport?.status === "error") && passportBanner()}
-        {own && <Link className="btn" style={{marginBottom:24}} href="/saved?tab=visits">View my visit details in My notebook</Link>}
+        {own &&
+          (d.passport?.status === "reconnect" ||
+            d.passport?.status === "error") &&
+          passportBanner()}
+        {own && (
+          <Link
+            className="btn"
+            style={{ marginBottom: 24 }}
+            href="/saved?tab=visits"
+          >
+            View my visit details in My notebook
+          </Link>
+        )}
         <Tabs value={profileTab} onValueChange={setProfileTab}>
           <TabsList variant="line" className="tabs-list">
-            <TabsTrigger value="visits">Been there ({visited.length})</TabsTrigger>
-            <TabsTrigger value="rankings">Reviews ({ranked.length})</TabsTrigger>
+            <TabsTrigger value="visits">
+              Been there ({visited.length})
+            </TabsTrigger>
+            <TabsTrigger value="rankings">
+              Reviews ({ranked.length})
+            </TabsTrigger>
             <TabsTrigger value="lists">Public lists</TabsTrigger>
           </TabsList>
         </Tabs>
         {profileTab === "visits" ? (
-          visited.length ? <>
-            <p className="notebook-description">Places visited, verified by Blackbird check-ins.</p>
-            <div className="public-visits">{visited.map(v => <article className="visit-row" key={v.id}>
-              <Link href={`/restaurants/${v.id}`} className="visit-photo"><RestaurantImage venue={v} compact /></Link>
-              <div className="row-info"><Link href={`/restaurants/${v.id}`}><h2>{v.name}</h2></Link><p className="muted">{v.neighborhood} · {v.cuisine}</p></div>
-              <span className="verified"><CheckCircle2 size={16} /> Visited</span>
-            </article>)}</div>
-          </> : <Empty title="No verified visits yet" body={own ? "Your Blackbird places appear here after your visits sync." : "Places will appear here when this diner syncs Blackbird visits."} />
+          visited.length ? (
+            <>
+              <p className="notebook-description">
+                Places visited, verified by Blackbird check-ins.
+              </p>
+              <div className="public-visits">
+                {visited.map((v) => (
+                  <article className="visit-row" key={v.id}>
+                    <Link href={`/restaurants/${v.id}`} className="visit-photo">
+                      <RestaurantImage venue={v} compact />
+                    </Link>
+                    <div className="row-info">
+                      <Link href={`/restaurants/${v.id}`}>
+                        <h2>{v.name}</h2>
+                      </Link>
+                      <p className="muted">
+                        {v.neighborhood} · {v.cuisine}
+                      </p>
+                    </div>
+                    <span className="verified">
+                      <CheckCircle2 size={16} /> Visited
+                    </span>
+                  </article>
+                ))}
+              </div>
+            </>
+          ) : (
+            <Empty
+              title="No verified visits yet"
+              body={
+                own
+                  ? "Your Blackbird places appear here after your visits sync."
+                  : "Places will appear here when this diner syncs Blackbird visits."
+              }
+            />
+          )
         ) : profileTab === "rankings" ? (
           ranked.length ? (
-            <div className="stack">{ranked.map(r => reviewCard(r, true))}</div>
+            <div className="stack">
+              {ranked.map((r) => reviewCard(r, true))}
+            </div>
           ) : (
             <Empty
               title="Every good notebook has a first page"
-              body={own ? "Review a restaurant you’ve visited to share your experience." : "This diner hasn’t published a review yet."}
+              body={
+                own
+                  ? "Review a restaurant you’ve visited to share your experience."
+                  : "This diner hasn’t published a review yet."
+              }
               action={
                 <Link href="/" className="btn primary">
                   Explore NYC
@@ -1260,7 +1509,16 @@ export default function Tabletalk() {
           )
         ) : ls.length ? (
           <div className="cards list-cards">{ls.map(listCard)}</div>
-        ) : <Empty title="No public lists yet" body={own ? "Create a public list in My notebook to share it here." : "Public lists will appear here when this diner shares one."} />}
+        ) : (
+          <Empty
+            title="No public lists yet"
+            body={
+              own
+                ? "Create a public list in My notebook to share it here."
+                : "Public lists will appear here when this diner shares one."
+            }
+          />
+        )}
         {own && (
           <button
             className="btn light"
@@ -1281,53 +1539,30 @@ export default function Tabletalk() {
         <Link href="/" className="back">
           <ArrowLeft size={15} /> Back to the table
         </Link>
-        <h1>
-          A little more <span className="serif">about us.</span>
-        </h1>
+        <h1>About Tabletalk.</h1>
         <h2>Your city. Your people. Your taste.</h2>
         <p>
           Tabletalk is an independent dining notebook for New York. Explore
           spots, write honest reviews, share a list without a login wall, and
           follow people whose taste you trust.
         </p>
-        <h2>Your dining notebook.</h2>
+        <h2>A little help choosing dinner.</h2>
         <p>
-          Lists, reviews, follows and saved places are stored on our server and
-          survive a page reload. Public lists can be opened by anyone with the
-          link. The NYC restaurant catalog is saved from Blackbird and available
-          to everyone without signing in. We check for updates every six hours
-          when the site is visited and keep the last saved catalog if Blackbird
-          is unavailable. Diners and lists come from people who have signed in
-          with Blackbird.
+          Browse New York restaurants and public lists without an account. Sign
+          in with Blackbird to keep your own notebook, share favorite places and
+          follow diners whose recommendations you love.
         </p>
+        <h2>Reviews from people who’ve been.</h2>
         <p>
-          Sign in with Blackbird to save places, create lists and follow diners.
-          Anything you publish as a review, profile or public list is visible to
-          other visitors. Verified places you’ve visited also appear on your profile.
-          Visit dates, private lists and bookmarks stay private.
+          Your Blackbird visits sync when you sign in. A verified visit to that
+          restaurant is required to write or edit a review, so every review
+          starts with a meal someone actually had.
         </p>
-        <h2>Blackbird, connected thoughtfully.</h2>
+        <h2>Your notebook, your choice.</h2>
         <p>
-          Blackbird sign-in and dining history use the official Flynet SDK. Live
-          access requires partner credentials and an approved callback URL.{" "}
-          {d.integration.configured
-            ? "The integration is configured."
-            : "This deployment is awaiting that access."}{" "}
-          An imported Blackbird check-in at the exact location is required to
-          post or edit a review. Raw check-ins stay private.
-        </p>
-        <p>
-          <a
-            href="https://docs.flynet.org/resources/request-access"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Blackbird developer access
-          </a>{" "}
-          ·{" "}
-          <a href="https://docs.flynet.org/" target="_blank" rel="noreferrer">
-            Flynet docs
-          </a>
+          Your profile, reviews and the restaurants you’ve visited are public.
+          Visit dates and saved places stay private. Make a list public to share
+          it with anyone, or keep it private for your own plans.
         </p>
         {d.integration.discovery && (
           <button
@@ -1346,9 +1581,7 @@ export default function Tabletalk() {
                 };
                 if (!r.ok) throw new Error(b.error);
                 await load();
-                toast.success(
-                  `${b.count} NYC spots available to everyone.`,
-                );
+                toast.success(`${b.count} NYC spots available to everyone.`);
               } catch (e) {
                 toast.error((e as Error).message);
               } finally {
@@ -1356,7 +1589,7 @@ export default function Tabletalk() {
               }
             }}
           >
-            Check restaurant catalog
+            Refresh restaurant directory
           </button>
         )}
         <h2>Photo credits</h2>
@@ -1385,10 +1618,7 @@ export default function Tabletalk() {
       </a>
       <header className="topbar">
         <Link className="brand" href="/">
-          <span className="brand-mark">
-            <Utensils size={22} />
-          </span>
-          tabletalk<span style={{ color: "#dc4b33" }}>.</span>
+          tabletalk
         </Link>
         <nav className="nav" aria-label="Main navigation">
           {[
@@ -1401,8 +1631,9 @@ export default function Tabletalk() {
               href={url as string}
               key={url as string}
               className={active === section ? "active" : ""}
+              aria-current={active === section ? "page" : undefined}
             >
-              {typeof Icon !== "string" && <Icon size={16} />} {label as string}
+              {label as string}
             </Link>
           ))}
         </nav>
@@ -1429,8 +1660,8 @@ export default function Tabletalk() {
         )}
         {content}
         <footer className="footer">
-          <Link className="brand" style={{ fontSize: 21 }} href="/">
-            tabletalk.
+          <Link className="brand" href="/">
+            tabletalk
           </Link>
           <span>Made for people who make plans around food.</span>
           <div className="actions">
@@ -1467,7 +1698,7 @@ export default function Tabletalk() {
           onConfirm={modal.run}
         />
       )}
-      <Toaster position="bottom-right" richColors />
+      <Toaster position="bottom-right" />
     </>
   );
 }
@@ -1541,7 +1772,7 @@ function ModalBody({
     return (
       <>
         {head(
-          "Pull up a chair.",
+          "Your dining notebook.",
           "A notebook for the places you love and the ones you’ll love next.",
         )}
         <div className="form-stack">
@@ -1556,7 +1787,8 @@ function ModalBody({
             </p>
           )}
           <p className="form-help">
-            Your verified visited places appear on your public profile. Check-in dates stay private. Browsing is always open.
+            Your verified visited places appear on your public profile. Check-in
+            dates stay private. Browsing is always open.
           </p>
         </div>
       </>
@@ -1578,11 +1810,12 @@ function ModalBody({
               ? "Your Blackbird visits sync automatically. Reviews unlock for locations you’ve checked in to. Check Been there in My notebook for the sync status."
               : "Blackbird connection is awaiting partner access. You can still browse restaurants and public lists; account features will unlock after Blackbird sign-in is available."}
           </p>
-          {data.integration.configured && data.passport?.status === "reconnect" && (
-            <a className="btn primary" href="/api/auth/blackbird/start">
-              Reconnect Blackbird
-            </a>
-          )}
+          {data.integration.configured &&
+            data.passport?.status === "reconnect" && (
+              <a className="btn primary" href="/api/auth/blackbird/start">
+                Reconnect Blackbird
+              </a>
+            )}
           <a className="btn" href="/saved?tab=visits">
             View my visits
           </a>
@@ -1720,7 +1953,7 @@ function ModalBody({
   return (
     <>
       {head(
-        original ? "Fine-tune your shortlist." : "Make it a list.",
+        original ? "Edit your list" : "Create a list",
         "A few good places, in your own order.",
       )}
       <form
@@ -1826,7 +2059,14 @@ function ModalBody({
           <div className="selected-places">
             {ids.map((id, i) => (
               <div className="selected-place" key={id}>
-                {data.venues.find(v=>v.id===id) && <span className="picker-photo"><RestaurantImage venue={data.venues.find(v=>v.id===id)!} compact /></span>}
+                {data.venues.find((v) => v.id === id) && (
+                  <span className="picker-photo">
+                    <RestaurantImage
+                      venue={data.venues.find((v) => v.id === id)!}
+                      compact
+                    />
+                  </span>
+                )}
                 <span>
                   {i + 1}. {data.venues.find((v) => v.id === id)?.name}
                 </span>
@@ -1890,7 +2130,9 @@ function ModalBody({
                   key={v.id}
                   onClick={() => setIds((a) => [...a, v.id])}
                 >
-                  <span className="picker-photo"><RestaurantImage venue={v} compact /></span>
+                  <span className="picker-photo">
+                    <RestaurantImage venue={v} compact />
+                  </span>
                   {v.name}
                   <Plus size={15} />
                 </button>

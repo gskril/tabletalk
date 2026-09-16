@@ -43,7 +43,7 @@ test("anonymous exploration, filters, map, detail, and mobile layout", async ({
   ).toBeVisible();
   await page.getByRole("link", { name: "View Thai Diner" }).click();
   await expect(
-    page.getByRole("heading", { name: "Notes from the table" }),
+    page.getByRole("heading", { name: "Reviews" }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Get directions" }),

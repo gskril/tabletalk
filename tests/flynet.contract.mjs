@@ -1,4 +1,6 @@
 import { sessionAccess, RefreshPending, ReconnectRequired } from "../lib/session-access.ts";
+import { occasionLabels, researchedLabels, enrichedVenue } from "../lib/restaurant-labels.ts";
+import { restaurantLabelResearch } from "../data/restaurant-labels.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
@@ -965,4 +967,46 @@ test("cached catalog is identical for members and guests; lightweight state stay
     env.DB.batch = originalBatch;
     if (session) cookieJar.set("tt_session", session);
   }
+});
+
+test("occasion labels reject malformed metadata and normalize only known provider names", () => {
+  for (const bad of [null, {}, 'broken json', '{"name":"Brunch"}', 42]) assert.deepEqual(occasionLabels(bad), []);
+  assert.deepEqual(occasionLabels([' brunch ', { name: 'Brunch' }, { name: 'CASUAL' }, { label: 'Date night' }, '<script>', null]), ['Brunch', 'Casual']);
+});
+
+test("researched labels require current exact location identity and cannot leak into staging", () => {
+  const [id, entry] = Object.entries(restaurantLabelResearch)[0];
+  assert.ok(id, 'publish a reviewed dataset, not empty filters');
+  const venue = { id, ...entry, source: 'production', tags: JSON.stringify(entry.labels.map(l => l.label)) };
+  assert.ok(researchedLabels(id, 'production', entry.website, entry.name).length);
+  for (const change of [{ id: 'other-location' }, { source: 'staging' }, { website: 'https://unrelated.test' }, { name: 'New restaurant' }]) {
+    const changed = { ...venue, ...change };
+    assert.deepEqual(researchedLabels(changed.id, changed.source, changed.website, changed.name), []);
+    if (!change.id) assert.deepEqual(JSON.parse(enrichedVenue(changed).tags), []);
+  }
+  const now = Date.now;
+  try {
+    Date.now = () => Date.parse(entry.checkedAt) + 181 * 86400000;
+    assert.deepEqual(enrichedVenue(venue).tag_sources, []);
+    assert.deepEqual(JSON.parse(enrichedVenue(venue).tags), []);
+  } finally { Date.now = now; }
+});
+
+test("reviewed labels persist on catalog upsert and appear identically in both public responses", async () => {
+  const [id, entry] = Object.entries(restaurantLabelResearch)[0];
+  const environment = env.FLYNET_ENVIRONMENT;
+  env.FLYNET_ENVIRONMENT = 'production';
+  try {
+    const mapped = { ...location, id, restaurant: { ...location.restaurant, name: entry.name, websiteUrl: entry.website, tags: [{ name: 'Casual' }] } };
+    await upsertVenue(mapped).run();
+    const stored = sql.prepare('SELECT * FROM venues WHERE id=?').get(id);
+    for (const label of entry.labels) assert.ok(JSON.parse(stored.tags).includes(label.label));
+    const catalog = await (await catalogResponse()).json();
+    const full = await (await state()).json();
+    const publicVenue = catalog.venues.find(v => v.id === id);
+    assert.deepEqual(publicVenue, full.venues.find(v => v.id === id));
+    assert.deepEqual(publicVenue.tag_sources.map(s => s.url), entry.labels.map(s => s.url));
+    await upsertVenue({ ...mapped, restaurant: { ...mapped.restaurant, tags: [] } }).run();
+    assert.deepEqual(JSON.parse(sql.prepare('SELECT tags FROM venues WHERE id=?').get(id).tags), occasionLabels(entry.labels.map(l => l.label)));
+  } finally { env.FLYNET_ENVIRONMENT = environment; sql.prepare('DELETE FROM venues WHERE id=?').run(id); }
 });

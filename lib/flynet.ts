@@ -1,3 +1,4 @@
+import { occasionLabels, researchedLabels } from "./restaurant-labels";
 import { avatarUrl } from "./avatar";
 import { env } from "cloudflare:workers";
 import {
@@ -61,7 +62,10 @@ export async function authorizationRequest() {
   }
   return request;
 }
-export async function exchangeAuthorizationCode(code: string, codeVerifier: string) {
+export async function exchangeAuthorizationCode(
+  code: string,
+  codeVerifier: string,
+) {
   const c = settings();
   const form = new URLSearchParams({
     grant_type: "authorization_code",
@@ -75,10 +79,14 @@ export async function exchangeAuthorizationCode(code: string, codeVerifier: stri
 }
 export async function exchangeRefreshToken(refreshToken: string) {
   const c = settings();
-  return postOAuthToken(new URLSearchParams({
-    grant_type: "refresh_token", refresh_token: refreshToken,
-    client_id: c.clientId, client_secret: c.clientSecret,
-  }));
+  return postOAuthToken(
+    new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: c.clientId,
+      client_secret: c.clientSecret,
+    }),
+  );
 }
 async function postOAuthToken(form: URLSearchParams) {
   const c = settings();
@@ -91,7 +99,8 @@ async function postOAuthToken(form: URLSearchParams) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
-        "User-Agent": "Tabletalk/1.0 (+https://your-app.example)",
+        "User-Agent":
+          "Tabletalk/1.0 (+https://your-app.example)",
       },
       body: form.toString(),
       // Workers supports manual/follow; manual keeps credentials on this endpoint.
@@ -102,7 +111,9 @@ async function postOAuthToken(form: URLSearchParams) {
     throw networkFlynetError(error);
   }
   if (!response.ok) throw await shapeFlynetError(response);
-  return response.json() as Promise<Awaited<ReturnType<FlynetOAuth["exchangeCode"]>>>;
+  return response.json() as Promise<
+    Awaited<ReturnType<FlynetOAuth["exchangeCode"]>>
+  >;
 }
 async function encryptionKey() {
   const secret = settings().encryptionKey;
@@ -141,11 +152,15 @@ type Location = Awaited<
   ReturnType<FlynetDiscoveryClient["locations"]["getLocation"]>
 >;
 export function isNYC(l: Location) {
-  if (!["ny", "new york"].includes(l.address?.state?.trim().toLowerCase() || "")) return false;
+  if (
+    !["ny", "new york"].includes(l.address?.state?.trim().toLowerCase() || "")
+  )
+    return false;
   const zip = l.address?.zipcode?.trim() || "";
   // NYC's published postal ranges also cover Queens neighborhood city names.
   // Mixed Nassau/Queens ZIPs (11001/11040/11096) need an explicit borough name.
-  const nycZip = /^(?:(?:10[0-4]|11[1-4]|116)\d{2}|11004|11005)(?:-\d{4})?$/.test(zip);
+  const nycZip =
+    /^(?:(?:10[0-4]|11[1-4]|116)\d{2}|11004|11005)(?:-\d{4})?$/.test(zip);
   return (
     [
       "new york",
@@ -163,7 +178,7 @@ export function upsertVenue(l: Location) {
   const addr = l.address;
   return db()
     .prepare(
-      "INSERT INTO venues(id,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at,image_thumb) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,cuisine=excluded.cuisine,neighborhood=excluded.neighborhood,address=excluded.address,price=excluded.price,lat=excluded.lat,lng=excluded.lng,image=excluded.image,image_thumb=excluded.image_thumb,website=excluded.website,source=excluded.source,updated_at=excluded.updated_at",
+      "INSERT INTO venues(id,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,source,updated_at,image_thumb) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,cuisine=excluded.cuisine,neighborhood=excluded.neighborhood,address=excluded.address,price=excluded.price,lat=excluded.lat,lng=excluded.lng,image=excluded.image,image_thumb=excluded.image_thumb,website=excluded.website,source=excluded.source,updated_at=excluded.updated_at,tags=excluded.tags",
     )
     .bind(
       l.id,
@@ -177,7 +192,17 @@ export function upsertVenue(l: Location) {
       r.asset?.web2x || r.asset?.preview1x || "",
       r.websiteUrl || "",
       "A restaurant on the Blackbird network.",
-      "[]",
+      JSON.stringify(
+        occasionLabels([
+          ...occasionLabels(r.tags),
+          ...researchedLabels(
+            l.id,
+            settings().environment,
+            r.websiteUrl || "",
+            r.name?.trim() || l.name || "",
+          ).map((x) => x.label),
+        ]),
+      ),
       settings().environment,
       now(),
       r.asset?.preview1x || "",
@@ -206,7 +231,11 @@ export async function syncDiscovery() {
     count += locations.length;
     const next = result.pagination.nextPage;
     if (next === null || next === undefined)
-      return { count: locationIds.size, complete: true, locationIds: [...locationIds] };
+      return {
+        count: locationIds.size,
+        complete: true,
+        locationIds: [...locationIds],
+      };
     if (next <= page)
       throw new AppError(
         "Flynet pagination did not advance. Please retry later.",
@@ -255,11 +284,16 @@ export async function syncVisits(userId: string, accessToken: string) {
   return { count: seen.size, complete: false };
 }
 
-
 /** Refresh only the authenticated member's photo; preserve locally edited names. */
 export async function syncMemberAvatar(userId: string, accessToken: string) {
   const c = settings();
-  const member = await new FlynetMemberClient({accessToken, environment:c.environment, timeoutMs:15000}).getProfile();
-  await db().prepare("UPDATE profiles SET avatar=? WHERE id=? AND external_id=?")
-    .bind(avatarUrl(member.avatar),userId,c.environment+":"+member.id).run();
+  const member = await new FlynetMemberClient({
+    accessToken,
+    environment: c.environment,
+    timeoutMs: 15000,
+  }).getProfile();
+  await db()
+    .prepare("UPDATE profiles SET avatar=? WHERE id=? AND external_id=?")
+    .bind(avatarUrl(member.avatar), userId, c.environment + ":" + member.id)
+    .run();
 }

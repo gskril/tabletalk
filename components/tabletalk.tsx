@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast, Toaster } from "sonner";
+import { OCCASION_LABELS, occasionLabels } from "@/lib/occasion-labels";
 import { avatarUrl } from "@/lib/avatar";
 import type { State, Venue, Person, Review, DiningList } from "@/lib/types";
 import DiningMap from "@/components/dining-map";
@@ -703,6 +704,13 @@ export default function Tabletalk() {
     const catalogVenues = catalogIds
       ? d.venues.filter((v) => catalogIds.has(v.id))
       : d.venues;
+    const labelCounts = new Map(
+      OCCASION_LABELS.map((label) => [
+        label,
+        catalogVenues.filter((v) => occasionLabels(v.tags).includes(label))
+          .length,
+      ]),
+    );
     const filtered = catalogVenues
       .filter(
         (v) =>
@@ -713,7 +721,8 @@ export default function Tabletalk() {
           (!neighborhood || v.neighborhood === neighborhood) &&
           (!cuisine || v.cuisine === cuisine) &&
           (!price || v.price === price.length) &&
-          (!occasion || JSON.parse(v.tags).includes(occasion)),
+          (!occasion ||
+            occasionLabels(v.tags).some((label) => label === occasion)),
       )
       .sort(
         (a, b) =>
@@ -772,18 +781,22 @@ export default function Tabletalk() {
         <div className="filter-chips">
           {[
             "All spots",
-            "Date night",
-            "Brunch",
-            "Good for groups",
-            "Casual",
-            "Vegetarian",
+            ...OCCASION_LABELS.filter(
+              (label) => (labelCounts.get(label) || 0) > 0,
+            ),
           ].map((t) => (
             <button
               key={t}
               className={`chip ${occasion === t || (!occasion && t === "All spots") ? "active" : ""}`}
+              aria-pressed={occasion === t || (!occasion && t === "All spots")}
               onClick={() => setOccasion(t === "All spots" ? "" : t)}
             >
               {t}
+              {t !== "All spots" && (
+                <span className="label-count">
+                  {labelCounts.get(t as (typeof OCCASION_LABELS)[number])}
+                </span>
+              )}
             </button>
           ))}
           <div className="view-toggle">
@@ -803,6 +816,12 @@ export default function Tabletalk() {
             </button>
           </div>
         </div>
+        {occasion && (
+          <p className="label-filter-note">
+            Based on published restaurant information. Coverage is still
+            growing; places without a confirmed label aren’t included.
+          </p>
+        )}
         <div className="section-head">
           <h2>
             {query || neighborhood || cuisine || price || occasion
@@ -933,6 +952,30 @@ export default function Tabletalk() {
               <RestaurantImage venue={v} priority />
             </div>
             <p className="detail-description">{v.description}</p>
+            {!!v.tag_sources?.length && (
+              <details className="restaurant-labels">
+                <summary>
+                  {v.tag_sources.map((s) => s.label).join(" · ")}
+                </summary>
+                <p>
+                  Tabletalk labels based on published information. Menus and
+                  availability can change.
+                </p>
+                <ul>
+                  {v.tag_sources.map((s) => (
+                    <li key={s.label}>
+                      <a href={safeUrl(s.url)} target="_blank" rel="noreferrer">
+                        {s.label} source <ExternalLink size={13} />
+                      </a>
+                      <span className="muted">
+                        {" "}
+                        · Checked {new Date(s.checkedAt).toLocaleDateString()}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
             <div className="section-head">
               <h2>Reviews</h2>
               {score(v.id)}

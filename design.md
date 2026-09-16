@@ -212,3 +212,11 @@ pages with local fixtures, including mobile and keyboard flows. Check the existi
 integration and browser suites, updating only assertions whose intended copy or
 presentation changed. Remove `public/brand` and ensure `/brand` and its former
 pages return 404 in the packaged app. Commit and publish the cohesive result.
+
+## Restaurant labels
+
+Occasion filters show catalog counts and omit empty categories. Selected filters
+explain that researched coverage is incomplete. Restaurant detail pages disclose
+reviewed labels in a compact expandable section with source links and check dates.
+Use the same public labels for guests and members. Unknown suitability stays
+unlabeled; do not present inferred labels as Blackbird endorsements.

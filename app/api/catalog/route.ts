@@ -1,3 +1,5 @@
+import { enrichedVenue } from "@/lib/restaurant-labels";
+import type { Venue } from "@/lib/types";
 import { all } from "@/lib/data";
 import { publicCatalog } from "@/lib/catalog-cache";
 import { failure } from "@/lib/auth";
@@ -9,10 +11,19 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const catalog = await publicCatalog();
-    const venues = await all("SELECT * FROM venues WHERE source!='demo' ORDER BY source DESC,name");
-    return Response.json({ venues, catalog }, {
-      headers: { "Cache-Control": catalog?.syncedAt ? "public, max-age=300" : "no-store" },
-    });
+    const venues = await all<Venue>(
+      "SELECT * FROM venues WHERE source!='demo' ORDER BY source DESC,name",
+    );
+    return Response.json(
+      { venues: venues.map(enrichedVenue), catalog },
+      {
+        headers: {
+          "Cache-Control": catalog?.syncedAt
+            ? "public, max-age=300"
+            : "no-store",
+        },
+      },
+    );
   } catch (error) {
     return failure(error);
   }

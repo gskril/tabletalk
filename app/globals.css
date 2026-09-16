@@ -1747,3 +1747,47 @@ h3 {
     scroll-behavior: auto !important;
   }
 }
+
+.label-count {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-left: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.label-filter-note {
+  margin: -8px 0 20px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  max-width: 680px;
+}
+.restaurant-labels {
+  margin: 16px 0 24px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+.restaurant-labels summary {
+  cursor: pointer;
+  color: var(--primary);
+  min-height: 44px;
+  padding: 10px 0;
+}
+.restaurant-labels p {
+  color: var(--muted-foreground);
+  margin: 8px 0;
+}
+.restaurant-labels ul {
+  padding-left: 20px;
+}
+.restaurant-labels li {
+  margin: 8px 0;
+}
+.restaurant-labels a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.restaurant-labels svg {
+  display: inline;
+  vertical-align: middle;
+}

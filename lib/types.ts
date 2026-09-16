@@ -21,6 +21,7 @@ export type Venue = {
   website: string;
   description: string;
   tags: string;
+  tag_sources?: { label: string; url: string; checkedAt: string }[];
   source: string;
   updated_at: string;
 };

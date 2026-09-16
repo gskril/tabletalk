@@ -1,0 +1,3506 @@
+{
+  "catalogLocations": 855,
+  "labeledLocations": 200,
+  "counts": {
+    "Date night": 15,
+    "Good for groups": 47,
+    "Brunch": 140,
+    "Vegetarian": 22,
+    "Casual": 22
+  },
+  "skippedApprovals": [
+    {
+      "id": "874f9f4e-9814-4a21-bb18-5c28b27d0124",
+      "name": "Cafe Kestrel",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "740d3301-09ce-49d9-8bd0-4207ba41a9d4",
+      "name": "Soba Ulala",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "b5dadb67-0582-44ff-b616-09d74d0ed742",
+      "name": "Chito Gvrito NYC",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "596e4230-a961-403d-8644-6a4f00c04512",
+      "name": "Sami & Susu",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "2f0c4d00-1ad0-43dd-a15d-6a9658f32c7c",
+      "name": "Nudibranch",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "41f95551-2dcd-4472-8de3-6a7f00502c58",
+      "name": "Tappo",
+      "label": "Date night",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "e47f1723-ea48-4d97-9432-323c950b842f",
+      "name": "Markette",
+      "label": "Date night",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "e47f1723-ea48-4d97-9432-323c950b842f",
+      "name": "Markette",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "5f06a05d-4506-4fc2-90fb-973a61018712",
+      "name": "Gordo's Cantina",
+      "label": "Vegetarian",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "c778d1d9-05e3-4f5d-baf5-ac7ead0c57c0",
+      "name": "Phoenix Palace",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "c0bd51c6-da7c-461f-93a0-35dab4ec4e9a",
+      "name": "Pesce lulu Seafood Kitchen NYC",
+      "label": "Casual",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "8e5353a7-12f3-42f3-a0ed-ecc1bc2f30e7",
+      "name": "Greywind",
+      "label": "Date night",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "8e5353a7-12f3-42f3-a0ed-ecc1bc2f30e7",
+      "name": "Greywind",
+      "label": "Good for groups",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "2d57f8bc-e83d-466e-8921-694cde893611",
+      "name": "Nom Wah",
+      "label": "Casual",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "97f64083-ce29-46c1-bf35-fd7ede00e33d",
+      "name": "Nom Wah",
+      "label": "Casual",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "17257622-f269-4d50-b0c4-4208b3d564db",
+      "name": "Lafayette Grand Café & Bakery",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "effbbdc5-3519-4a13-a772-88f5ca2e0426",
+      "name": "Carne Mare",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "0e8cda6c-fbf8-4172-9fc4-4abc0cb6698f",
+      "name": "The Good Fork Pub",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "b5dadb67-0582-44ff-b616-09d74d0ed742",
+      "name": "Chito Gvrito NYC",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "613023fb-a374-4f0f-8314-93f97f0f76ea",
+      "name": "Bar Primi",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "db0633b9-59c5-45ee-828b-1c2c1ee75c56",
+      "name": "Artesano",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "20aee385-b3df-4ad8-9fae-d5d9074d29b6",
+      "name": "Dada",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "b75fee74-6e6b-414e-8461-039712f08479",
+      "name": "Krupa Grocery",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "f69c9356-0ff0-4216-9b7b-dd45285969f5",
+      "name": "Miatzil",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "1fdf329e-9780-40b4-8a43-784865b404f1",
+      "name": "Jacob's Pickles",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "d6af7f83-003e-4410-b490-488c71d68248",
+      "name": "Virginia's",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "485ad18a-4288-4af9-9b0e-973f3f68b6be",
+      "name": "Zou Zou's",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "6ce2bca5-91cf-4e47-b2a6-88d2b617a076",
+      "name": "The Paris Café",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "08a28b42-d43d-499c-b91f-0bf65d104cf8",
+      "name": "Quatorze",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "5f06a05d-4506-4fc2-90fb-973a61018712",
+      "name": "Gordo's Cantina",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "40f96b8a-284e-4b8d-a341-20121b476bc6",
+      "name": "Chez Ma Tante",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "57b674b0-3d24-47b8-bb2b-d7d235ef3086",
+      "name": "La Contenta",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "ff3671eb-0349-44bb-8ced-c15a80b43bf9",
+      "name": "Suprema Provisions",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "a9095820-38bc-428c-8f65-2473b96b74f1",
+      "name": "Za-Ya",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "95872a40-f14b-4b92-bccf-b5331d4bf135",
+      "name": "Diner",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    },
+    {
+      "id": "c2437975-6a06-4966-8ef8-272674ed4920",
+      "name": "Someday Bar",
+      "label": "Brunch",
+      "reason": "street address not corroborated on fetched pages"
+    }
+  ],
+  "unlabeledLocations": [
+    {
+      "id": "9604f247-70b9-49dc-8afb-1187e9fd64d0",
+      "name": "3 Sheets",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3ccbc5cd-34a6-4d60-9023-376eb9ad59e9",
+      "name": "390 Social",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "132f528f-9943-4272-b888-d24a4ff05eaa",
+      "name": "56709",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8c9ff3ad-f290-4842-9a53-c0cf2d53624c",
+      "name": "5ive Spice",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9b7b333f-da89-4920-9896-3edaf1447cd7",
+      "name": "5ive Spice",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "82861e78-3dc2-4e97-b0ce-3240e42efb39",
+      "name": "5s",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7b6b2354-33b1-4515-bc0a-c26a123427b1",
+      "name": "6 NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ba1353dc-45e4-45bd-931e-5b4f86dd7879",
+      "name": "8282",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "23cc7cfc-e699-41d4-83ff-81a94466eb3f",
+      "name": "87 Ludlow",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "726e7605-c3dc-44a6-ab66-50e874f5fe6d",
+      "name": "929",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "92b8ac27-ab7c-4bf7-a715-8b29f3d952dd",
+      "name": "ALL BLUES",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5581fe55-1577-4277-9945-d6e665a43e03",
+      "name": "ANDAMIRO",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2c9bfc4d-b1cb-428f-ac61-1316aa75ee8c",
+      "name": "Abigail's Kitchen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b62d4b9a-b5f5-4796-ba06-240fae5d1665",
+      "name": "Accidental Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2f88fd94-69a7-4443-8bfa-3121ef1d5125",
+      "name": "Ace's Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a9d53189-68df-4285-ae6d-667a93d96177",
+      "name": "Ace's Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f43e6a67-a7e0-4908-875b-131cd2dd8cfb",
+      "name": "Adda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ffbb79af-d94c-43fa-b14a-91009b85a9c0",
+      "name": "Aftermath",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9e6054ff-8dd8-4e6f-8673-37fe31577c0d",
+      "name": "Ako",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "53db65d3-ab68-4301-948d-bcb040dd522e",
+      "name": "Alidoro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9c491d1f-2286-45cd-b9e6-60c0b3d7e1cb",
+      "name": "Alidoro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "10054259-9138-4e3a-ba3f-063ecefa2915",
+      "name": "Alidoro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4f5097c8-3b05-4655-9511-928aa1d312a3",
+      "name": "Alidoro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5919f18d-f77c-4437-a74c-a097599f9e8e",
+      "name": "Alison",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e0125d50-c578-4613-a46f-89c879b21a28",
+      "name": "Alma Negra",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4250ddd4-ca9e-4eb5-a2c8-3f7daee7eb4d",
+      "name": "Alphabet City Beer Co.",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c785d19a-37c4-4d61-a94d-b10399019aee",
+      "name": "Am Thai Bistro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c70e1b71-2e97-4403-986a-1d655f023ca4",
+      "name": "American Bar - New York",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dd8717b5-4d96-4855-a16e-7f24b4973fb3",
+      "name": "Aqua",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "01020c53-59f4-40be-8823-0ea24b56dc04",
+      "name": "Ariari",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "db0633b9-59c5-45ee-828b-1c2c1ee75c56",
+      "name": "Artesano",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c63724ac-8337-4ca7-a227-414249bbc76f",
+      "name": "Arthur and Sons",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8e30018f-18cc-459c-adaa-fc36231f240a",
+      "name": "Arthur and Sons",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ba9c8422-a5fa-42d8-96c7-1a88804967b7",
+      "name": "Asano",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2e8d0391-ed02-4fb9-bb37-8384fa71164b",
+      "name": "Asano",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9ca9755a-f5bf-4579-8ed1-c8893b8c4829",
+      "name": "Attaboy",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d678cf3a-1935-4872-8d19-6b2a1da56961",
+      "name": "BLT Prime",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "463ba713-b229-4cae-97d0-a835a7a120ce",
+      "name": "BO's Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2357a2ac-d139-4944-b2e4-fea5c1b7de97",
+      "name": "Balera",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "70c29946-40bb-481a-b8b9-75fb7b343fde",
+      "name": "Bananas",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "319d6932-39ad-4628-a930-d4bba3930012",
+      "name": "Bananas Country Club",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b06de676-cfd6-46d0-8ca1-51d868223202",
+      "name": "Bangkok Supper Club",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "da81f08b-199b-419b-958e-339fde432a2b",
+      "name": "Banzarbar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0b7f0ce0-5e90-4ceb-bee6-6b4053c4d4f5",
+      "name": "Bar 91",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "85eefef2-c2a0-4752-ac68-95fb7e1aede8",
+      "name": "Bar Francis",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dfe7f82e-62bf-412d-9253-14d535e11416",
+      "name": "Bar Freda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "09ec71a0-4f97-4847-92c4-dccc20d05c19",
+      "name": "Bar Jade",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e9320ae3-ec33-4133-97dd-dfe346c4fbeb",
+      "name": "Bar Madonna",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "77d196cc-c5c1-4e81-90dc-95edf89152e7",
+      "name": "Bar Masa",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0ad923b6-8848-4d05-bc0e-777587c4e602",
+      "name": "Bar Milagro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "613023fb-a374-4f0f-8314-93f97f0f76ea",
+      "name": "Bar Primi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3d062e23-46d0-401d-86ba-3e0694b92907",
+      "name": "Bar Sprezzatura NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "82a9c052-03d0-43cd-8517-79c2f9a11ae0",
+      "name": "BarDough",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0deb9fcc-b6ed-4668-897c-2b88f895127c",
+      "name": "Barbuto",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8c7dc7af-2823-4d78-8d24-33af665ae974",
+      "name": "Barlume",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9a67b9c1-e849-4677-ab47-2c3ac12e7f2c",
+      "name": "Barn Joo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a7ee2444-d3fa-4061-887f-4ec2e2267126",
+      "name": "Bateman's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2d766b89-1fb5-4bd3-93c5-c06adcea5db3",
+      "name": "Bathtub Gin",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "76b2929a-abdc-4f3c-8fe4-c1839ecb8a20",
+      "name": "Beer Street South",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6decd8e3-6ffb-46ae-9b4a-24153a09000a",
+      "name": "Bella Luna Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4e31bf42-f677-4038-b186-d78e09fc4a18",
+      "name": "Bento by Point Seven",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "07154268-d98c-43a1-ad4a-6ecdff129fd6",
+      "name": "Beto’s Carnitas & Guisados",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2616a1d6-aaae-4b73-89da-505634d76178",
+      "name": "Bianco Latte Bakery & Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "556c3639-2324-4f11-851b-2de3c09067ca",
+      "name": "Bibble & Sip",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0a560843-f1f5-4179-b2b7-cb22fe925ee0",
+      "name": "BierWax",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a21e6c42-ea32-4af6-b591-1aca8a1855bd",
+      "name": "Bird & Branch Coffee Roasters",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "81e35b75-fd4a-4a1c-9bad-ee50bdf3a1b3",
+      "name": "Bird & Branch Coffee Roasters",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "03df970a-4411-4447-a04d-d14047a8c37b",
+      "name": "Birdee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8cc2acfa-c691-415c-bc7c-5060c31825a7",
+      "name": "Birds",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8f90012f-f8c9-4c10-b93e-19b8f9e81a32",
+      "name": "Black Oak on Fifth",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0b47aca6-e318-411e-972d-fe941abd03da",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a58cf9bb-2789-40cc-80a1-567eea0832d3",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a8ee105b-10a3-4b7a-8c09-3cff3b3d378c",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7ac2c25a-69f5-4388-803a-81eddf98a090",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "415f9d87-688a-4de1-8c75-dcfd5c9bc829",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b02e1ff2-1e79-47f8-a8f0-be518580c1ad",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "878690e5-2c88-43da-8460-4bb022bbb9d1",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "84a9a3fe-b691-4bf7-841c-8cfa67560978",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "602c0c52-7ccd-4b18-b6b7-6cc0a1568c26",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ab50e249-6b04-499f-9406-5c280637ee51",
+      "name": "Black Seed Bagels",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "55ca0a88-a7e9-4d86-9eff-750cf2eaf1bb",
+      "name": "Black Tap Craft Burgers & Beer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1391781b-f71c-49fb-869c-6c9a1915681c",
+      "name": "Black Tap Craft Burgers & Beer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "007808d0-9042-4a9c-a248-7c3139892335",
+      "name": "Blackbird",
+      "reason": "no website"
+    },
+    {
+      "id": "a938eb24-c968-4b05-a71a-e6670e09c01e",
+      "name": "Blackbird Club at Parcelle",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4226b58d-7df2-40db-9940-46c7d357ae4f",
+      "name": "Blackbird Office",
+      "reason": "no website"
+    },
+    {
+      "id": "a99635dd-3094-47e1-a428-05083ad3a9bb",
+      "name": "Blackbird × Cowy Burger",
+      "reason": "no website"
+    },
+    {
+      "id": "1928ffd9-01fe-49d0-a5c9-a2c2f57981f3",
+      "name": "Blind Tiger",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "69ab888e-715a-42e7-87c0-ed34c193aeca",
+      "name": "Blinky's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c8be9b37-fc83-4e38-8a9f-e3a73b340862",
+      "name": "Boobliq Bagels and Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "850c570e-9f2e-423f-855f-ee1661a23ccd",
+      "name": "Boro Brine",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "03614408-a800-4ef7-82f0-a6cbd0eedba5",
+      "name": "Boss Tweeds",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "be337ea4-7cf1-45ef-b4b5-7eb2a6fbba85",
+      "name": "Brass",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "91af3e27-89e1-4ce9-a723-5ebedcac1577",
+      "name": "Breeze",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "960982aa-5f38-443e-a9f3-08ff0b5c919a",
+      "name": "Bridges",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b0cddfa7-d337-48b0-b4dc-28bef2b9a956",
+      "name": "Briscola",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "311b03ea-b896-478f-95d1-f5e715bf00b8",
+      "name": "Brooklyn Bread Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6292864a-78b9-4429-a1da-9d32bb2f7419",
+      "name": "Brooklyn Brewery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ca523600-9b0a-4581-a611-1823b6c6b667",
+      "name": "Brooklyn Kava",
+      "reason": "no website"
+    },
+    {
+      "id": "bff3f616-67a3-462f-a6e8-0a1e8ba41590",
+      "name": "Brooklyn Kolache",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c9a6e3fc-ff3b-4377-a4ef-f653311e7e1e",
+      "name": "Bub's Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fb25f491-d9f9-48b2-86ae-9e29886456c1",
+      "name": "Buenos Aires",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1f0e843f-e9e4-4680-966b-efcbd7a0bfb6",
+      "name": "Burgers and Beer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "061eafb4-21f5-4ff1-8162-27da4b65beff",
+      "name": "Bushwick Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6de829ef-8ac1-47d6-ae4f-bd4e82ac95d9",
+      "name": "Bánh by Lauren",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3c298780-ac2e-436f-9c47-1d6b4e038399",
+      "name": "Bāng Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4249cec4-6791-4197-8b6d-84bb75a92805",
+      "name": "CHILI 美麗",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "611ebfa8-4db8-4909-910e-c2f199a6dfda",
+      "name": "CHIM CHIM NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "abe79f09-6e87-4492-aabc-0d235741c631",
+      "name": "Cafe - Frenchette Bakery at the Whitney",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bf5753fd-8ac9-4f8a-ad7a-1026831a1b50",
+      "name": "Cafe Blackbird at FarCon",
+      "reason": "no website"
+    },
+    {
+      "id": "69925316-2abf-43de-a8bc-78050dcc75b5",
+      "name": "Cafe Boulud",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "874f9f4e-9814-4a21-bb18-5c28b27d0124",
+      "name": "Cafe Kestrel",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "581f2fc5-91d2-420f-a057-33245cd6ff4c",
+      "name": "Cafe Rue Dix",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e28c9028-a6fc-4938-9fbf-0bf02c6df298",
+      "name": "Caledonia Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "87dde2a3-f55d-4869-a0a0-72be92814f18",
+      "name": "Caledonia Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "673a5916-4d9c-42e2-8eeb-8876cd620cff",
+      "name": "Canal Street Market",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "535857e1-74a1-46f9-a12b-271e028c5f39",
+      "name": "Cappone's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "68c889c4-e016-4825-8e6b-74f0cabfb062",
+      "name": "Carlota",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "369efc97-1545-432a-a651-f5e58491355a",
+      "name": "Carmine Street Beers",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "effbbdc5-3519-4a13-a772-88f5ca2e0426",
+      "name": "Carne Mare",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7a7313f8-2be8-4a9c-8a18-76b8823d166c",
+      "name": "Carta",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "019bcedb-7be0-4cac-b0b0-c96249c05f2f",
+      "name": "Casa 13urger",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c09eea68-0cb8-4043-b4dc-a2fdcdef65e8",
+      "name": "Castell's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8a6aa38e-1382-4422-bc9e-82634247948a",
+      "name": "Celestine",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "53282451-ba47-4fd2-a4d6-8dcd4caa8073",
+      "name": "Chada",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6c85de98-a6af-444c-878a-cb2ba8c20672",
+      "name": "Chambers",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3f95098d-0730-46cc-96b8-ae4f80b28bf6",
+      "name": "Charles Pan-Fried Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8caeb7ef-e0b7-4ced-9b12-6d85fc5c2909",
+      "name": "Charles Pan-Fried Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ab18922f-f91f-46a5-b26b-b4699dba9a72",
+      "name": "Charles Pan-Fried Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "66ef633f-7a2e-4d8d-94ec-2f2b3ac81a2b",
+      "name": "Cheeseboat",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "751683e9-0b81-4599-8d41-ef486a1d4843",
+      "name": "Chelsea Living Room",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "40f96b8a-284e-4b8d-a341-20121b476bc6",
+      "name": "Chez Ma Tante",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "be258bd1-ed15-4b14-9d36-59e643947fa6",
+      "name": "Chin Up Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6e91960e-6044-45ba-9abd-55ab8c2d00d3",
+      "name": "Chinta Thai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b5dadb67-0582-44ff-b616-09d74d0ed742",
+      "name": "Chito Gvrito NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a807de60-a8bc-4243-ac87-04aaba49a51b",
+      "name": "City Subs",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "71a4fbd6-2b0e-4e04-a578-4cd1111eb5b9",
+      "name": "Comal",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "312783c2-81ea-4910-8077-bac8079e9ca7",
+      "name": "Commodore II",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "acc36b5b-1d5c-454b-a3d1-74a974ea8469",
+      "name": "Congress Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "18ee9206-9a44-4e5a-85a9-24d4988f9ee7",
+      "name": "Counter - Frenchette Bakery at the Whitney",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5aaa3e5c-ab79-4870-b5f7-3892823bdd83",
+      "name": "Cove",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "05efd035-d981-4cd6-98c3-35878f524752",
+      "name": "Creamline",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "733583f0-30c4-4ed0-a41a-133874e7d916",
+      "name": "Crif Dogs",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "403cf79b-2239-4498-b92b-b3ea10aee679",
+      "name": "Criollas Baked Empanadas @ Columbus Circle Underground Market",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "19c03820-c523-4011-8059-a2b4f67f7eb9",
+      "name": "Crown Shy",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "20aee385-b3df-4ad8-9fae-d5d9074d29b6",
+      "name": "Dada",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "44e72d52-5fe6-4cf8-bfe9-a421a2cafb53",
+      "name": "Dahla",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9d75c717-f030-4fd2-8c1c-fd969f9efbc5",
+      "name": "Dahlia",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5e1d71c5-e156-4a84-a1d5-d1b6b2f87441",
+      "name": "Davey's Ice Cream",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0330ac3c-a16d-4f83-93f3-0370263dc222",
+      "name": "Deploy Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1d654679-0afb-4652-8627-c59d1aa95a02",
+      "name": "Deploy Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "adf1e2c5-00b2-4119-9c16-46169c7b1702",
+      "name": "Deux Luxe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ce5d0441-700f-4617-881a-e992993f4f67",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "be8ddce1-8474-4b12-8ccc-5bbb00f80dde",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0eb52b90-7b8e-4276-a08c-7fbe7fe5c37b",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "20ae1e7e-d30e-42d1-b18d-71349ffd0104",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "23955c6d-bf70-4881-9af0-d12328937686",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5a480d01-0901-436a-98bb-f3f4e58be847",
+      "name": "Devoción",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "95872a40-f14b-4b92-bccf-b5331d4bf135",
+      "name": "Diner",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dac76118-187e-4a0b-81b0-38bcf4fb617b",
+      "name": "Disco Birdies",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a99e12fa-1597-4521-becf-e60358bf466f",
+      "name": "Donna",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a0fba7de-32b2-4379-994b-9bf93dc11e94",
+      "name": "Downtown Social",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "76a4d928-9908-4a9a-bc0b-f7807bbfe5a1",
+      "name": "Dravida",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "12a6d27a-0ebc-40cd-9868-589e52b04b00",
+      "name": "Echo Bravo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "40d161f0-ba50-4ef0-9bda-a878f4eb1f53",
+      "name": "Ed's Lobster Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "94ddb551-da65-4da4-abc2-3932442a4827",
+      "name": "Edy's Grocer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "61ce6002-3ce0-426a-a380-67263fe44dc2",
+      "name": "Ed’s Elbow Room",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "182faa59-2b87-4d86-9b0e-33ed1161362d",
+      "name": "Eli's Night Shift",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3ea7c194-34c7-47f8-b132-49742e9a258e",
+      "name": "Ella Funt",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6fada005-d742-4a6f-bcf5-ee2a1b036e1b",
+      "name": "Emmett's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d0196ce7-3dda-4e1c-a31e-3cb2001cfaa1",
+      "name": "Emmett's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6fad009c-ebae-48fa-b5d9-764ba7ddbc13",
+      "name": "Empellón Taqueria & Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8a25e917-c16d-46b1-8030-ffc0b4bda8e4",
+      "name": "Ensenada",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6a554352-b199-4c59-950b-7722d3cfdec7",
+      "name": "Evil Twin Brewing",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bc921fc8-cbb8-41cd-909a-798a9d448206",
+      "name": "Evil Twin Brewing",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "02af2840-df97-454d-972b-7363af016bc0",
+      "name": "F&F Pizzeria",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "edd99396-52cb-4a55-bad2-578e2c1e7374",
+      "name": "F&F Restaurant and Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bc1b8f80-4694-4a7b-bd70-29efe38b5a16",
+      "name": "F&F x Blackbird Pizza Sessions",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6de7a4a1-49f3-44c1-9076-805274bd993c",
+      "name": "FIELDTRIP",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5f752e77-7a26-407c-9321-90d2c212f5f8",
+      "name": "FIELDTRIP",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8cc71c45-ed72-4e76-8b82-4547b45854ff",
+      "name": "FKA:",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "281a7878-4dfd-4231-b3ee-805a567de06a",
+      "name": "FLYBAR",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5b4b4117-a7c1-4ee0-9a27-390c02797580",
+      "name": "FLYBAR (FSR - demo)",
+      "reason": "no website"
+    },
+    {
+      "id": "f1ccb214-ce90-4a22-8a77-db3e0b7aa978",
+      "name": "FLYBAR (QSR - demo)",
+      "reason": "no website"
+    },
+    {
+      "id": "1b070693-8f99-49ba-b151-86d1cecfd8b3",
+      "name": "FLYBAR (Square - demo)",
+      "reason": "no website"
+    },
+    {
+      "id": "53849474-c39b-471b-96e2-cb73051dac41",
+      "name": "Fairfax",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "eb6a56b1-0da9-48cd-b81d-657b0b6e5414",
+      "name": "Falu House",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3021aaf7-a92c-404c-8d9b-f6295849e2fb",
+      "name": "Fan Fan Doughnuts",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5604f29a-64bb-4048-8210-4bdb6d42e0a6",
+      "name": "FifthSip.",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "383f76e0-3f72-4dee-a397-2659dfe721ff",
+      "name": "Filaga",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "25acc307-6aaa-49c3-94b4-ed6410fb9b29",
+      "name": "Filthy Diamond",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6260125c-56fc-425e-b637-d1edf1eefc72",
+      "name": "Finback Brewery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "06005331-67db-4428-ab8c-f7f1bb0576b9",
+      "name": "Finback Brewery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "46a9ca23-76b7-4b35-b42a-899036006f8a",
+      "name": "Finback Brewery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e65cd2af-a33e-43d6-849c-31e265dd6ad0",
+      "name": "Fish Cheeks",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bc19a4d7-89b8-4f08-ad4c-336a53ff45ea",
+      "name": "Fish Cheeks",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "65d64b88-1dc4-42a6-8a66-ab1092f9c2d2",
+      "name": "Flower Cat",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8e5e50e5-20b3-4854-9205-669bae0fe8f8",
+      "name": "Fonda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "913e6f84-2371-457e-a43f-f6b15996b49d",
+      "name": "Fonda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4c797bdc-2db2-497b-a542-7d37cec1bd49",
+      "name": "Fonda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5a5ae471-71a2-476e-8faa-fd8fe0554150",
+      "name": "Forever Thai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bef14f58-0b14-42a5-9fe3-5b8c8ecfa2d2",
+      "name": "Fornino",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8f2b4891-e8ec-419c-9303-29111ff4a601",
+      "name": "Fort Hamilton Distillery & Tasting Room",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "351be30a-4c29-4390-aad3-59011356b1d0",
+      "name": "Founding Member",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b855437c-a58b-479b-abd0-8edd3cbce58a",
+      "name": "Francie",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4ef788a9-9733-46a1-975b-6e03fa6847a6",
+      "name": "Frankies 457 Spuntino",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2f884d5a-0dbc-4cdd-9c07-04a28bc36e68",
+      "name": "Frankies Events",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e6d16b24-7432-4d27-a7ed-64773acc58ba",
+      "name": "Frenchette Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b91c12b4-5cd8-43ab-8f44-bb09258835a3",
+      "name": "Frenchette Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f86a8bb0-53b6-41a7-b6c5-689022c11d43",
+      "name": "Friend of a Farmer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4ba78f75-87e8-41f1-8b78-490fcc8903a5",
+      "name": "Friend of a Farmer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "37ad7efd-b062-4adc-9f7a-381570145184",
+      "name": "GATHER",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b21a7eee-aa57-48fa-aa4a-47147ab0a0c0",
+      "name": "GLORIA",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "951cecdb-9558-4dbe-90c7-f3ced1566225",
+      "name": "Gelso & Grand",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5a6666a1-507f-4edc-bac5-d88a9813ef90",
+      "name": "GiGi Curry & Noodle Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fc48ee6a-cbd6-40a6-ae35-f1c10fda6817",
+      "name": "Gigi's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "27ec9491-e7d7-423d-a553-b7cf48df5886",
+      "name": "Gjelina",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "294cdbb7-54b1-4a1e-935a-ca0f74dcdaac",
+      "name": "Glory Days",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4b561c0a-e6fd-480f-9184-da4469f46495",
+      "name": "Godunk Thai Street Food",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "392bc553-5e6f-4e83-8461-a7f35a360533",
+      "name": "Good Thanks",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9c5f582a-cbda-4012-a1dd-5033da14590e",
+      "name": "Good Thanks",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5f06a05d-4506-4fc2-90fb-973a61018712",
+      "name": "Gordo's Cantina",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c2f1f050-12c7-40c3-b41b-3c22be5e1d23",
+      "name": "Gotham Burger Social Club",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1a3592e5-d316-4e7d-be5a-e39b0355d211",
+      "name": "Grandma's Home 外婆家",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d58174bd-d786-4eea-a982-9af95869a927",
+      "name": "Greenpoint Fish & Lobster",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b492f742-1643-49bf-90ed-2f6e3c630261",
+      "name": "Greenwood Park",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "934530e0-3676-4937-8774-29339212620b",
+      "name": "Grey Heron Café",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8e5353a7-12f3-42f3-a0ed-ecc1bc2f30e7",
+      "name": "Greywind",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "34842e90-2c7f-4f3d-b779-294fc9ad1677",
+      "name": "Grimm Artisanal Ales",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "cc0d761c-94a8-404f-ab3b-b9232b346294",
+      "name": "Grimm Tavern",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7533d9c2-0050-437b-b988-0023ac53265b",
+      "name": "HIEN FROM VIETNAM",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ccc95717-bedc-43fd-97ee-0d029962e166",
+      "name": "HOM Cafe & Wine",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e5a59bfa-b52e-4d00-b82f-8ade77314e92",
+      "name": "HUPO琥珀",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "36531f03-ab39-44ea-a601-171436015435",
+      "name": "HaSalon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d9399f05-3139-45b1-a1ca-78be68b2ff61",
+      "name": "Hags",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "187df955-354e-4ba4-8e66-d787e110519d",
+      "name": "Hanoi House",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8cab32d8-296f-421e-a702-c033ee200c0e",
+      "name": "Hard to Explain",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6e5b1d4f-c652-4376-a040-8c4d26d23e14",
+      "name": "Hearty & Healthy",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "13aa1a3c-0dfe-437d-8758-d066157254ce",
+      "name": "Heidi's House by the side of the road",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "11f8a6ee-f811-40bf-ada2-ca59e0f3a336",
+      "name": "Hello Hello Bar & Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a9fa95fb-522e-405a-be75-9adfa4ad50b8",
+      "name": "High Tide",
+      "reason": "no website"
+    },
+    {
+      "id": "df99e15d-dfac-43a0-acb1-679be06e273e",
+      "name": "Highball Ltd.",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "374ccc33-3bc0-46f3-8802-c417e208f649",
+      "name": "Honeybrains",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "70313b19-4da2-4400-8063-18d0e5d3f421",
+      "name": "Honeybrains",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f9523d0a-d559-42af-8543-51c4c8748ae7",
+      "name": "Honeybrains",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "20f0b538-7d16-4aa7-9ce4-edbef209d00e",
+      "name": "Honeybrains",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2ae8b44e-98bd-41bb-8330-d36b7a1bf30e",
+      "name": "Hummus Kitchen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8359d2c6-4993-45c2-b985-814567425a05",
+      "name": "Hungry Llama",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bcc7ca17-00bb-4b2c-b460-9892565c1671",
+      "name": "Hungry Spicy",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "43625618-4fb6-4318-a9df-7de35b2cb559",
+      "name": "Hungry Thirsty",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "030293c2-b713-4001-814b-e15a5e97616e",
+      "name": "IRIS",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b0dc1913-d681-446b-aaa4-53b2f97b6723",
+      "name": "Il Buco Alimentari & Vineria",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7ad70152-68c1-46d9-abd5-f652a829b170",
+      "name": "Il Corallo Trattoria",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "558a982e-27a3-4d60-8b81-935c722b03a5",
+      "name": "Il Mulino New York",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a0f852fb-31a3-4d7f-b45c-7e7e7088ede9",
+      "name": "Il Mulino Prime",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "20550fcf-5c54-4f97-9acc-5541297e29c5",
+      "name": "Inday All Day",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "26d794c5-8bf8-4ce0-b4e9-73eb1d257d97",
+      "name": "Indian Table",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "afe9a10e-e5fe-4103-bfb9-18f8e865aecf",
+      "name": "Insa",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dbf0290b-6b51-42cc-80b2-4d6ff80f5825",
+      "name": "Isshiki",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f0e08687-c77f-4faa-aa8e-4f4f2deab7ff",
+      "name": "Ivan Ramen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1df72e9f-2c5f-476f-bb34-a624d1beb842",
+      "name": "Izakaya-Futago",
+      "reason": "no website"
+    },
+    {
+      "id": "7d4a0e91-8537-406e-9271-1734c310ef5c",
+      "name": "J KENNEDYS",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1fdf329e-9780-40b4-8a43-784865b404f1",
+      "name": "Jacob's Pickles",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d22ec426-d34c-4de8-b988-aec9eb6312b9",
+      "name": "Jaffa",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "680e5f75-c1d7-4e5a-8e16-2b16ae5e9a88",
+      "name": "Jajaja Mexicana",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3ab1af3e-51fd-44d9-9159-aea01c604218",
+      "name": "Jajaja Mexicana",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9ae2d52a-9432-4be5-8c06-3b886e297693",
+      "name": "Jajaja Mexicana",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c0b7bb9d-2248-44e4-8560-21d208e589f2",
+      "name": "Jan Jao Kha",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f0569ffd-8412-430b-baaf-0534858e02cf",
+      "name": "Jax Pizza Joint",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f2c67c36-dd90-4a07-82aa-87420261cfb1",
+      "name": "Joey Roses",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4167ce9b-6a86-4c23-a25a-85c2fec87ae4",
+      "name": "KEI (Izakaya and Ramen)",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a91b5fb2-173b-4d10-9f91-2dcbc2f5a391",
+      "name": "KRAAM Thai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ca683fc7-a34b-44b5-9414-6366ae09118c",
+      "name": "Kaew Jao Jorm",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "85785c35-d2ed-4833-80a9-e61637ca25dc",
+      "name": "Kalye",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a86d847b-49a8-45b6-8821-90bb29d13c58",
+      "name": "Kato Sake Works",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2549e585-aee5-4529-868f-679306710b34",
+      "name": "Kees",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "03e455cc-0cc2-4543-bedd-f453bce23e1a",
+      "name": "Ketchy Shuby",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "eebeef0b-de98-4335-8412-63a7d02603a4",
+      "name": "Khe-Yo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4e82790c-8dbc-489c-9434-fa4e3cf7246c",
+      "name": "Kiko",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f5b918ac-de42-4d01-b6d8-b8c61d07fb53",
+      "name": "Kilo Bravo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "84f4da12-6993-4a5f-9227-135de39cdb9c",
+      "name": "King Tai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9927e090-6397-41d5-a644-019636ee5343",
+      "name": "Kings County Distillery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f2542efe-aae9-43cc-b7e3-9f9b3ce7147e",
+      "name": "Kis Café & Books",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4d164288-2c1e-482c-a6db-cc57cbe4f5fe",
+      "name": "Kiwami",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4c82cf42-048d-4c19-9b6e-500476830293",
+      "name": "Klom Klorm",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3a75992a-7185-42ce-bce2-2736acd82135",
+      "name": "Kofee cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0c352b64-8c2c-4316-adb7-a2ef7f500cf7",
+      "name": "Koke",
+      "reason": "no website"
+    },
+    {
+      "id": "23cafbc8-2363-4018-9bc5-7faa0e7b5471",
+      "name": "Kona Coffee Roasters",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b523fc1b-f3e9-4822-a219-729bfb336e95",
+      "name": "Kona Coffee Roasters",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7ea6c13a-306b-4864-9af3-8c9df51b2982",
+      "name": "Kona Coffee Roasters",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "17a52bc5-fb14-4e67-a225-55b1b18c1b7d",
+      "name": "Kru",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b75fee74-6e6b-414e-8461-039712f08479",
+      "name": "Krupa Grocery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f4973539-5525-434e-b6f8-5073a7288f1f",
+      "name": "L'Arte del Gelato",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e5b6050f-4b1b-4544-adda-a2d0cfd16f2a",
+      "name": "L'abeille",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "47f9887c-58d0-400e-89d1-445581163e05",
+      "name": "L'abeille à côté",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8835658a-b2cb-4f18-9aaf-108830392715",
+      "name": "L'avion Café",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ae6888d9-40a1-495a-9fe9-4eea45f28fb8",
+      "name": "LECIEL",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "18b7f21a-4cea-4e8b-87ef-988e207ee540",
+      "name": "LOKL Cafe SoHo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "57b674b0-3d24-47b8-bb2b-d7d235ef3086",
+      "name": "La Contenta",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dcf18ef7-b5ae-4314-9b3b-1792a32905ea",
+      "name": "La Fleur Rouge",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "54c7db33-c1d8-4d74-9342-17ce962c308e",
+      "name": "La Newyorkina",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f142e07a-1de4-4d9a-b18c-5b8a31368887",
+      "name": "La Pecora Bianca",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "026a7c4d-0395-47ee-b146-ee1bd177dc20",
+      "name": "La Tete D'Or",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "17257622-f269-4d50-b0c4-4208b3d564db",
+      "name": "Lafayette Grand Café & Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "400ff04e-9b59-4ab5-b600-621296167cf6",
+      "name": "Lakay Bistro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ab7ef9ca-483e-4a3c-8a68-ef251c0280b5",
+      "name": "Laser Wolf",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "691de218-9cc8-44e8-bf78-f92882fa8d5b",
+      "name": "Last Crumb",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "45eb9292-d5f8-4cd5-a2e7-78b4a3ee1e99",
+      "name": "Laziza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e1aae8d6-2adc-49a2-87d1-81bc8c609065",
+      "name": "Lazy Sundaes",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e49090be-9292-4ba4-8a98-4f4435f7de76",
+      "name": "Le Bernardin",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5b01bc4d-241c-4bd4-addb-087c30913da5",
+      "name": "Le Bernardin Prive",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "91df65d7-0b50-4fa4-8ef2-5149ad521faf",
+      "name": "Le Bernardin Salon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ad083c2a-46e8-4e0d-a098-cecfe93d50e1",
+      "name": "Le Pavillon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4bc7f913-9411-4b4f-91ae-c1914a3b7828",
+      "name": "Le Rock",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "147c38a7-2450-4b2e-ab1f-76c8a87fe727",
+      "name": "Le Veau d'Or",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b904b987-f694-43bf-97de-dc37ad5db55e",
+      "name": "Lighthouse",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "868f584b-4e1f-4545-b1d2-deba87399938",
+      "name": "Little Armenia Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7b836388-0428-4da3-9003-7c387b31839e",
+      "name": "Little Charli",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "162f2bd9-777f-4254-aeee-866d770f34cc",
+      "name": "Little Falcon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e1fbc731-15d4-415d-b82c-3dd9adbfaa07",
+      "name": "Little Grenjai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "eadb77a1-8703-4d50-a5c9-4c0a3057c6ee",
+      "name": "Little Pine 小松家宴",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2d283641-ea2d-4803-8375-cbf85f202392",
+      "name": "Little Rascal",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5b1f48a5-1e7d-456c-82c8-0c99d535b175",
+      "name": "Little Rascal",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6c5febd8-157a-4f8e-81bc-4de0a5828835",
+      "name": "Llama San",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6ce7a6f3-d037-485d-a520-d8a7c61f8e6c",
+      "name": "LoHi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e9e8038f-186d-46ab-b560-6c4fd9a1b8af",
+      "name": "Lobby Bar at MADE Hotel",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9ee48455-aba1-49d4-9c0f-af4f4cc38ad4",
+      "name": "Locanda Verde",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "75f71438-f0ff-45bf-8bad-021022104561",
+      "name": "Locanda Verde",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "53c2289b-5593-49e8-b115-311c4a22196c",
+      "name": "Lola Taverna",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "04538f34-d8ce-4b80-9cf8-f05d67dd97c8",
+      "name": "Los Burritos Juarez",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8e57cb15-d237-4ea8-91df-d1ef2078afe7",
+      "name": "Lovely's Old Fashioned",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fc6fd8f4-42ff-480e-8a07-169d301186b9",
+      "name": "Lucy's Vietnamese",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fd3f16be-a511-4a39-8060-a6243fd98168",
+      "name": "Lucy's Vietnamese",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0e4e0d14-5d21-4bd8-9248-d4b6f3036666",
+      "name": "Luthun",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bdbddaf6-5605-441a-b5d3-14fb4cbc0ff1",
+      "name": "MALAVITA",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5f9fb895-e241-4ee5-b5ee-9e1574f41855",
+      "name": "Macario",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1d8853b3-513e-4f24-971a-8a2f35c37dfa",
+      "name": "Madame Bonté Café",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0531d73a-a777-470a-8588-16b11e3fa43e",
+      "name": "Madame Bonté Café",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "499fdf7f-41e2-43e1-8ac2-0b83195b1c5b",
+      "name": "Madame Vo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6faf9c5c-d056-4ecf-a663-d079b8b8b59c",
+      "name": "Madman Espresso",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e634095e-e36e-468e-97f1-28f8c9742ed2",
+      "name": "Madman Espresso",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bbd84b10-e812-4cf0-8274-9ed371e4b249",
+      "name": "Mah-Ze-Dahr",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1018916e-9bc8-4643-8145-e75cc2202ab6",
+      "name": "Mah-Ze-Dahr",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ea67d8b6-c1d4-4e69-820e-77fba8f56769",
+      "name": "Mah-Ze-Dahr",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ed487f2e-c0e0-421d-94be-f406b90b4cb4",
+      "name": "Maison May Kitchen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a3b8c112-1a32-4829-af98-8feaf4686644",
+      "name": "Maison Sun",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4170ec40-159e-4e82-9e4c-8f6a6923979e",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "28cd226e-abc8-4cde-8109-938551c6f54c",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6a667082-bfad-44a1-b552-59819f8c03c6",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "96b83320-a091-4203-b648-670a80c354cb",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b7a2b98f-7c61-4f5e-b9c5-50f294599147",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "72e845f3-68ca-4fde-a005-401a94b7103f",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2ab70631-f5a5-4faf-992f-6eaddc6e1efe",
+      "name": "Maman",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "81f10a9d-0317-4cb1-acc2-0f505716a5c9",
+      "name": "Mandarin Coffee Roastery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4fb3c5b3-b009-48e9-aab7-90ad6cb592ce",
+      "name": "Manhattō",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "28052b6c-b264-42bf-a4e8-78dab560a001",
+      "name": "Margot",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e47f1723-ea48-4d97-9432-323c950b842f",
+      "name": "Markette",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6413ab7f-8029-477c-8ceb-4ba9ade2c160",
+      "name": "Mayflower",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ac3e04bb-f749-478b-a5f6-ad769b397af7",
+      "name": "Meet & Meat",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "08e9c686-31f2-4f5e-81e8-d680493e7479",
+      "name": "Members Only West Village",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "131cdb38-5dee-48fd-a231-40c9610ffff4",
+      "name": "Meraki",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f69c9356-0ff0-4216-9b7b-dd45285969f5",
+      "name": "Miatzil",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5f038b52-fd7b-4a45-b16f-ca70452f33e7",
+      "name": "Mile End Deli",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c21884d2-d5d6-44b1-8a63-9f5db6a8c5f1",
+      "name": "Milk & Hops",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7a996ed5-7fba-4d45-9803-c0e67378bb9b",
+      "name": "Milk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "69d7f692-210e-4a67-ad2b-6edd5b704eea",
+      "name": "Milk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a6bbcc20-814c-4407-ba8d-355ab35f7085",
+      "name": "Milk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1a955ff4-e2fe-45cf-96cf-aca623789209",
+      "name": "Milk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1fcac2ce-68cf-46a1-8d40-274bb000534a",
+      "name": "Milk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1100e588-78c8-4ef7-aac3-f52bf7c1e82f",
+      "name": "Mishik",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c80095ef-504a-4b7e-b3a7-3e23d136f02f",
+      "name": "Misi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "cfe4448b-4558-4fa7-8462-12444ead3235",
+      "name": "Misirizzi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "573c9ce0-bc9d-423e-997e-9f38ebc0032d",
+      "name": "Mitsuru",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a211eec6-8d01-4b7f-ad56-c24f80a1a6c4",
+      "name": "Mixteca",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "329b7e0f-d422-40f2-ac9c-9e14a4556579",
+      "name": "Mokyo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "88e17f3f-3389-4dae-9a47-cbfb54a3878e",
+      "name": "Momofuku Noodle Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8dfd66c0-0e38-42ce-8a36-aa5e593c865b",
+      "name": "Momofuku Noodle Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dc246c46-7611-40e0-93ac-c5970bd066e1",
+      "name": "Momoya",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "045cf46a-12a3-4a82-9147-6a7c90b094c8",
+      "name": "Momoya",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "150a703e-0653-4fee-b928-e3b26c410654",
+      "name": "Monsieur Bistro Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8b8d3fc9-4785-47b1-92a2-7446b7c0ecb3",
+      "name": "Moody Tongue Sushi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6a1e6580-ac39-4db8-98a6-1adfd9692bf6",
+      "name": "Muku",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "21de79b2-b42e-4bc7-9f86-6fa26bb7216b",
+      "name": "MáLà Project",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b1719c14-773a-4422-bf66-834046cd2c4b",
+      "name": "MáLà Project",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c9d40019-91f9-4c74-930e-ebe09c1549dc",
+      "name": "MáLà Project",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "11b85c1a-9ec0-4ed0-84ac-89a3201186d6",
+      "name": "MáLà Project",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d3e9b596-03e6-4b36-b0a3-37ba7844ea11",
+      "name": "Nabila's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "358318b5-bb03-4f93-8e69-364632efeac3",
+      "name": "Narkara",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b6908875-5092-4c23-9aba-f97ad7a0c51d",
+      "name": "Nat's on Bank",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "95d20041-ab6c-4aa5-b6ae-523150e12088",
+      "name": "Neeloo",
+      "reason": "no website"
+    },
+    {
+      "id": "4f87c6a3-28a4-42d3-aff8-72710bde780f",
+      "name": "No. 7 Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2d57f8bc-e83d-466e-8921-694cde893611",
+      "name": "Nom Wah",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "97f64083-ce29-46c1-bf35-fd7ede00e33d",
+      "name": "Nom Wah",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "922f288e-f43c-45d9-a503-e8716e176033",
+      "name": "Nom Wah events",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ddfce9e4-b2a4-4995-b839-0dc6daa51196",
+      "name": "Nounou Noodle Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7aa3a04c-9a35-4131-ab50-6c54f61ec39a",
+      "name": "Noury",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2f0c4d00-1ad0-43dd-a15d-6a9658f32c7c",
+      "name": "Nudibranch",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "03742a94-b1cf-4125-a8ed-a8328667725f",
+      "name": "Off the Wagon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7f4ccce0-3c91-4128-830c-97c2ddfc99be",
+      "name": "Oita Sushi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "efd69d00-a312-4355-8f21-9015752f2f2c",
+      "name": "Old GERTIE (do not use)",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ff77bc3f-217e-4230-a0b9-16c8929ea6ff",
+      "name": "Only The Wild Ones",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9223daec-3a66-4600-88ee-925f633c4ba1",
+      "name": "Ornithology Jazz Club",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2e1ad03e-d958-4d20-b5cc-9af02f5c8130",
+      "name": "Orwashers Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4d205e46-b593-490d-92c1-a6de39962871",
+      "name": "Orwashers Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fae12cd3-1459-4e9c-8e4e-db33b040a09c",
+      "name": "Orwashers Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ec6a8bc5-69d8-40f2-97a9-4293c5d03c4e",
+      "name": "Osteria Radisa",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4bc59f9a-8c77-4408-b5a1-fedb301d1c31",
+      "name": "Other Half",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "81512552-b346-47b7-951c-407f08933858",
+      "name": "Other Half",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e2a176aa-0ed3-416f-9974-beb6b7a4ed42",
+      "name": "Other Half",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8456ef22-4b08-4574-a8e5-324b7028e555",
+      "name": "Overflow Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bc377b5f-48ba-4629-97d4-9cbf35e9a3b1",
+      "name": "Overstory",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dd02ec56-81b8-41e0-9fe3-f52ab49bddbc",
+      "name": "PROPAGANDA",
+      "reason": "no website"
+    },
+    {
+      "id": "75166053-dfe3-4d60-8a13-0d0fd7d4fb0c",
+      "name": "Padoca Bakery - 67",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fa35760e-70fb-4192-82ce-659cb9c8045e",
+      "name": "Padoca Bakery - 86",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8986477c-03bb-4bc8-b613-6ba321f7dc49",
+      "name": "Pairing",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "effc59a5-8901-457f-9721-aafe95ba0f3c",
+      "name": "Paper Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "531c4c8f-ff0b-48bb-8d10-7bfc06285374",
+      "name": "Paradise Lost",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "113e87b9-1ced-401e-9375-f76d5d49fa57",
+      "name": "Parcelle",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6d516b62-85dc-4162-9c64-9d7428ffc908",
+      "name": "Passerine",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1816bb27-0efb-4715-b107-508842a7d81b",
+      "name": "Pasta Louise Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "269585fe-73b7-4947-8f31-c48e552eb214",
+      "name": "Pasta Louise Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9e632031-8faf-4d59-9c67-f90ba537f862",
+      "name": "Pastai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "20240191-f48d-40cb-8bd1-8e2180115a1c",
+      "name": "Pastasole",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a35696c4-c799-4973-8450-122741efb52b",
+      "name": "Pastasole",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ad8fb9a8-71b3-4455-91a8-f0a16baf0c61",
+      "name": "Patisserie Fouet",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "854859ef-83d3-4100-b1fe-487c77542ba0",
+      "name": "Patisserie Fouet",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8327e158-e84a-4f49-adcf-0ff9491ffda5",
+      "name": "Pavlo Mochi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e100c8ca-bea4-4074-a3f3-4bc302873de1",
+      "name": "Peaches HotHouse",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9f36c375-45ea-4476-bae8-e610a8950d1a",
+      "name": "Peaches Prime",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e4c2c550-e5c5-4691-aac3-e06e84183132",
+      "name": "Pearl Box",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f9815b86-eee6-42d3-a53f-20f623ba084f",
+      "name": "Peasant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2cdcb3c7-c2fa-4991-b36c-24aa3f597044",
+      "name": "Pecking House",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4f3ae10f-57a6-41c2-883d-7ab99e7f7b24",
+      "name": "Peppercorn Station",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c0bd51c6-da7c-461f-93a0-35dab4ec4e9a",
+      "name": "Pesce lulu Seafood Kitchen NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "616f8c99-36fa-4781-8671-089848542f31",
+      "name": "Peter Luger",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3b8375f0-cc47-4221-ad1c-a27ac888122a",
+      "name": "Phil’s",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "538f39e2-4938-4076-b254-66efbb60d538",
+      "name": "Phobar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c778d1d9-05e3-4f5d-baf5-ac7ead0c57c0",
+      "name": "Phoenix Palace",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9aea737f-d213-4f79-9ec8-c79a008d821e",
+      "name": "Pilot",
+      "reason": "no website"
+    },
+    {
+      "id": "f01433d1-4d01-4fe8-bb19-4d666d81979d",
+      "name": "Pinky Swear",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "919a8956-5833-4142-bf31-005be8def1c7",
+      "name": "Pizza Studio Tamaki",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f27bf8cc-2718-4752-a34b-0b84c7a49455",
+      "name": "Pizzette",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ff4962c3-c2f0-4a22-a565-93c917ecf159",
+      "name": "Please Don't Tell",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "620ef54c-ae4a-4338-ac39-343cdc3eebe7",
+      "name": "Point Seven",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ccf0e9a1-3fb5-4539-9405-6ff789eb9930",
+      "name": "Poppy's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dd9d4015-57a7-4e31-b6df-a41dfd5ae4e5",
+      "name": "Postcard",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f7be245a-ff47-4d6a-a07f-85b0ff5f3d78",
+      "name": "Privy's Pancakes",
+      "reason": "no website"
+    },
+    {
+      "id": "53e34d6c-fc1a-44fe-a7dc-892f24561ca9",
+      "name": "Proper Food",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "265d7b91-f995-49d9-887b-3b57d4834169",
+      "name": "Proper Food",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "29d6b7a0-63da-4b83-a3b3-5fb61a36ed91",
+      "name": "Proper Food",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f6a15bf1-3480-435e-a7b1-e8aea80999a8",
+      "name": "Puya - Tacos de Puebla",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "08a28b42-d43d-499c-b91f-0bf65d104cf8",
+      "name": "Quatorze",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "19210e94-bb3a-4ad3-a321-a88caf837880",
+      "name": "Queens Soccer Festival",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d8fdd1d1-2a1e-4377-b4fd-939e5d926ac3",
+      "name": "Queue Beer",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bac5707d-fdcc-4291-8d53-62971fbd02a6",
+      "name": "Radio Kwara",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "cc6219a7-9db3-46d2-8cc6-132ee92b4a93",
+      "name": "Raku",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d2151690-4b74-49e2-bcef-b2daceef0570",
+      "name": "Raku",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7906647d-d60a-4368-ab89-b5d8e11c652e",
+      "name": "Raku",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3bbedc37-0f54-46c6-ba9a-9b26fa662d2b",
+      "name": "Ramro",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b2c0dfcb-1e97-472d-88be-611dc7f1c67c",
+      "name": "Regina's Grocery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5ea54232-6406-4450-952a-1b3042d38e5c",
+      "name": "Ribalta",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1206bdb0-f755-4f45-b448-aa57bed604b4",
+      "name": "Rito Gelato",
+      "reason": "no website"
+    },
+    {
+      "id": "4b02471d-7af6-4191-813b-30fc35729f55",
+      "name": "Roberta's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "52b978ad-b7d3-4ad8-a9e0-0051c988d064",
+      "name": "Roberta's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7906f0a0-3f7b-4e2f-ae01-2a1cc84d2a34",
+      "name": "Roberta's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e1e122e9-c273-4c73-ae99-4e6748cb726b",
+      "name": "Rocco's Sports & Recreation",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f62bd110-f116-4e97-8c51-c31a52ec301a",
+      "name": "Rofaqaa",
+      "reason": "no website"
+    },
+    {
+      "id": "dfc57f28-1449-4022-8beb-d1df8277a4f6",
+      "name": "Rokstar Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3e2c5923-8a2b-495c-bb75-fe2cb17a40e1",
+      "name": "Rokstar Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6030ca3c-255a-47f4-89ef-381e262f4d49",
+      "name": "Rokstar Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "805316d8-b49b-4f90-8858-8110bdfdadb6",
+      "name": "Rokstar Chicken",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d68234ad-8010-47bf-9fc2-de8d7947af16",
+      "name": "RokuNana",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "de3335f0-0c3a-4fb5-87c5-7cf12bab6957",
+      "name": "Romeos",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "00a10e5f-3007-47cd-a3f9-cd89cb9d7326",
+      "name": "Roscioli NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4a0d14b3-9104-4f2a-b647-d6ff2bdeec2f",
+      "name": "Rosevale Kitchen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "82d25c5f-ee8b-4fa7-a246-2888164a46c2",
+      "name": "Royal Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "19e6840c-6956-43d2-8729-9fa30fd1fd0c",
+      "name": "Runner Up",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fa4b384c-0a79-4fbb-8ec7-45c4591d8529",
+      "name": "Sabai Thai",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2359b50f-8681-4bd7-8d8d-2123cec19826",
+      "name": "Saga",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8593a6bf-e69c-4ce0-baa5-6fbca9a9d046",
+      "name": "Sagaponack",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fbe46b35-4a22-4a38-82e6-d7314ed4e6d6",
+      "name": "Saint Tuesday",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "53ab8d04-e2f8-42de-95b2-8d94f99e9de8",
+      "name": "Salumeria Rosi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "596e4230-a961-403d-8644-6a4f00c04512",
+      "name": "Sami & Susu",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0881ee08-515a-437e-926b-4d3cd0616e2b",
+      "name": "Sandro's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "39d47ae7-850c-43bc-a45c-ac8e110ead84",
+      "name": "Santa Panza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "82fe7ef2-9adc-4dfc-b9f8-e6dc7f61b828",
+      "name": "Savour - Healthy Asian Bowl",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d9805284-2e81-44d0-9527-01aad3ba00ea",
+      "name": "Scarlet Lounge",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "34d9e7d6-03c3-4a65-bbc1-d10214c64265",
+      "name": "Seed + Mill",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "396f55d8-3524-4fc9-bac4-245b9e2ea104",
+      "name": "Semma",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1cb5c564-11c0-4826-878c-9198c913304e",
+      "name": "Seventy Seven Alley",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "83369de5-fd1a-4a69-8999-064af3fa2d34",
+      "name": "Shan",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f659ee43-b251-4106-85b4-caf34bbb5808",
+      "name": "Shifka NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "10a63e50-c679-4a9a-a251-18a7567b3bf3",
+      "name": "Shmoné Wine",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0ab47213-6c15-4435-ad4a-9cd1b5d55edc",
+      "name": "Sip&Guzzle",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a62be044-d6b2-46dd-8c0b-8028679dce63",
+      "name": "Sipsteria Morningside",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bb3e59d5-d353-45e8-b383-a2e55ab94dd6",
+      "name": "Sipsteria UWS Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8b771e33-90db-49a0-95c5-9195702c074a",
+      "name": "Sipsteria UWS Wine Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8eae6203-2256-48c7-9f34-43691301ace3",
+      "name": "So Good Coffee",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "740d3301-09ce-49d9-8bd0-4207ba41a9d4",
+      "name": "Soba Ulala",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "712ac37c-6a4b-45ef-95f0-847fc4814102",
+      "name": "Society Cafe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2ebec9b1-0679-4904-a5de-33d201ad7886",
+      "name": "Soft Hours Tea House 柔時閑堂",
+      "reason": "no website"
+    },
+    {
+      "id": "c5544786-923c-497c-8071-4d4f9cd37a16",
+      "name": "Softside",
+      "reason": "no website"
+    },
+    {
+      "id": "c2437975-6a06-4966-8ef8-272674ed4920",
+      "name": "Someday Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "758c9ac9-43cc-411b-a692-266b2dee3302",
+      "name": "Sona",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4326ef9c-7559-4ba1-a6e4-e47eb580dac1",
+      "name": "Sotto la Luna",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fcfb9a99-413d-40b9-bd5e-ba3223e5f1de",
+      "name": "Sound Booth (at Port Sa'id)",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f494dacb-bbb7-4431-837d-476b94dc4a31",
+      "name": "Spaghetti Incident",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1bffa645-d9af-428f-afdf-8c7016b513f2",
+      "name": "Spicy Moon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "39ba5209-0fa0-4889-8048-4af28d319b0d",
+      "name": "Spicy Moon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c15e7c03-eebb-4a02-8b4c-c74e34062fda",
+      "name": "Spicy Moon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5ac368d4-90e9-44a2-8835-5849a8ff9e30",
+      "name": "Spicy Moon",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4eccdf34-b84c-4fbc-b642-67aad12831ce",
+      "name": "Spring Cafe Aspen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c79dcb5e-73f8-4acc-ae0f-68929d4d65ee",
+      "name": "Spygold",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "22f6e266-e778-456e-b0ac-12726ccab9b1",
+      "name": "St. Mazie",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a81747e1-1756-4254-8000-4713f25c16e3",
+      "name": "Still Life",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "84b0bb21-dac5-421d-ae49-e42b0477a302",
+      "name": "Stone Street Coffee Company",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2e429a3c-914f-48c1-8dc3-78c842877c77",
+      "name": "Studio Bar at the Whitney",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b6a7a407-5c86-496f-b8ed-d3402088417c",
+      "name": "Suited NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1dfcd882-82f7-4a65-8669-90146c299ee2",
+      "name": "Sukh",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "419551a6-99d2-4ba4-9ff2-8e05c3173836",
+      "name": "Sunday To Sunday",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "53066dff-9f4d-4e39-9bb8-d39e849228ad",
+      "name": "Sunken Harbor Club",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4df03517-a3d1-4be8-a81f-5b5d333f2841",
+      "name": "Sunn's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ff3671eb-0349-44bb-8ced-c15a80b43bf9",
+      "name": "Suprema Provisions",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5a45ac2e-4f97-43e0-8609-4334c8f7975d",
+      "name": "Sushi Ikumi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c104c899-290e-43d2-8754-37f03ed63236",
+      "name": "Sushi Yasuda",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "22d088f9-dbc7-4c28-bbc7-9b178805f53c",
+      "name": "Sushi of Gari",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e3a6c9d8-3826-48ac-9e9e-3c03c4bdeaba",
+      "name": "Sushi of Gari",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4f0fba46-4bc8-45c4-9c7c-6760358be03f",
+      "name": "Sushi of Gari",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3c940606-95bc-43ea-b043-5c7d2c3b5336",
+      "name": "Sweet Graffiti",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "72b456c3-647c-4ea9-b7fd-9795e35d03dd",
+      "name": "THEP Thai Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9050f3b3-4e34-4c56-9fba-630aac0d9782",
+      "name": "TIN's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bde99c6d-44f2-4635-a58c-375381318071",
+      "name": "Tabaré",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "96b431e8-97d8-4b06-bf3b-82eacacda07d",
+      "name": "Tabaré",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3158e54f-4977-4c6d-be3b-64655172cd35",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a6f21c1e-9e22-4def-9146-3a344ca38207",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "accdc5bb-d06b-4a54-a763-b83dca431645",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a770d7d1-b87e-43a4-b386-7198862e1a80",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b9b1d8f7-7a94-49dd-9148-ffdd9a42e32d",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5c8d156f-4cf9-4081-ad71-a6fd3668f268",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "73a175f5-5c28-4431-8aa4-5b0f5287bc05",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b1ce5a53-9960-4da4-90cf-c2300fbfa918",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "47c23276-4644-4712-93c5-b2af6ba4a4ae",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1e8b4ecd-63f7-4c2c-8d4d-94bb441888d5",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "829b05ae-4ecc-47bb-a4db-c02cf40773c2",
+      "name": "Tacombi",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1bac6ee5-0eec-4394-a0af-78e42f764059",
+      "name": "Tacos 1986",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0cba40b1-2682-45af-b1e1-155711bc5ea8",
+      "name": "Taku Sando",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9191909c-e915-4031-971b-42ef7c509de5",
+      "name": "Talea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "28b94859-b4a9-4124-9b7d-69d4a9b534f5",
+      "name": "Talea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1879584b-79dc-4035-a7d5-59411111f037",
+      "name": "Talea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "cf0982bf-fb37-4ae7-9682-efbe44eff733",
+      "name": "Talea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9cb7a78e-45a4-46de-8878-ccc4ffcc9f7d",
+      "name": "Talea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "41f95551-2dcd-4472-8de3-6a7f00502c58",
+      "name": "Tappo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "30ac32fe-8d5e-496b-9f50-0fe745611dbd",
+      "name": "Temakase",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "cbb1d377-f3b1-419e-9ad4-4285ebfe7c37",
+      "name": "Temakase",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "36f136ad-f25b-4906-a6b0-bb60df7c27a1",
+      "name": "Tera NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2bb4c6d5-156b-4773-8fe3-321f9bfca7ef",
+      "name": "Tha Phraya",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b130a6d8-cac7-47da-afbe-36a53ddc5eae",
+      "name": "Thai Pavilion NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "37dddedb-50b8-4dcf-93ba-2600e2542615",
+      "name": "The Argyle",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b4b02c55-26c2-4fa2-8454-9b03576c546d",
+      "name": "The Bakery at Greywind",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "aa523d34-d61f-4d1e-9d30-938ef8ba1ab4",
+      "name": "The Bronze Owl",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5f2ad98c-f3ee-4382-b6b9-e3fbe77e4aa0",
+      "name": "The Collectors Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d4bce6d0-5506-4037-887d-562500746b2e",
+      "name": "The Commons Chelsea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b653f83c-0f67-4049-bf98-d59e324d8ce5",
+      "name": "The Deep End",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6391b375-00b2-4bb4-b184-0fbbcec6f669",
+      "name": "The Garret West",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e1798930-c3c0-4559-aa6d-0dafac0a9f32",
+      "name": "The Gin Mill",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0e8cda6c-fbf8-4172-9fc4-4abc0cb6698f",
+      "name": "The Good Fork Pub",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9f4cd64e-903d-4e89-93e0-3015c6fb63e1",
+      "name": "The Great Chestnut Experiment",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "524edcf6-e1fd-4b00-bdb6-b491b94e2093",
+      "name": "The Greats of Craft",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7106c3cd-95c2-4942-b5a1-ed94e4d35081",
+      "name": "The Hamilton",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b7c3ef24-4d18-48d9-be4f-92abcab3ebb1",
+      "name": "The Hidden Pearl",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1ef467ee-cf41-49e0-99c7-e9e57a4c332e",
+      "name": "The History Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "aa1f6761-6d8f-4e84-b8b0-d7d8d7c1e725",
+      "name": "The Hunterian",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ef31a7c3-3258-463a-9e72-d10e3daf377a",
+      "name": "The Little Pig",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a89fd017-0980-4619-9c42-500f4aab34dd",
+      "name": "The Lost Draft",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "10ba9793-1e5b-4143-ab76-73599539afd5",
+      "name": "The MOUTH Bar + Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bd471a9c-6e9c-4325-81a7-6fc7a6195fc1",
+      "name": "The Museum",
+      "reason": "no website"
+    },
+    {
+      "id": "91a7b23a-f99d-4f12-ab62-8a0325e7e0a7",
+      "name": "The Musket Room",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6ce2bca5-91cf-4e47-b2a6-88d2b617a076",
+      "name": "The Paris Café",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7ca74d78-0adb-4b01-8141-0f2c8a9816b0",
+      "name": "The Puttery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7422544d-df19-40f4-8bcd-b419da43e425",
+      "name": "The Shakespeare",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6f1cbddd-8119-4204-993d-d83af4c0823a",
+      "name": "The Sparrow",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "829a6422-6236-4042-ab87-830cb603c78b",
+      "name": "The Stand - Restaurant",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f69764ca-8034-43ca-922d-ec03f014eced",
+      "name": "The Standard Biergarten",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5e98753b-f164-4671-8d2a-494a612afdf5",
+      "name": "The Stumble Inn",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c8d1c914-1c55-4935-b590-6a8b5af80909",
+      "name": "The Ten Bells",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2138a48c-a879-49d1-988a-4d162869b0cc",
+      "name": "The Ten Bells Brooklyn",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "181af54a-2875-4986-8a2f-e76322e5402b",
+      "name": "The Test Brewery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ec3279e6-bc83-4bcb-af0e-2c931652bd78",
+      "name": "The Tusk Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "21c20453-8321-4d7f-b67c-42b132457465",
+      "name": "They Say That",
+      "reason": "no website"
+    },
+    {
+      "id": "45eb123e-daaf-4e3c-aee5-59f48856bbf1",
+      "name": "Thief",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "951afb81-26c5-43d0-8401-1935d6b7f541",
+      "name": "Third Time's The Charm",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3fcfe5e8-e5ae-4c10-b170-defa8ecb4e2c",
+      "name": "Threes Brewing",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "82862ba3-8000-4c43-bc40-725c4d0c7352",
+      "name": "Threes Brewing",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "0ccb5887-3733-47d1-b307-88ffafcf6860",
+      "name": "Thursday Kitchen",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "45dfa8d0-baac-4b11-8208-386584ce9420",
+      "name": "Thyme Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3c0d7325-5fd7-4f29-ae09-c058ec822d74",
+      "name": "Tia Pol",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bb8e57f2-6293-48c4-8524-eb5362cc5f94",
+      "name": "Tiki Chick",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "35028ebf-b7ac-4e11-b326-df814071538c",
+      "name": "Tinto Cafe",
+      "reason": "no website"
+    },
+    {
+      "id": "eaa7f1b7-6515-482b-9e43-28a196ea201c",
+      "name": "Tio Pepe",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c524c481-df20-4d1f-9730-c2163a9a8a82",
+      "name": "Titi's Empanadas",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c50bbbc2-3d1d-468f-a891-4ddf7205c99d",
+      "name": "Titi's Empanadas",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "8e25de42-d156-490b-9cd6-3549c856c4ea",
+      "name": "Tolo",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "3d7abc92-672a-4e2d-b7ed-f3e4cf4f891d",
+      "name": "Tomiño Taberna Gallega",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d086d359-957d-48fd-9819-be60a5cc6399",
+      "name": "Tonchin",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4f645a0c-6da7-4ef6-a3bb-efe3b15524a9",
+      "name": "Tonchin",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "96b60458-c59c-445f-aaa1-0b047bec37bc",
+      "name": "Tora",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6a076c26-ed42-4a7c-9b42-ca1102e7762d",
+      "name": "Tortelli",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7c8cb1bc-d82a-4219-997b-947df2d7b66b",
+      "name": "Traveler",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "986d9d8c-c2b9-45af-a57d-3355a0c1c151",
+      "name": "Trinity Place restaurant and bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b02a14f9-9ac3-4059-b593-a9e5feed4d6e",
+      "name": "Trudie's Tavern",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "85d9d8c5-b29b-44dc-883e-f72a1fe344e7",
+      "name": "Turbo Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "91702531-cf30-43ac-9e80-7ce02e6aa969",
+      "name": "Twilight Lounge 朝暮",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "56dc742d-3688-4b5f-9d5c-b4fa1448352d",
+      "name": "Twin Tails",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "693bdef3-6d1e-4f0f-8045-ff80e84bc8c7",
+      "name": "Twist Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "32cf52ff-83ff-4ae2-bcd8-9e873707c5bc",
+      "name": "Two Hands Williamsburg",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "fd849731-0067-4a4e-a0ed-0afba61c4778",
+      "name": "Unregular Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "90848652-854e-4652-b7dd-c91bf383b2f7",
+      "name": "Unregular Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c3df5dd1-e888-455b-94f5-cfa307f326bf",
+      "name": "Unregular Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "55e1d504-6ddd-4fb7-a49f-67cfcc389822",
+      "name": "Unregular Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "be82e751-ce48-4d35-a564-03a8c8d31acd",
+      "name": "Upside",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "c352d09e-842c-4a20-a4aa-474cdae0bfe6",
+      "name": "Upstate Stock",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "9ca7ee1f-d6ad-4e6d-af47-6b709dde14ed",
+      "name": "Vacations Bar",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b2f82b9d-fb90-4540-95c0-1b339ab3ad06",
+      "name": "Valla Table",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "1b5b143d-a694-491d-b4a9-4f42a7b44389",
+      "name": "Vallarta Tropical NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "f45c47a9-4c6e-4ef5-b92e-5755f6e04170",
+      "name": "Variant Cafe",
+      "reason": "no website"
+    },
+    {
+      "id": "df0098bf-5cfd-4dcb-bdc0-9c6d06c60845",
+      "name": "Veselka",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "4972a782-8b5d-4e67-bf64-1dfebf59bab2",
+      "name": "Veselka Grand Central",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ce57bd50-443e-4133-b96b-dbfa0cbf003c",
+      "name": "Veselka Williamsburg",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e32aedb9-2182-4abe-93c3-ed73bbb59c96",
+      "name": "Vineapple",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "d6af7f83-003e-4410-b490-488c71d68248",
+      "name": "Virginia's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dc2a7063-ea36-4504-b945-c2d465a9684a",
+      "name": "Voyager Espresso",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "404d73b4-ccf6-4b00-bd99-c925fd6037e0",
+      "name": "WINNER Bakery",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "18d3804d-6f4b-4da4-8900-f8af89d432dd",
+      "name": "WINNER Butcher",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "b7ebb837-f5c4-4e32-bfb0-c6497a61b097",
+      "name": "WINNER at Margot",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "bb00e7bf-1bab-4ade-a5de-ccc56c628549",
+      "name": "WINNER in the Park",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "ee3cb6b8-ac3b-4b81-886d-78f41c7f6ed8",
+      "name": "Wanglang NYC",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "78d9f3ae-79dd-43e4-b226-318d7e90093d",
+      "name": "Wanpaku",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "5d8ea4b5-1b04-4de8-9910-0b1d4185edfc",
+      "name": "WarrenPeace",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "29d99d90-b4f2-4777-a7d6-80d7b9f1f3b4",
+      "name": "Wayward Fare",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "dfb29903-31b8-4542-87fe-0588d124db28",
+      "name": "Westlight",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "2776470a-d618-418a-8cd0-a2039f64aa2c",
+      "name": "White Horse Tavern",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "29ac0ce0-9636-4794-a1e2-db2203a1540d",
+      "name": "Wild Cherry",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "389fcbd4-314d-4f37-b573-d185b4857320",
+      "name": "Wild East Brewing Co.",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "09b28976-13c6-48c5-aaed-f23bbf77db09",
+      "name": "X-Golf",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "da2976e0-1a7a-4710-8a0d-8bbaae5f60e4",
+      "name": "Yakiniku Futago Chelsea",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "09019354-e370-41ad-a38d-c350cc916e3c",
+      "name": "Yawning Cobra",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "7f8633f8-3e96-459d-b26a-48f6d791db82",
+      "name": "Yingtao",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a9095820-38bc-428c-8f65-2473b96b74f1",
+      "name": "Za-Ya",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "e7e234f2-3242-4c06-9b1e-29e1bd09e7e9",
+      "name": "Zev Rovine Selections",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "56a0e1d3-dec2-4a9e-a174-60f02c92c038",
+      "name": "Zillions Pizza",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "927ef47c-6124-4d48-95ca-57f6ec5b8a93",
+      "name": "Zoller's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "485ad18a-4288-4af9-9b0e-973f3f68b6be",
+      "name": "Zou Zou's",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6b9c56ff-3917-4237-b4b2-53b280696fa3",
+      "name": "Zucker's Bagels & Smoked Fish",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "a0a5052a-84cf-4ec5-a091-c9ff11e25c5b",
+      "name": "designers collab coffee.",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "6e1f1cb5-2db1-4499-b017-22cbe3ecb5fe",
+      "name": "la co ce (la cocina central)",
+      "reason": "no reviewed label with corroborated location"
+    },
+    {
+      "id": "85fc069c-284f-4c30-9610-45f35e71858c",
+      "name": "tikal cafe",
+      "reason": "no reviewed label with corroborated location"
+    }
+  ]
+}

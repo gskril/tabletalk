@@ -515,3 +515,23 @@ test("large catalog renders in batches and searches restaurants beyond the first
   await page.getByRole("textbox", { name: "Search restaurants" }).fill("");
   await expect(page.locator(".venue-card")).toHaveCount(24);
 });
+
+test("occasion filters show counts, hide empty categories, and disclose restaurant sources", async ({ page }) => {
+  await page.route('**/api/catalog', async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    data.venues = data.venues.map((v: { name: string }) => ({ ...v, tags: v.name === 'Rubirosa' ? '["Brunch"]' : '[]', tag_sources: v.name === 'Rubirosa' ? [{ label: 'Brunch', url: 'https://www.rubirosanyc.com/menus/', checkedAt: '2026-09-16T00:00:00Z' }] : [] }));
+    await route.fulfill({ response, json: data });
+  });
+  await page.goto('/');
+  const brunch = page.getByRole('button', { name: 'Brunch 1', exact: true });
+  await expect(brunch).toBeVisible();
+  await expect(page.getByRole('button', { name: /^Date night/ })).toHaveCount(0);
+  await brunch.click();
+  await expect(brunch).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.venue-card')).toHaveCount(1);
+  await expect(page.getByText('Coverage is still growing', { exact: false })).toBeVisible();
+  await page.locator('.venue-card').getByRole('link').first().click();
+  await page.locator('.restaurant-labels summary').click();
+  await expect(page.getByRole('link', { name: 'Brunch source' })).toHaveAttribute('href', 'https://www.rubirosanyc.com/menus/');
+});

@@ -1091,18 +1091,33 @@ h3 {
   z-index: 0;
   font-family: "DM Sans", Arial, sans-serif;
 }
-.restaurant-marker span {
+.restaurant-marker-badge {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 36px;
-  background: var(--primary);
-  color: var(--primary-foreground);
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  background: var(--card);
+  color: var(--primary);
   border: 2px solid var(--card);
-  border-radius: 5px;
+  border-radius: 50%;
   font-size: 14px;
   font-weight: 500;
-  box-shadow: 0 2px 5px #382a2b20;
+  box-shadow: 0 2px 7px #382a2b40;
+}
+.restaurant-marker-badge img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.restaurant-marker[aria-pressed="true"] .restaurant-marker-badge {
+  outline: 3px solid var(--primary);
+  outline-offset: 1px;
+}
+.restaurant-marker:focus-visible .restaurant-marker-badge {
+  outline: 3px solid var(--foreground);
+  outline-offset: 3px;
 }
 .map-place-picker {
   display: flex;

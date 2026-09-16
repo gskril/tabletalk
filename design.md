@@ -220,3 +220,8 @@ explain that researched coverage is incomplete. Restaurant detail pages disclose
 reviewed labels in a compact expandable section with source links and check dates.
 Use the same public labels for guests and members. Unknown suitability stays
 unlabeled; do not present inferred labels as Blackbird endorsements.
+
+Map markers use circular restaurant thumbnails instead of index numbers. Preserve
+restaurant-name labels for assistive technology, a 44px touch target, a clear
+selected/focus ring, and initials when an image is missing or fails. Use supplied
+preview assets, and keep the map picker names free of numbering.

@@ -1035,8 +1035,24 @@ h3 {
   gap: 24px;
   margin: 0 0 30px;
 }
-.profile-hero > div {
+.profile-summary {
   min-width: 0;
+}
+.profile-actions {
+  margin-top: 18px;
+}
+.profile-notebook-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-size: 14px;
+}
+.profile-notebook-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .profile-hero p {
   margin-top: 9px;
@@ -1342,8 +1358,8 @@ h3 {
   .topbar {
     min-height: 0;
     flex-wrap: wrap;
-    padding: 14px 20px 0;
-    gap: 10px 18px;
+    padding: 10px 20px 0;
+    gap: 6px 18px;
   }
   .brand {
     font-size: 32px;
@@ -1364,7 +1380,7 @@ h3 {
     font-size: 14px;
   }
   .shell {
-    padding: 26px 20px 44px;
+    padding: 20px 20px 36px;
   }
   h1 {
     font-size: 38px;
@@ -1476,22 +1492,59 @@ h3 {
     font-size: 27px;
   }
   .profile-hero {
-    align-items: flex-start;
-    gap: 17px;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px 12px;
+    margin-bottom: 12px;
+  }
+  .profile-summary {
+    display: contents;
   }
   .profile-hero .avatar.large {
-    width: 66px;
-    height: 66px;
+    grid-column: 1;
+    grid-row: 1;
+    width: 56px;
+    height: 56px;
     font-size: 22px;
   }
   .profile-hero h1 {
-    font-size: 38px;
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 32px;
+  }
+  .profile-hero .profile-bio {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 16px;
+  }
+  .profile-actions {
+    grid-column: 3;
+    grid-row: 1;
+    margin: 0;
+  }
+  .profile-actions .btn {
+    padding: 9px 12px;
+    white-space: nowrap;
   }
   .stats {
-    gap: 20px;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0 0 4px;
   }
   .tabs-list {
-    gap: 22px !important;
+    gap: 20px !important;
+    margin-bottom: 16px !important;
+  }
+  .notebook-description {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .notebook-section {
+    margin: 20px 0 28px;
   }
   .map {
     height: 390px;
@@ -1512,19 +1565,34 @@ h3 {
     height: 160px;
   }
   .visit-row {
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 14px;
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 8px 14px;
+    padding: 16px 0;
+    align-items: start;
+  }
+  .visit-row > .row-info {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+  .public-visits .visit-row:first-child {
+    padding-top: 12px;
   }
   .visit-photo {
-    width: 96px;
-    height: 96px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 88px;
+    height: 88px;
+    align-self: start;
   }
   .visit-row > .actions,
   .visit-row > .verified {
     grid-column: 2;
+    grid-row: 2;
   }
   .visit-row h2 {
-    font-size: 27px;
+    font-size: 25px;
   }
   .visit-row p {
     font-size: 14px;
@@ -1572,7 +1640,8 @@ h3 {
   .list-row {
     display: grid;
     grid-template-columns: 22px 68px minmax(0, 1fr) 44px;
-    gap: 10px;
+    gap: 6px 10px;
+    padding: 16px 0;
   }
   .list-row .rank {
     width: 22px;
@@ -1585,9 +1654,21 @@ h3 {
   .list-row h3 {
     font-size: 25px;
   }
+  .list-row:has(> .score:not(.none)) .row-photo,
+  .list-row:has(> .score:not(.none)) .rank,
+  .list-row:has(> .score:not(.none)) > .icon-btn {
+    grid-row: 1 / span 2;
+  }
+  .list-row:has(> .score:not(.none)) .row-info {
+    grid-row: 1;
+    grid-column: 3;
+    align-self: end;
+  }
   .list-row .score {
     grid-column: 3;
+    grid-row: 2;
     justify-content: flex-start;
+    align-self: start;
   }
   .list-row > .icon-btn {
     grid-column: 4;
@@ -1595,19 +1676,6 @@ h3 {
   }
   .list-row .row-info p {
     font-size: 13px;
-  }
-  .stats {
-    gap: 18px;
-  }
-  .profile-hero {
-    flex-wrap: wrap;
-  }
-  .profile-hero > div {
-    flex: 1;
-    min-width: 190px;
-  }
-  .profile-hero h1 {
-    font-size: 36px;
   }
   .banner .actions {
     gap: 10px;
@@ -1658,16 +1726,13 @@ h3 {
   .chip {
     padding: 8px 9px;
   }
-  .profile-hero > div {
-    min-width: 165px;
-  }
   .visit-row {
-    grid-template-columns: 76px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 72px minmax(0, 1fr);
+    column-gap: 12px;
   }
   .visit-photo {
-    width: 76px;
-    height: 84px;
+    width: 72px;
+    height: 80px;
   }
   .visit-row h2 {
     font-size: 25px;

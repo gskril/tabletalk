@@ -1383,9 +1383,9 @@ export default function Tabletalk() {
       <>
         <div className="profile-hero">
           <Avatar person={p} large />
-          <div>
+          <div className="profile-summary">
             <h1>{p.name}</h1>
-            <p>{p.bio}</p>
+            {p.bio && <p className="profile-bio">{p.bio}</p>}
             <div className="stats">
               <div>
                 <strong>{ranked.length}</strong>Reviews
@@ -1394,10 +1394,10 @@ export default function Tabletalk() {
                 <strong>{ls.length}</strong>Lists
               </div>
               <div>
-                <strong>{visited.length}</strong>Verified places visited
+                <strong>{visited.length}</strong>Been there
               </div>
             </div>
-            <div className="actions" style={{ marginTop: 18 }}>
+            <div className="actions profile-actions">
               {p.demo ? <span className="demo-tag">Demo diner</span> : null}
               {own ? (
                 <button
@@ -1429,11 +1429,11 @@ export default function Tabletalk() {
           passportBanner()}
         {own && (
           <Link
-            className="btn"
-            style={{ marginBottom: 24 }}
+            className="profile-notebook-link"
+            aria-label="View my visit details in My notebook"
             href="/saved?tab=visits"
           >
-            View my visit details in My notebook
+            Visit details in My notebook <ArrowRight size={15} />
           </Link>
         )}
         <Tabs value={profileTab} onValueChange={setProfileTab}>

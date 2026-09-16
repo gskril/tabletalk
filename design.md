@@ -159,6 +159,14 @@ show public verified places and reviews. Private visit dates stay in the owner's
 notebook. Statistics are small sans-serif values; a person's name is the heading.
 Use the same photo rows, tabs, actions, and empty states throughout.
 
+On mobile, put the 56 px avatar, name and Edit/Follow action in one header row.
+Let statistics use the full width below it with three equal columns. Do not indent
+statistics under the name or reserve space for an empty bio. Use a compact text
+link to private visit details. Keep 16 px after tabs and 8 px after introductory
+copy. In visit rows, the photo spans the name/metadata and status/action rows, so
+verification sits beside the photograph. Use 16 px vertical row padding and allow
+long names to wrap naturally. Keep every action at least 44 px tall.
+
 ### Dialogs, notices, errors, and maps
 
 Dialogs use the same cream surface, burgundy actions, modest radius, and serif

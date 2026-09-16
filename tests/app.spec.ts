@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { localSession, localCatalog, localPublicProfile } from "./local-session";
+import { sampleVenues } from "../lib/sample-data";
 async function join(page: Page, name: string) {
   await localSession(page.context(), baseURL, name);
   await page.reload();
@@ -13,6 +14,14 @@ test("anonymous exploration, filters, map, detail, and mobile layout", async ({
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  // Keep this fixture flow independent of real catalog rows cached locally.
+  await page.route("**/api/catalog", async (route) => {
+    const venues = sampleVenues.map(([id, name, cuisine, neighborhood, address, price, lat, lng, image, website, description, tags]) => ({
+      id, name, cuisine, neighborhood, address, price, lat, lng, image, website, description,
+      tags: JSON.stringify(tags), source: "staging", updated_at: "2026-09-17",
+    }));
+    await route.fulfill({ json: { venues } });
+  });
   await page.goto("/");
   await expect(
     page.getByRole("heading", { name: "New York, by taste." }),

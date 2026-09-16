@@ -15,10 +15,8 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
-  Compass,
   Heart,
   Link2,
-  List,
   Lock,
   MapPin,
   Map as MapIcon,
@@ -26,7 +24,6 @@ import {
   Search,
   SlidersHorizontal,
   Star,
-  Users,
   Utensils,
   X,
   LogOut,
@@ -513,8 +510,8 @@ export default function Tabletalk() {
           >
             <Heart
               size={16}
-              fill={d.likes.includes(r.id) ? "#d94a31" : "none"}
-              color={d.likes.includes(r.id) ? "#d94a31" : undefined}
+              fill={d.likes.includes(r.id) ? "var(--primary)" : "none"}
+              color={d.likes.includes(r.id) ? "var(--primary)" : undefined}
             />
             {r.likes || "Helpful"}
           </button>
@@ -1622,11 +1619,11 @@ export default function Tabletalk() {
         </Link>
         <nav className="nav" aria-label="Main navigation">
           {[
-            ["/", "Explore", Compass, "explore"],
-            ["/lists", "Lists", List, "lists"],
-            ["/feed", "The table", Users, "feed"],
-            ["/saved", "My notebook", Bookmark, "saved"],
-          ].map(([url, label, Icon, section]) => (
+            ["/", "Explore", "explore"],
+            ["/lists", "Lists", "lists"],
+            ["/feed", "The table", "feed"],
+            ["/saved", "My notebook", "saved"],
+          ].map(([url, label, section]) => (
             <Link
               href={url as string}
               key={url as string}

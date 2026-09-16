@@ -59,6 +59,8 @@ type Modal =
   | { type: "profile" }
   | { type: "confirm"; title: string; run: () => Promise<void> }
   | null;
+const verifiedVisitLabel = (count?: number | null) =>
+  count ? `${count} verified ${count === 1 ? "visit" : "visits"}` : "Visited";
 const safeUrl = (s: string) => (/^https?:\/\//.test(s) ? s : "#");
 const initials = (s: string) =>
   s
@@ -634,6 +636,11 @@ export default function Tabletalk() {
                     <p className="muted">
                       {v.neighborhood} · {v.cuisine}
                     </p>
+                    {visit.visit_count != null && (
+                      <p className="verified">
+                        {verifiedVisitLabel(visit.visit_count)}
+                      </p>
+                    )}
                     <p className="small muted">
                       Last visited{" "}
                       {new Date(visit.visited_at).toLocaleDateString("en-US", {
@@ -1395,10 +1402,13 @@ export default function Tabletalk() {
     const own = p?.id === me?.id;
     const visited = publicVisits
       .filter((v) => v.user_id === p?.id)
-      .map((v) => venue(v.venue_id))
-      .filter((v): v is Venue => !!v)
+      .flatMap((visit) => {
+        const place = venue(visit.venue_id);
+        return place ? [{ ...place, visit_count: visit.visit_count }] : [];
+      })
       .sort(
         (a, b) =>
+          (b.visit_count ?? 0) - (a.visit_count ?? 0) ||
           a.name.localeCompare(b.name) ||
           a.neighborhood.localeCompare(b.neighborhood) ||
           a.id.localeCompare(b.id),
@@ -1494,7 +1504,7 @@ export default function Tabletalk() {
           visited.length ? (
             <>
               <p className="notebook-description">
-                Places visited, verified by Blackbird check-ins.
+                Most visited first, based on synced Blackbird check-ins.
               </p>
               <div className="public-visits">
                 {visited.map((v) => (
@@ -1511,7 +1521,8 @@ export default function Tabletalk() {
                       </p>
                     </div>
                     <span className="verified">
-                      <CheckCircle2 size={16} /> Visited
+                      <CheckCircle2 size={16} />{" "}
+                      {verifiedVisitLabel(v.visit_count)}
                     </span>
                   </article>
                 ))}

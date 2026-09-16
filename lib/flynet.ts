@@ -252,22 +252,31 @@ export async function syncVisits(userId: string, accessToken: string) {
     timeoutMs: 15000,
   });
   let page: number | undefined = 0;
-  const seen = new Map<string, string>();
+  const seen = new Set<string>();
+  const checkinIds = new Set<string>();
   for (let n = 0; n < 40 && page !== undefined; n++) {
     const result = await client.listCheckIns({ page, pageSize: 50 });
     const checks = result.checkIns.filter((c) => isNYC(c.location));
     const stmts: D1PreparedStatement[] = [];
     for (const c of checks) {
       const visited = c.createdAt.toISOString();
-      if (seen.has(c.location.id)) continue;
-      seen.set(c.location.id, visited);
-      stmts.push(upsertVenue(c.location));
+      // An API page (or a later sync) may repeat the same check-in. Distinct
+      // check-in IDs at the same location are repeat visits, not duplicates.
+      if (checkinIds.has(c.id)) continue;
+      checkinIds.add(c.id);
+      if (!seen.has(c.location.id)) stmts.push(upsertVenue(c.location));
+      seen.add(c.location.id);
       stmts.push(
         db()
           .prepare(
             "INSERT INTO visits(user_id,venue_id,visited_at) VALUES(?,?,?) ON CONFLICT(user_id,venue_id) DO UPDATE SET visited_at=MAX(visits.visited_at,excluded.visited_at)",
           )
           .bind(userId, c.location.id, visited),
+        db()
+          .prepare(
+            "INSERT INTO visit_checkins(user_id,checkin_id,venue_id) VALUES(?,?,?) ON CONFLICT(user_id,checkin_id) DO NOTHING",
+          )
+          .bind(userId, c.id, c.location.id),
       );
     }
     if (stmts.length) await db().batch(stmts);

@@ -50,6 +50,13 @@
       "when": 1789511274884,
       "tag": "0006_colossal_star_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1789600759725,
+      "tag": "0007_volatile_ken_ellis",
+      "breakpoints": true
     }
   ]
 }

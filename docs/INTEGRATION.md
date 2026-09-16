@@ -45,3 +45,9 @@ For local development set `.env`. For hosting use Sites environment variables an
 
 ## Review policy and balances
 Reviews require an imported member check-in for the exact location; saves and lists require Blackbird sign-in but do not require a visit. The UI and API both enforce this. Demo reviews are no longer published, and legacy unverified rows are hidden from public feeds and averages. Staging proofs are labeled staging and cannot authorize a production location. Wallet balances are intentionally omitted; `read:wallets` is not requested.
+
+## Repeat visit counts
+
+The member check-in endpoint returns distinct check-in IDs for each location. `visit_checkins` retains these IDs privately, with a `(user_id, checkin_id)` primary key and a `(user_id, venue_id)` count index. Replayed pages and repeated imports cannot inflate counts; completed batches remain available if a later page fails. The existing `visits` table continues to hold one review-eligibility proof and the latest date per member/location.
+
+Public state exposes only the aggregate `visit_count`, never check-in IDs or visit dates. Profile Been there sorts by descending count, then name/neighborhood/ID. Counts represent imported Blackbird check-ins, not a guarantee of every lifetime visit. Older proofs return a null count until that member's next automatic sync imports the underlying history; the UI shows “Visited” in the meantime. Profile totals and community rankings continue to count distinct locations.

@@ -20,6 +20,10 @@ export async function GET(request?: Request) {
     ]);
     const passport = me ? await memberPassport(me.id) : null;
     const uid = me?.id || "";
+    // NULL means this older visit proof has not had its check-in history synced
+    // yet. Never manufacture a count of one from the old last-visit row.
+    const visitCountSql =
+      "NULLIF((SELECT count(*) FROM visit_checkins c WHERE c.user_id=v.user_id AND c.venue_id=v.venue_id),0) AS visit_count";
     const query = (sql: string, ...args: unknown[]) =>
       db()
         .prepare(sql)
@@ -67,11 +71,11 @@ export async function GET(request?: Request) {
         ),
         query("SELECT review_id FROM likes WHERE user_id=?", uid),
         query(
-          `SELECT v.venue_id,v.visited_at ${verifiedVisitFrom} AND v.user_id=?`,
+          `SELECT v.venue_id,v.visited_at,${visitCountSql} ${verifiedVisitFrom} AND v.user_id=?`,
           uid,
         ),
         query(
-          `SELECT v.user_id,v.venue_id ${verifiedVisitFrom} ORDER BY v.user_id,v.venue_id`,
+          `SELECT v.user_id,v.venue_id,${visitCountSql} ${verifiedVisitFrom} ORDER BY v.user_id,v.venue_id`,
         ),
         ...(includeCatalog
           ? [

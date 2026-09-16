@@ -163,6 +163,23 @@ export const visits = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.venueId] })],
 );
+// Check-in identities stay server-side; only per-location counts are public.
+export const visitCheckins = sqliteTable(
+  "visit_checkins",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    checkinId: text("checkin_id").notNull(),
+    venueId: text("venue_id")
+      .notNull()
+      .references(() => venues.id),
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.checkinId] }),
+    index("idx_visit_checkins_user_venue").on(t.userId, t.venueId),
+  ],
+);
 export const rateLimits = sqliteTable("rate_limits", {
   key: text("key").primaryKey(),
   count: integer("count").notNull(),
@@ -176,7 +193,9 @@ export const catalogCache = sqliteTable("catalog_cache", {
   leaseToken: text("lease_token").notNull().default(""),
 });
 export const passportSyncs = sqliteTable("passport_syncs", {
-  userId: text("user_id").primaryKey().references(() => profiles.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => profiles.id, { onDelete: "cascade" }),
   status: text("status").notNull().default("syncing"),
   syncedAt: integer("synced_at"),
   nextAttemptAt: integer("next_attempt_at").notNull().default(0),

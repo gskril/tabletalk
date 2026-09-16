@@ -69,8 +69,16 @@ export type State = {
   bookmarks: string[];
   following: string[];
   likes: string[];
-  visits: { venue_id: string; visited_at: string }[];
-  publicVisits: { user_id: string; venue_id: string }[];
+  visits: {
+    venue_id: string;
+    visited_at: string;
+    visit_count?: number | null;
+  }[];
+  publicVisits: {
+    user_id: string;
+    venue_id: string;
+    visit_count?: number | null;
+  }[];
   integration: {
     configured: boolean;
     discovery: boolean;

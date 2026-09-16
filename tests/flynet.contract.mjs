@@ -804,7 +804,7 @@ test("public places and community ranking use only verified distinct locations",
     assert(data.lists.findIndex(l=>l.id==='rank-explorer-list') < data.lists.findIndex(l=>l.id==='rank-new-list'));
     assert.equal(data.publicVisits.filter(v=>v.user_id==='rank-explorer').length,3);
     assert(!data.publicVisits.some(v=>v.user_id==='demo-member' || v.user_id==='wrong-environment'));
-    for (const visit of data.publicVisits) assert.deepEqual(Object.keys(visit).sort(),['user_id','venue_id']);
+    for (const visit of data.publicVisits) assert.deepEqual(Object.keys(visit).sort(),['user_id','venue_id','visit_count']);
     assert.deepEqual(data.visits,[]);
     assert.equal(data.passport,null);
     assert(!data.people.some(p=>'external_id' in p || 'email' in p));
@@ -1028,4 +1028,47 @@ test("research expansion keeps branch-specific sources and rejects known mislead
   const audit = JSON.parse(readFileSync('data/restaurant-label-coverage.json', 'utf8'));
   assert.equal(entries.length, audit.labeledLocations);
   assert.equal(entries.length + audit.unlabeledLocations.length, audit.catalogLocations);
+});
+
+test("repeat visit counts deduplicate check-in IDs across pages and syncs, preserve progress on failures, and keep IDs private", async () => {
+  const userId = 'repeat-count-member';
+  sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#123456',0,?,?)")
+    .run(userId, 'Repeat diner', 'staging:repeat-count-member', at);
+  const otherLocationId = '66666666-6666-4666-8666-666666666666';
+  let includeNew = false;
+  let failSecondPage = false;
+  const check = (id, created_at) => ({ id, object: 'check_in', location, blackbird_pay_enabled: false, created_at });
+  upstreamOverride = req => {
+    const page = Number(new URL(req.url).searchParams.get('page'));
+    if (page === 1 && failSecondPage) return Response.json({ message: 'Access denied' }, { status: 403 });
+    return Response.json({
+      check_ins: page === 0 ? [check('repeat-a', at), check('repeat-a', at), check('repeat-b', at), ...(includeNew ? [check('repeat-d', '2026-09-16T12:00:00Z')] : [])]
+        : [check('repeat-b', at), check('repeat-c', '2026-09-15T12:00:00Z'), { ...check('repeat-other-branch', at), location: { ...location, id: otherLocationId } }],
+      pagination: { ...pagination, current_page: page, next_page: page === 0 ? 1 : null, total_pages: 2, total_count: 3 },
+    });
+  };
+  const count = () => sql.prepare('SELECT count(*) AS n FROM visit_checkins WHERE user_id=? AND venue_id=?').get(userId, locationId).n;
+  try {
+    await syncVisits(userId, 'valid-provider-token');
+    assert.equal(count(), 3);
+    assert.equal(sql.prepare('SELECT count(*) AS n FROM visit_checkins WHERE user_id=? AND venue_id=?').get(userId, otherLocationId).n, 1, 'another branch has its own count');
+    assert.equal(sql.prepare('SELECT visited_at FROM visits WHERE user_id=? AND venue_id=?').get(userId, locationId).visited_at, '2026-09-15T12:00:00.000Z');
+    await syncVisits(userId, 'valid-provider-token');
+    assert.equal(count(), 3, 'reimporting history must not inflate visit counts');
+    includeNew = true;
+    failSecondPage = true;
+    await assert.rejects(syncVisits(userId, 'valid-provider-token'));
+    assert.equal(count(), 4, 'a partial sync retains new and previously verified check-ins');
+    failSecondPage = false;
+    await syncVisits(userId, 'valid-provider-token');
+    assert.equal(count(), 4);
+    cookieJar.clear();
+    const dto = await (await state()).json();
+    const publicVisit = dto.publicVisits.find(v => v.user_id === userId && v.venue_id === locationId);
+    assert.deepEqual(publicVisit, { user_id: userId, venue_id: locationId, visit_count: 4 });
+    assert.deepEqual(dto.visits, []);
+    assert(!JSON.stringify(dto).includes('repeat-d'), 'individual check-in IDs remain private');
+    const plan = sql.prepare('EXPLAIN QUERY PLAN SELECT count(*) FROM visit_checkins WHERE user_id=? AND venue_id=?').all(userId, locationId);
+    assert(plan.some(row => row.detail.includes('idx_visit_checkins_user_venue')));
+  } finally { upstreamOverride = undefined; }
 });

@@ -1990,6 +1990,11 @@ function ModalBody({
       </>
     );
   if (modal.type === "confirm") return null;
+  const matchingVenues = data.venues.filter((v) =>
+    `${v.name} ${v.neighborhood} ${v.address}`
+      .toLowerCase()
+      .includes(search.trim().toLowerCase()),
+  );
   return (
     <>
       {head(
@@ -2094,91 +2099,138 @@ function ModalBody({
               : "Only you. Shared links will not reveal this list."}
           </p>
         </div>
-        <div>
-          <label style={{ marginBottom: 7 }}>Your spots ({ids.length})</label>
-          <div className="selected-places">
-            {ids.map((id, i) => (
-              <div className="selected-place" key={id}>
-                {data.venues.find((v) => v.id === id) && (
-                  <span className="picker-photo">
-                    <RestaurantImage
-                      venue={data.venues.find((v) => v.id === id)!}
-                      compact
-                    />
-                  </span>
-                )}
-                <span>
-                  {i + 1}. {data.venues.find((v) => v.id === id)?.name}
-                </span>
-                <button
-                  type="button"
-                  aria-label={`Move ${data.venues.find((v) => v.id === id)?.name} up`}
-                  disabled={i === 0}
-                  onClick={() =>
-                    setIds((a) => {
-                      const b = [...a];
-                      [b[i - 1], b[i]] = [b[i], b[i - 1]];
-                      return b;
-                    })
-                  }
-                >
-                  <ArrowUp size={14} />
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Move ${data.venues.find((v) => v.id === id)?.name} down`}
-                  disabled={i === ids.length - 1}
-                  onClick={() =>
-                    setIds((a) => {
-                      const b = [...a];
-                      [b[i + 1], b[i]] = [b[i], b[i + 1]];
-                      return b;
-                    })
-                  }
-                >
-                  <ArrowDown size={14} />
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Remove ${data.venues.find((v) => v.id === id)?.name}`}
-                  onClick={() => setIds((a) => a.filter((x) => x !== id))}
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+        <section
+          className="list-editor-section"
+          aria-labelledby="list-find-heading"
+        >
+          <h3 id="list-find-heading">Find restaurants</h3>
           <input
             aria-label="Find a restaurant for your list"
-            placeholder="Find a spot to add…"
-            style={{ marginTop: 10 }}
+            placeholder="Search by name, neighborhood or address…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <div className="picker" style={{ marginTop: 6 }}>
-            {data.venues
-              .filter(
-                (v) =>
-                  !ids.includes(v.id) &&
-                  `${v.name} ${v.neighborhood}`
-                    .toLowerCase()
-                    .includes(search.toLowerCase()),
-              )
-              .map((v) => (
+          <div
+            className="picker list-restaurant-picker"
+            aria-label="Restaurant search results"
+          >
+            {matchingVenues.map((v) => {
+              const added = ids.includes(v.id);
+              return (
                 <button
                   type="button"
                   key={v.id}
-                  onClick={() => setIds((a) => [...a, v.id])}
+                  disabled={added || busy}
+                  aria-label={`${added ? "Added" : "Add"} ${v.name}, ${v.address || v.neighborhood}`}
+                  onClick={() =>
+                    setIds((a) => (a.includes(v.id) ? a : [...a, v.id]))
+                  }
                 >
                   <span className="picker-photo">
                     <RestaurantImage venue={v} compact />
                   </span>
-                  {v.name}
-                  <Plus size={15} />
+                  <span className="picker-place-details">
+                    <strong>{v.name}</strong>
+                    <span>{v.neighborhood}</span>
+                    {v.address && <span>{v.address}</span>}
+                  </span>
+                  <span
+                    className={`picker-place-action ${added ? "is-added" : ""}`}
+                  >
+                    {added ? <Check size={16} /> : <Plus size={16} />}
+                    <span>{added ? "Added" : "Add"}</span>
+                  </span>
                 </button>
-              ))}
+              );
+            })}
+            {!matchingVenues.length && (
+              <p className="list-editor-empty">
+                No matching restaurants. Try another name or address.
+              </p>
+            )}
           </div>
-        </div>
+        </section>
+        <section
+          className="list-editor-section list-editor-selection"
+          aria-labelledby="list-selection-heading"
+        >
+          <div className="list-editor-section-heading">
+            <h3 id="list-selection-heading">
+              Your list <span>({ids.length})</span>
+            </h3>
+            <span className="form-help" role="status" aria-live="polite">
+              {ids.length} {ids.length === 1 ? "spot" : "spots"} added
+            </span>
+          </div>
+          <p className="form-help">
+            {ids.length
+              ? "Use the arrows to set the order."
+              : "Add restaurants above to start your list."}
+          </p>
+          <ol className="selected-places">
+            {ids.map((id, i) => {
+              const venue = data.venues.find((v) => v.id === id);
+              const label = venue
+                ? `${venue.name}, ${venue.address || venue.neighborhood}`
+                : "Unavailable restaurant";
+              return (
+                <li className="selected-place" key={id}>
+                  <span className="selected-place-rank" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  {venue && (
+                    <span className="picker-photo">
+                      <RestaurantImage venue={venue} compact />
+                    </span>
+                  )}
+                  <span className="picker-place-details">
+                    <strong>{venue?.name || "Unavailable restaurant"}</strong>
+                    {venue && <span>{venue.neighborhood}</span>}
+                    {venue?.address && <span>{venue.address}</span>}
+                  </span>
+                  <div className="selected-place-actions">
+                    <button
+                      type="button"
+                      aria-label={`Move ${label} up`}
+                      disabled={busy || i === 0}
+                      onClick={() =>
+                        setIds((a) => {
+                          const b = [...a];
+                          [b[i - 1], b[i]] = [b[i], b[i - 1]];
+                          return b;
+                        })
+                      }
+                    >
+                      <ArrowUp size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Move ${label} down`}
+                      disabled={busy || i === ids.length - 1}
+                      onClick={() =>
+                        setIds((a) => {
+                          const b = [...a];
+                          [b[i + 1], b[i]] = [b[i], b[i + 1]];
+                          return b;
+                        })
+                      }
+                    >
+                      <ArrowDown size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Remove ${label}`}
+                      disabled={busy}
+                      onClick={() => setIds((a) => a.filter((x) => x !== id))}
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
         {error && (
           <p className="form-error" role="alert">
             {error}

@@ -127,10 +127,10 @@ test("notebook: review gate, ordered public list across browsers, saves and foll
     .getByLabel("A note for the table")
     .fill("Three places to share with friends.");
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("button", { name: "Rubirosa", exact: true }).click();
-  await dialog.getByRole("button", { name: "Thai Diner", exact: true }).click();
-  await dialog.getByRole("button", { name: "BINX", exact: true }).click();
-  await dialog.getByRole("button", { name: "Move BINX up" }).click();
+  await dialog.getByRole("button", { name: /^Add Rubirosa,/ }).click();
+  await dialog.getByRole("button", { name: /^Add Thai Diner,/ }).click();
+  await dialog.getByRole("button", { name: /^Add BINX,/ }).click();
+  await dialog.getByRole("button", { name: /^Move BINX,.* up$/ }).click();
   await dialog
     .getByRole("button", { name: "Create list", exact: true })
     .click();

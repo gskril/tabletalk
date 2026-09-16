@@ -62,10 +62,12 @@ def fetch(url,check_robots=True):
 
 PATTERNS={
  'Brunch':r'\bbrunch\b',
- 'Good for groups':r'\b(?:large parties|large groups|group dining|group reservations|parties of (?:[6-9]|1[0-9]|six|seven|eight|nine|ten)|groups of (?:[6-9]|1[0-9]|six|seven|eight|nine|ten))\b',
- 'Date night':r'\b(?:date night|romantic|intimate dining|candlelit|candle-lit)\b',
- 'Casual':r'\b(?:casual dining|casual restaurant|neighborhood hangout|laid-back|laid back|counter service|fast casual|fast-casual)\b',
- 'Vegetarian':r'\b(?:vegan restaurant|vegetarian restaurant|plant-based restaurant|vegan menu|vegetarian menu|vegetarian options|vegan options)\b',
+ # Broad candidate discovery only: reviewers must reject biographies, dress codes,
+ # diet exclusions, menu legends, catering-only offers and mismatched branches.
+ 'Good for groups':r'\b(?:private dining|private parties|large.part\w*|large groups?|group dining|group reservations|parties of|groups of)\b',
+ 'Date night':r'\b(?:date nights?|romantic|intimate|candlelit|candle-lit)\b',
+ 'Casual':r'\b(?:casual(?:ly)?|neighborhood hangout|laid-back|laid back|counter service|fast casual|fast-casual)\b',
+ 'Vegetarian':r'\b(?:vegan|vegetarian|plant-based|plant based)\b',
 }
 
 def run(group,out):

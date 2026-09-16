@@ -1010,3 +1010,22 @@ test("reviewed labels persist on catalog upsert and appear identically in both p
     assert.deepEqual(JSON.parse(sql.prepare('SELECT tags FROM venues WHERE id=?').get(id).tags), occasionLabels(entry.labels.map(l => l.label)));
   } finally { env.FLYNET_ENVIRONMENT = environment; sql.prepare('DELETE FROM venues WHERE id=?').run(id); }
 });
+
+test("research expansion keeps branch-specific sources and rejects known misleading menu matches", () => {
+  const entries = Object.values(restaurantLabelResearch);
+  const blackTap = entries.filter(v => v.name === 'Black Tap Craft Burgers & Beer');
+  assert.equal(blackTap.length, 1, 'Herald Square evidence must not label Broome Street');
+  assert.ok(blackTap[0].labels.some(l => l.url.includes('herald-square')));
+  const locanda = entries.filter(v => v.name === 'Locanda Verde');
+  assert.equal(locanda.length, 2);
+  assert.deepEqual(locanda.flatMap(v => v.labels.filter(l => l.label === 'Brunch').map(l => new URL(l.url).pathname)).sort(), ['/location/-hudson-yards/', '/location/-tribeca/']);
+  const primi = entries.find(v => v.name === 'Bar Primi');
+  assert.ok(primi.labels.some(l => l.label === 'Brunch' && l.url.includes('penn-district')));
+  for (const name of ['Soba Ulala', 'Thursday Kitchen', 'Luthun', 'Devoción']) {
+    assert.ok(entries.filter(v => v.name === name).every(v => !v.labels.some(l => l.label === 'Vegetarian')), name);
+  }
+  assert.ok(entries.filter(v => v.name === 'Le Pavillon').every(v => !v.labels.some(l => l.label === 'Casual')));
+  const audit = JSON.parse(readFileSync('data/restaurant-label-coverage.json', 'utf8'));
+  assert.equal(entries.length, audit.labeledLocations);
+  assert.equal(entries.length + audit.unlabeledLocations.length, audit.catalogLocations);
+});

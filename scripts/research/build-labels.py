@@ -11,6 +11,9 @@ approvals = json.loads((root/'scripts/research/approved-labels.json').read_text(
 def normalized(text):
     text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode().lower()
     text = re.sub(r'(\d+)(st|nd|rd|th)\b', r'\1', text)
+    text = re.sub(r'(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)', ' ', text)
+    for i, word in enumerate(['first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth','eleventh','twelfth'], 1):
+        text = re.sub(r'\b'+word+r'\b', str(i), text)
     for a, b in {'west':'w','east':'e','north':'n','south':'s','street':'st','avenue':'ave','road':'rd','place':'pl','boulevard':'blvd'}.items():
         text = re.sub(r'\b'+a+r'\b', b, text)
     return re.sub(r'[^a-z0-9]', '', text)
@@ -22,9 +25,11 @@ for approval in approvals:
     if not page or approval['tag'] not in page['candidates']:
         raise ValueError('Approval has no evidence: '+str(approval))
     for venue in research['venues']:
+        if 'locationIds' in approval and venue['id'] not in approval['locationIds']:
+            continue
         if approval['scope'] != 'brand' and venue['name'] != approval['name']:
             continue
-        street = normalized(venue['address'].split(',')[0])
+        street = normalized(re.split(r'\s+(?:(?:Kiosk|Shop|Unit|Storefront|Ste|Suite)\s+\w+|Front|\d+(?:st|nd|rd|th)?\s+Floor|Ground\s+Floor)$', venue['address'].split(',')[0], flags=re.I)[0])
         # Name alone cannot distinguish relocated venues or similarly named branches.
         # Brand-wide claims are the only explicitly reviewed exception.
         texts = normalized(' '.join(p['text'] for p in research['pages']))

@@ -504,13 +504,6 @@
     "scope": "location"
   },
   {
-    "key": "abb53d2d993fe4b0788f",
-    "name": "Phoenix Palace",
-    "tag": "Good for groups",
-    "url": "https://phoenixpalaceny.com/",
-    "scope": "location"
-  },
-  {
     "key": "ac8cd01fedb076498c93",
     "name": "Tasca NYC",
     "tag": "Date night",
@@ -777,13 +770,6 @@
     "scope": "location"
   },
   {
-    "key": "0e6b1d7ecb858a5f1244",
-    "name": "Lafayette Grand Café & Bakery",
-    "tag": "Brunch",
-    "url": "https://www.lafayetteny.com/menus/",
-    "scope": "location"
-  },
-  {
     "key": "0eb1b1e99420cc478e5c",
     "name": "Mango Bay",
     "tag": "Brunch",
@@ -805,13 +791,6 @@
     "scope": "location"
   },
   {
-    "key": "10a850078515d596ca86",
-    "name": "Carne Mare",
-    "tag": "Brunch",
-    "url": "https://www.carnemare.com/menus/",
-    "scope": "location"
-  },
-  {
     "key": "114a4fee9bc48a56ed9d",
     "name": "Lavender Lake",
     "tag": "Brunch",
@@ -823,13 +802,6 @@
     "name": "The Good Fork Pub",
     "tag": "Brunch",
     "url": "https://www.goodfork.com/menus/",
-    "scope": "location"
-  },
-  {
-    "key": "1280cdb60ff7ab38dac3",
-    "name": "Chito Gvrito NYC",
-    "tag": "Brunch",
-    "url": "https://www.chito-gvritonyc.com/menus/",
     "scope": "location"
   },
   {
@@ -879,13 +851,6 @@
     "name": "Ursula Brooklyn",
     "tag": "Brunch",
     "url": "https://www.ursulabk.com/menu/",
-    "scope": "location"
-  },
-  {
-    "key": "2641d49ceae873a58d45",
-    "name": "Bar Primi",
-    "tag": "Brunch",
-    "url": "https://www.barprimi.com/location/bar-primi-bowery/",
     "scope": "location"
   },
   {
@@ -1323,13 +1288,6 @@
     "scope": "location"
   },
   {
-    "key": "8bcc43e7bd78d2f048a2",
-    "name": "The Paris Café",
-    "tag": "Brunch",
-    "url": "https://pariscafenyc.com/menu",
-    "scope": "location"
-  },
-  {
     "key": "8bd5ea0fe577fee55218",
     "name": "Pil Pil",
     "tag": "Brunch",
@@ -1519,13 +1477,6 @@
     "scope": "location"
   },
   {
-    "key": "b0916bbe54d72d9f9177",
-    "name": "Chez Ma Tante",
-    "tag": "Brunch",
-    "url": "https://chezmatantebk.com",
-    "scope": "location"
-  },
-  {
     "key": "b0bab9c8aeaa55e46d49",
     "name": "Casa Thirteen",
     "tag": "Brunch",
@@ -1544,7 +1495,10 @@
     "name": "La Contenta",
     "tag": "Brunch",
     "url": "https://www.lacontentagreenpoint.com/",
-    "scope": "location"
+    "scope": "location",
+    "locationIds": [
+      "af484e3a-b6df-4aed-a4f6-5f684e75a9ec"
+    ]
   },
   {
     "key": "b3b2d7a5822b99acdf7b",
@@ -1771,13 +1725,6 @@
     "scope": "location"
   },
   {
-    "key": "ed45a24fef1077e412e9",
-    "name": "Diner",
-    "tag": "Brunch",
-    "url": "https://www.dinernyc.com/menus/",
-    "scope": "location"
-  },
-  {
     "key": "ee2c23c06d4b4ee30ca4",
     "name": "Aita",
     "tag": "Brunch",
@@ -1852,6 +1799,1102 @@
     "name": "Peaches Lewis",
     "tag": "Brunch",
     "url": "https://www.bcrestaurantgroup.com/location/peaches-kitchen-bar/",
+    "scope": "location"
+  },
+  {
+    "key": "032757b8892f0153a2d5",
+    "name": "The Sparrow",
+    "tag": "Date night",
+    "url": "https://www.thesparrownyc.com/about-us/",
+    "scope": "location"
+  },
+  {
+    "key": "0816fc0d64dfe6a4532b",
+    "name": "Deux Luxe",
+    "tag": "Vegetarian",
+    "url": "https://www.deuxluxeny.com/about-1",
+    "scope": "location"
+  },
+  {
+    "key": "0cb98ff952f998c0c793",
+    "name": "Pastasole",
+    "tag": "Vegetarian",
+    "url": "https://pastasoleny.com/group-orders/",
+    "scope": "location"
+  },
+  {
+    "key": "0e162fe7c81357733ad4",
+    "name": "Roscioli NYC",
+    "tag": "Good for groups",
+    "url": "https://www.rosciolinyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "11d49d8615e7128ba2e1",
+    "name": "Indian Table",
+    "tag": "Vegetarian",
+    "url": "https://indiantableny.com/new-menu/",
+    "scope": "location"
+  },
+  {
+    "key": "13ae86998524ba88a5bd",
+    "name": "The Ten Bells",
+    "tag": "Date night",
+    "url": "https://tenbellsnyc.com/about/",
+    "scope": "location"
+  },
+  {
+    "key": "14a81f495ae4279e90fd",
+    "name": "WarrenPeace",
+    "tag": "Date night",
+    "url": "https://www.warrenpeaceny.com/",
+    "scope": "location"
+  },
+  {
+    "key": "1529ee74a551723c5b06",
+    "name": "Le Pavillon",
+    "tag": "Good for groups",
+    "url": "https://www.lepavillonnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "154d87b8f76278df78d0",
+    "name": "Wild Cherry",
+    "tag": "Date night",
+    "url": "https://www.wildcherrynyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "1625d7c1239bb047ec8c",
+    "name": "Zoller's",
+    "tag": "Vegetarian",
+    "url": "https://www.zollersnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "1671b484c6b65ce48889",
+    "name": "Bateman's",
+    "tag": "Date night",
+    "url": "https://batemansnyc.com/about-us/",
+    "scope": "location"
+  },
+  {
+    "key": "16f9518369162aa600d5",
+    "name": "WINNER Bakery",
+    "tag": "Casual",
+    "url": "https://www.winner.nyc/location/winner-bakery/",
+    "scope": "location"
+  },
+  {
+    "key": "1716da8b8f7c4f578a24",
+    "name": "Momoya",
+    "tag": "Casual",
+    "url": "https://www.momoyanyc.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "1b04d00d568165924968",
+    "name": "Black Tap Craft Burgers & Beer",
+    "tag": "Good for groups",
+    "url": "https://blacktap.com/location/35th/",
+    "scope": "location",
+    "locationIds": [
+      "55ca0a88-a7e9-4d86-9eff-750cf2eaf1bb"
+    ]
+  },
+  {
+    "key": "1b04d00d568165924968",
+    "name": "Black Tap Craft Burgers & Beer",
+    "tag": "Vegetarian",
+    "url": "https://blacktap.com/restaurant-menu/herald-square-menu/",
+    "scope": "location",
+    "locationIds": [
+      "55ca0a88-a7e9-4d86-9eff-750cf2eaf1bb"
+    ]
+  },
+  {
+    "key": "20677e56cf4d24639d4b",
+    "name": "Friend of a Farmer",
+    "tag": "Good for groups",
+    "url": "https://www.friendofafarmer.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "2215708e2dd65fec38c4",
+    "name": "Peasant",
+    "tag": "Casual",
+    "url": "https://www.peasantnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "2215708e2dd65fec38c4",
+    "name": "Peasant",
+    "tag": "Date night",
+    "url": "https://www.peasantnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "2ac85151274d6d724507",
+    "name": "La Tete D'Or",
+    "tag": "Good for groups",
+    "url": "https://www.latetedorbydaniel.com/",
+    "scope": "location"
+  },
+  {
+    "key": "2e10d1e67f8cd7c0fe72",
+    "name": "Criollas Baked Empanadas @ Columbus Circle Underground Market",
+    "tag": "Vegetarian",
+    "url": "https://www.criollasempanadas.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "2edac13b6efa2175efc1",
+    "name": "Artesano",
+    "tag": "Good for groups",
+    "url": "https://artesanorestaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "326915d40b364fb4e45e",
+    "name": "Nabila's",
+    "tag": "Vegetarian",
+    "url": "https://www.nabilasbk.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "33460569dd49fef27f44",
+    "name": "Tabaré",
+    "tag": "Vegetarian",
+    "url": "https://www.tabarenyc.com/menu",
+    "scope": "location"
+  },
+  {
+    "key": "33bed8a620b95781cc30",
+    "name": "Pinky Swear",
+    "tag": "Vegetarian",
+    "url": "https://pinkyswearnyc.com/kitchen-food/",
+    "scope": "location"
+  },
+  {
+    "key": "356eaf1fe6f5a75286ae",
+    "name": "Il Corallo Trattoria",
+    "tag": "Vegetarian",
+    "url": "https://www.ilcorallotrattoria.com/menus",
+    "scope": "location"
+  },
+  {
+    "key": "378fa0c6ac8cb898df3d",
+    "name": "Tacos 1986",
+    "tag": "Vegetarian",
+    "url": "https://tacos1986.com/about",
+    "scope": "brand"
+  },
+  {
+    "key": "3a0e23dd8fc32a2866c6",
+    "name": "Traveler",
+    "tag": "Casual",
+    "url": "https://www.travelernyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "3d3830bde989f03c53c3",
+    "name": "Santa Panza",
+    "tag": "Vegetarian",
+    "url": "https://www.santapanza.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "418b94d6b60e404167a4",
+    "name": "Thyme Bar",
+    "tag": "Date night",
+    "url": "https://www.thymebarnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "420c0c3f225b04cec1ff",
+    "name": "la co ce (la cocina central)",
+    "tag": "Casual",
+    "url": "https://www.lacocenyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "42aaa0e292e97c19e161",
+    "name": "Hard to Explain",
+    "tag": "Good for groups",
+    "url": "https://www.hardtoexplain.co/",
+    "scope": "location"
+  },
+  {
+    "key": "42b0c19da9abe13b841f",
+    "name": "Mishik",
+    "tag": "Casual",
+    "url": "https://mishiknyc.com/about-1",
+    "scope": "location"
+  },
+  {
+    "key": "47cdb881b18eb58100b0",
+    "name": "St. Mazie",
+    "tag": "Good for groups",
+    "url": "https://www.stmazie.com/",
+    "scope": "location"
+  },
+  {
+    "key": "4b8117c657173679acad",
+    "name": "Seed + Mill",
+    "tag": "Vegetarian",
+    "url": "https://www.seedandmill.com/",
+    "scope": "location"
+  },
+  {
+    "key": "5022f4e6d5c4dbe2c18e",
+    "name": "Taku Sando",
+    "tag": "Vegetarian",
+    "url": "https://www.takusando.com/menu",
+    "scope": "location"
+  },
+  {
+    "key": "507c1ad302ed5b2e08d2",
+    "name": "Threes Brewing",
+    "tag": "Good for groups",
+    "url": "https://threesbrewing.com/pages/gowanus",
+    "scope": "location",
+    "locationIds": [
+      "3fcfe5e8-e5ae-4c10-b170-defa8ecb4e2c"
+    ]
+  },
+  {
+    "key": "533bf9abe35489e60cad",
+    "name": "The Commons Chelsea",
+    "tag": "Casual",
+    "url": "https://www.thecommonschelsea.com/",
+    "scope": "location"
+  },
+  {
+    "key": "54848fdca1a5064345a7",
+    "name": "Manhattō",
+    "tag": "Vegetarian",
+    "url": "https://www.manhatto.com/menu",
+    "scope": "location"
+  },
+  {
+    "key": "54e66c10b5e878fe88c1",
+    "name": "Krupa Grocery",
+    "tag": "Vegetarian",
+    "url": "https://www.krupagrocery.com/menus-brooklyn-windsor-terrace",
+    "scope": "location"
+  },
+  {
+    "key": "55713fb188487d0673f1",
+    "name": "Crif Dogs",
+    "tag": "Vegetarian",
+    "url": "https://www.crifdogs.com/menu/",
+    "scope": "location"
+  },
+  {
+    "key": "571793f5dbda465a1fa0",
+    "name": "Runner Up",
+    "tag": "Date night",
+    "url": "https://www.winner.nyc/location/runner-up/",
+    "scope": "location"
+  },
+  {
+    "key": "57858c1627217897a85f",
+    "name": "Sabai Thai",
+    "tag": "Good for groups",
+    "url": "https://www.sabaithai.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "5c029b53688bdf5e94af",
+    "name": "Bella Luna Restaurant",
+    "tag": "Good for groups",
+    "url": "https://www.bellalunanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "5c029b53688bdf5e94af",
+    "name": "Bella Luna Restaurant",
+    "tag": "Casual",
+    "url": "https://www.bellalunanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "5c029b53688bdf5e94af",
+    "name": "Bella Luna Restaurant",
+    "tag": "Date night",
+    "url": "https://www.bellalunanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "5d8621def6405f11faa8",
+    "name": "Klom Klorm",
+    "tag": "Casual",
+    "url": "https://www.klomklormnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "5fa341771de73d3f74a7",
+    "name": "Titi's Empanadas",
+    "tag": "Vegetarian",
+    "url": "https://www.titisnyc.com/about-1",
+    "scope": "location"
+  },
+  {
+    "key": "5fc196a43367871c02c7",
+    "name": "87 Ludlow",
+    "tag": "Good for groups",
+    "url": "https://87ludlownyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "6296d81d4c3e962eee66",
+    "name": "Godunk Thai Street Food",
+    "tag": "Vegetarian",
+    "url": "https://godunknewyork.com/food-menu",
+    "scope": "location"
+  },
+  {
+    "key": "64a7ae6cff2d6ef66d94",
+    "name": "HOM Cafe & Wine",
+    "tag": "Casual",
+    "url": "https://www.sipathom.com/",
+    "scope": "location"
+  },
+  {
+    "key": "64a7ae6cff2d6ef66d94",
+    "name": "HOM Cafe & Wine",
+    "tag": "Vegetarian",
+    "url": "https://www.sipathom.com/wine-bar",
+    "scope": "location"
+  },
+  {
+    "key": "64b057de2ae7b16f401e",
+    "name": "Locanda Verde",
+    "tag": "Good for groups",
+    "url": "https://www.locandaverdenyc.com/about/",
+    "scope": "location",
+    "locationIds": [
+      "75f71438-f0ff-45bf-8bad-021022104561"
+    ]
+  },
+  {
+    "key": "655d502de90faac0d0df",
+    "name": "Banzarbar",
+    "tag": "Date night",
+    "url": "https://www.banzarbar.com/",
+    "scope": "location"
+  },
+  {
+    "key": "663e39ea0f179be09425",
+    "name": "The Bronze Owl",
+    "tag": "Good for groups",
+    "url": "https://thebronzeowlnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "663e39ea0f179be09425",
+    "name": "The Bronze Owl",
+    "tag": "Casual",
+    "url": "https://thebronzeowlnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "663e39ea0f179be09425",
+    "name": "The Bronze Owl",
+    "tag": "Date night",
+    "url": "https://thebronzeowlnyc.com/about/",
+    "scope": "location"
+  },
+  {
+    "key": "66e23a9979ed2d903cab",
+    "name": "Sandro's",
+    "tag": "Good for groups",
+    "url": "https://www.sandrosrestaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "66e23a9979ed2d903cab",
+    "name": "Sandro's",
+    "tag": "Date night",
+    "url": "https://www.sandrosrestaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "6850ee66bbdd8eb015ac",
+    "name": "No. 7 Restaurant",
+    "tag": "Vegetarian",
+    "url": "http://www.no7restaurant.com/menus",
+    "scope": "location"
+  },
+  {
+    "key": "69cca3448a727418fb63",
+    "name": "Sagaponack",
+    "tag": "Good for groups",
+    "url": "https://www.saganewyork.com/",
+    "scope": "location"
+  },
+  {
+    "key": "6c19e2f12d45141ba4a4",
+    "name": "GATHER",
+    "tag": "Casual",
+    "url": "https://www.letsgatherandplay.com/",
+    "scope": "location"
+  },
+  {
+    "key": "6ca8197e419648ca9d4b",
+    "name": "The Puttery",
+    "tag": "Good for groups",
+    "url": "https://www.puttery.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "6ca8197e419648ca9d4b",
+    "name": "The Puttery",
+    "tag": "Vegetarian",
+    "url": "https://www.puttery.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "6ca8197e419648ca9d4b",
+    "name": "The Puttery",
+    "tag": "Date night",
+    "url": "https://www.puttery.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "6dd841bad337836ce40b",
+    "name": "Spygold",
+    "tag": "Date night",
+    "url": "https://www.spygoldnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "7195a026230d5072d828",
+    "name": "Grandma's Home 外婆家",
+    "tag": "Casual",
+    "url": "https://www.grandmashome.us/",
+    "scope": "location"
+  },
+  {
+    "key": "7414a8a830fc99f8db48",
+    "name": "6 NYC",
+    "tag": "Date night",
+    "url": "https://www.6restaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "74db5c4604b194b5a474",
+    "name": "Breeze",
+    "tag": "Vegetarian",
+    "url": "https://breezebk.com/menu/",
+    "scope": "location"
+  },
+  {
+    "key": "772a5c5b10a3fa7b8bdd",
+    "name": "Nudibranch",
+    "tag": "Date night",
+    "url": "https://nudibranchnyc.com",
+    "scope": "location"
+  },
+  {
+    "key": "7ae9f1a66f7cb7789231",
+    "name": "Valla Table",
+    "tag": "Casual",
+    "url": "https://vallatable.com/",
+    "scope": "location"
+  },
+  {
+    "key": "7ff9414b602fc7f3e950",
+    "name": "HaSalon",
+    "tag": "Good for groups",
+    "url": "https://www.hasalonnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "82a5f2ca7688adbd40a3",
+    "name": "tikal cafe",
+    "tag": "Vegetarian",
+    "url": "https://tikalcafe2020.com/",
+    "scope": "location"
+  },
+  {
+    "key": "8484ab42f16bf294046e",
+    "name": "Overstory",
+    "tag": "Date night",
+    "url": "https://www.overstory-nyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "84c8f477450384d242f9",
+    "name": "The Argyle",
+    "tag": "Date night",
+    "url": "https://www.marketterestaurant.com/theargyle/",
+    "scope": "location"
+  },
+  {
+    "key": "8802d76a3d2578069469",
+    "name": "Wild East Brewing Co.",
+    "tag": "Good for groups",
+    "url": "https://www.wildeastbrewing.com/",
+    "scope": "location"
+  },
+  {
+    "key": "8b2b4e5b7a863c33be24",
+    "name": "Semma",
+    "tag": "Good for groups",
+    "url": "https://www.semma.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "8b89db5f482456398feb",
+    "name": "ALL BLUES",
+    "tag": "Good for groups",
+    "url": "https://allbluesnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "8bb4fcf5b33f70ccffdd",
+    "name": "Sushi Ikumi",
+    "tag": "Good for groups",
+    "url": "https://www.ikumi.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "8ff8087392eeb56b2c6d",
+    "name": "Cappone's",
+    "tag": "Vegetarian",
+    "url": "https://capponesnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "9115e834050c386ecb20",
+    "name": "Tappo",
+    "tag": "Vegetarian",
+    "url": "https://www.nycthincrust.com/gruppo-menus-2/",
+    "scope": "location"
+  },
+  {
+    "key": "9301298dfb1e62547253",
+    "name": "Adda",
+    "tag": "Good for groups",
+    "url": "https://www.addanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "9301298dfb1e62547253",
+    "name": "Adda",
+    "tag": "Vegetarian",
+    "url": "https://www.addanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "9614f46d2fb3a1842856",
+    "name": "Abigail's Kitchen",
+    "tag": "Good for groups",
+    "url": "https://www.abigailskitchennyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "972b404e5be3a895262a",
+    "name": "Maison Sun",
+    "tag": "Vegetarian",
+    "url": "https://www.maisonsun.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "972b404e5be3a895262a",
+    "name": "Maison Sun",
+    "tag": "Date night",
+    "url": "https://www.maisonsun.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "a2aa88db90ff6d984c97",
+    "name": "The Musket Room",
+    "tag": "Date night",
+    "url": "https://www.musketroom.com/about/",
+    "scope": "location"
+  },
+  {
+    "key": "ab1a42e9de828a3c57d9",
+    "name": "Trinity Place restaurant and bar",
+    "tag": "Good for groups",
+    "url": "https://www.trinityplacenyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "b1681e8573b499b711df",
+    "name": "Wayward Fare",
+    "tag": "Date night",
+    "url": "https://waywardfarebk.com/",
+    "scope": "location"
+  },
+  {
+    "key": "b1f6589518038cf5225e",
+    "name": "Pecking House",
+    "tag": "Casual",
+    "url": "https://www.peckinghouse.com/about",
+    "scope": "brand"
+  },
+  {
+    "key": "b1f6589518038cf5225e",
+    "name": "Pecking House",
+    "tag": "Vegetarian",
+    "url": "https://www.peckinghouse.com/menu",
+    "scope": "brand"
+  },
+  {
+    "key": "b607e85128a1339394d0",
+    "name": "Cove",
+    "tag": "Good for groups",
+    "url": "https://www.cove-nyc.com/about",
+    "scope": "location"
+  },
+  {
+    "key": "b87c37287754c436110e",
+    "name": "Filaga",
+    "tag": "Vegetarian",
+    "url": "https://www.filaga.com/menu/",
+    "scope": "location"
+  },
+  {
+    "key": "b9b3539824a1f73ccc48",
+    "name": "BarDough",
+    "tag": "Good for groups",
+    "url": "https://www.bardoughnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "be154f802daa445fd266",
+    "name": "Zucker's Bagels & Smoked Fish",
+    "tag": "Casual",
+    "url": "https://www.zuckersbagels.com/about/",
+    "scope": "brand"
+  },
+  {
+    "key": "bf909ecc36d07d28ebc4",
+    "name": "Cafe Boulud",
+    "tag": "Good for groups",
+    "url": "https://www.cafeboulud.com/nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "c0f286abed55196f044d",
+    "name": "The History Restaurant",
+    "tag": "Casual",
+    "url": "https://www.historyrestaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "c0f286abed55196f044d",
+    "name": "The History Restaurant",
+    "tag": "Date night",
+    "url": "https://www.historyrestaurant.com/",
+    "scope": "location"
+  },
+  {
+    "key": "c34d01d15efbfe1f35b4",
+    "name": "Ketchy Shuby",
+    "tag": "Casual",
+    "url": "https://ketchyshubynyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "c34d01d15efbfe1f35b4",
+    "name": "Ketchy Shuby",
+    "tag": "Vegetarian",
+    "url": "https://ketchyshubynyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "c34d01d15efbfe1f35b4",
+    "name": "Ketchy Shuby",
+    "tag": "Date night",
+    "url": "https://ketchyshubynyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "cb4017b82ecdcba13b93",
+    "name": "Birds",
+    "tag": "Date night",
+    "url": "https://birds-nyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "d2cc1625b9ae3c0caed3",
+    "name": "Meet & Meat",
+    "tag": "Casual",
+    "url": "https://meetandmeatbk.com/about/",
+    "scope": "location"
+  },
+  {
+    "key": "d75b7923ae425fbd86e4",
+    "name": "Tolo",
+    "tag": "Good for groups",
+    "url": "https://tolonyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "d83d6c37415d9d6427c6",
+    "name": "Boro Brine",
+    "tag": "Date night",
+    "url": "https://www.borobrine.com/about",
+    "scope": "location"
+  },
+  {
+    "key": "d8e6b21716c6c91cb56a",
+    "name": "Dravida",
+    "tag": "Good for groups",
+    "url": "https://dravidanyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "dc1342d25a9fd104d791",
+    "name": "Cheeseboat",
+    "tag": "Vegetarian",
+    "url": "https://www.cheeseboatnyc.com/menu/",
+    "scope": "location"
+  },
+  {
+    "key": "dd7032a90d140f3b3472",
+    "name": "Tonchin",
+    "tag": "Vegetarian",
+    "url": "https://www.tonchinus.com/signature-menu",
+    "scope": "brand"
+  },
+  {
+    "key": "de5f3deeedfbd17639d4",
+    "name": "Little Pine 小松家宴",
+    "tag": "Casual",
+    "url": "https://www.littlepinenyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "de6894ffd1bd05ad0fad",
+    "name": "Spring Cafe Aspen",
+    "tag": "Vegetarian",
+    "url": "https://www.springcafeaspen.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "e07de2620b55df0fce10",
+    "name": "Pasta Louise Cafe",
+    "tag": "Vegetarian",
+    "url": "https://www.pastalouise.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "e1a5295577b82fec860c",
+    "name": "The Shakespeare",
+    "tag": "Vegetarian",
+    "url": "https://www.theshakespearenyc.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "e38a2a116787df5555c0",
+    "name": "Tacombi",
+    "tag": "Vegetarian",
+    "url": "https://www.tacombi.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "e47ed0fe913b70fedb52",
+    "name": "Spaghetti Incident",
+    "tag": "Good for groups",
+    "url": "https://spaghettiincidentnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "e8524f8d0cb082a6e6f1",
+    "name": "Two Hands Williamsburg",
+    "tag": "Vegetarian",
+    "url": "https://www.twohandshospitality.com/location/two-hands-williamsburg/",
+    "scope": "location"
+  },
+  {
+    "key": "ed139f2420f608e6e67e",
+    "name": "Shmoné Wine",
+    "tag": "Date night",
+    "url": "https://www.shmonenyc.com/shmonewine",
+    "scope": "location"
+  },
+  {
+    "key": "ed641120a1ac82be3292",
+    "name": "Rokstar Chicken",
+    "tag": "Casual",
+    "url": "https://rokstarchicken.com/",
+    "scope": "brand"
+  },
+  {
+    "key": "f8d847ad2e64d1be2933",
+    "name": "Carta",
+    "tag": "Date night",
+    "url": "https://cartawinebar.com/",
+    "scope": "location"
+  },
+  {
+    "key": "f92a967ccc8025ce03be",
+    "name": "Davey's Ice Cream",
+    "tag": "Vegetarian",
+    "url": "https://www.daveysicecream.com/menu",
+    "scope": "location"
+  },
+  {
+    "key": "fabcff19d61e68f849ff",
+    "name": "Boss Tweeds",
+    "tag": "Good for groups",
+    "url": "https://bosstweeds.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "fabcff19d61e68f849ff",
+    "name": "Boss Tweeds",
+    "tag": "Date night",
+    "url": "https://bosstweeds.nyc/",
+    "scope": "location"
+  },
+  {
+    "key": "0401a9c06e26f946b0b0",
+    "name": "KRAAM Thai",
+    "tag": "Vegetarian",
+    "url": "https://kraamnyc.com/food-menu",
+    "scope": "location"
+  },
+  {
+    "key": "1a115e9ee41bd9062824",
+    "name": "Chelsea Living Room",
+    "tag": "Vegetarian",
+    "url": "https://www.chelsealivingroomnyc.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "450336bbb65f33a7289c",
+    "name": "Aftermath",
+    "tag": "Good for groups",
+    "url": "https://www.aftermathnyc.com/",
+    "scope": "location"
+  },
+  {
+    "key": "7ea3e6e46a212cea5356",
+    "name": "Ivan Ramen",
+    "tag": "Vegetarian",
+    "url": "https://www.ivanramen.com/menu/",
+    "scope": "location"
+  },
+  {
+    "key": "a50dcf3bf8ad9a5cb901",
+    "name": "THEP Thai Restaurant",
+    "tag": "Vegetarian",
+    "url": "https://thepnewyork.com/menu-tab/",
+    "scope": "location"
+  },
+  {
+    "key": "fb83ae8af2a7e271feb7",
+    "name": "Veselka Williamsburg",
+    "tag": "Vegetarian",
+    "url": "https://veselka.com/blogs/menu-list/williamsburg",
+    "scope": "location"
+  },
+  {
+    "key": "fca89f2f2703fb1a3202",
+    "name": "Someday Bar",
+    "tag": "Vegetarian",
+    "url": "https://www.somedaybarnyc.com/menus/",
+    "scope": "location"
+  },
+  {
+    "key": "0e6b1d7ecb858a5f1244",
+    "name": "Lafayette Grand Café & Bakery",
+    "tag": "Brunch",
+    "url": "https://www.lafayetteny.com/location/lafayette/",
+    "scope": "location"
+  },
+  {
+    "key": "10a850078515d596ca86",
+    "name": "Carne Mare",
+    "tag": "Brunch",
+    "url": "https://www.carnemare.com/location/carne-mare/",
+    "scope": "location"
+  },
+  {
+    "key": "10a850078515d596ca86",
+    "name": "Carne Mare",
+    "tag": "Good for groups",
+    "url": "https://www.carnemare.com/contact/",
+    "scope": "location"
+  },
+  {
+    "key": "1280cdb60ff7ab38dac3",
+    "name": "Chito Gvrito NYC",
+    "tag": "Brunch",
+    "url": "https://www.chito-gvritonyc.com/location/chito-gvrito-gramercy-location/",
+    "scope": "location"
+  },
+  {
+    "key": "12a5d86b7ca889333f8b",
+    "name": "Crown Shy",
+    "tag": "Good for groups",
+    "url": "https://www.crownshy.nyc/private-dining/",
+    "scope": "location"
+  },
+  {
+    "key": "2641d49ceae873a58d45",
+    "name": "Bar Primi",
+    "tag": "Brunch",
+    "url": "https://www.barprimi.com/location/bar-primi-penn-district/",
+    "scope": "location"
+  },
+  {
+    "key": "2641d49ceae873a58d45",
+    "name": "Bar Primi",
+    "tag": "Good for groups",
+    "url": "https://www.barprimi.com/penn-district-private-events/",
+    "scope": "location"
+  },
+  {
+    "key": "54e66c10b5e878fe88c1",
+    "name": "Krupa Grocery",
+    "tag": "Good for groups",
+    "url": "https://www.krupagrocery.com/private-events-brooklyn",
+    "scope": "location"
+  },
+  {
+    "key": "64b057de2ae7b16f401e",
+    "name": "Locanda Verde",
+    "tag": "Brunch",
+    "url": "https://www.locandaverdenyc.com/location/-tribeca/",
+    "scope": "location",
+    "locationIds": [
+      "75f71438-f0ff-45bf-8bad-021022104561"
+    ]
+  },
+  {
+    "key": "64b057de2ae7b16f401e",
+    "name": "Locanda Verde",
+    "tag": "Brunch",
+    "url": "https://www.locandaverdenyc.com/location/-hudson-yards/",
+    "scope": "location",
+    "locationIds": [
+      "9ee48455-aba1-49d4-9c0f-af4f4cc38ad4"
+    ]
+  },
+  {
+    "key": "7195a026230d5072d828",
+    "name": "Grandma's Home 外婆家",
+    "tag": "Good for groups",
+    "url": "https://www.grandmashome.us/privatedining",
+    "scope": "location"
+  },
+  {
+    "key": "7d28a83fff397540aec9",
+    "name": "American Bar - New York",
+    "tag": "Good for groups",
+    "url": "https://www.americanbarnyc.com/private-events/",
+    "scope": "location"
+  },
+  {
+    "key": "8b5677ee5270992d20a0",
+    "name": "Zou Zou's",
+    "tag": "Good for groups",
+    "url": "https://www.zouzousnyc.com/private-events/",
+    "scope": "location"
+  },
+  {
+    "key": "8bcc43e7bd78d2f048a2",
+    "name": "The Paris Café",
+    "tag": "Brunch",
+    "url": "https://pariscafenyc.com/hoursandlocation",
+    "scope": "location"
+  },
+  {
+    "key": "9083bbd49d78c4c6a78f",
+    "name": "Tiki Chick",
+    "tag": "Brunch",
+    "url": "https://www.tikichick.com/about/",
+    "scope": "location"
+  },
+  {
+    "key": "9d44e4bec95b10efa427",
+    "name": "Twin Tails",
+    "tag": "Good for groups",
+    "url": "https://www.twintailsnyc.com/private-events/",
+    "scope": "location"
+  },
+  {
+    "key": "a2aa88db90ff6d984c97",
+    "name": "The Musket Room",
+    "tag": "Good for groups",
+    "url": "https://www.musketroom.com/private-dining/",
+    "scope": "location"
+  },
+  {
+    "key": "ab7c23dced9965b35fd2",
+    "name": "Point Seven",
+    "tag": "Good for groups",
+    "url": "https://pointsevennyc.com/private-dining/",
+    "scope": "location"
+  },
+  {
+    "key": "abb53d2d993fe4b0788f",
+    "name": "Phoenix Palace",
+    "tag": "Good for groups",
+    "url": "https://phoenixpalaceny.com/pages/large-groups",
+    "scope": "location"
+  },
+  {
+    "key": "b0916bbe54d72d9f9177",
+    "name": "Chez Ma Tante",
+    "tag": "Brunch",
+    "url": "https://chezmatantebk.com/Contact-2",
+    "scope": "location"
+  },
+  {
+    "key": "c127e0c85c804040a106",
+    "name": "Aqua",
+    "tag": "Brunch",
+    "url": "https://aqua-nyc.com/contact-us/",
+    "scope": "location"
+  },
+  {
+    "key": "c127e0c85c804040a106",
+    "name": "Aqua",
+    "tag": "Good for groups",
+    "url": "https://aqua-nyc.com/private-dining-events/",
+    "scope": "location"
+  },
+  {
+    "key": "ed45a24fef1077e412e9",
+    "name": "Diner",
+    "tag": "Brunch",
+    "url": "https://www.dinernyc.com/location/diner-brooklyn/",
+    "scope": "location"
+  },
+  {
+    "key": "ed45a24fef1077e412e9",
+    "name": "Diner",
+    "tag": "Good for groups",
+    "url": "https://www.dinernyc.com/parties/",
+    "scope": "location"
+  },
+  {
+    "key": "ee554d93ab35ef27b2ae",
+    "name": "Francie",
+    "tag": "Good for groups",
+    "url": "https://www.franciebrooklyn.com/private-events/",
+    "scope": "location"
+  },
+  {
+    "key": "f92b9d30a91b5adf9a9a",
+    "name": "Peter Luger",
+    "tag": "Good for groups",
+    "url": "https://peterluger.com/pages/locations-reservations",
+    "scope": "location"
+  },
+  {
+    "key": "fda5b88414c451a2ee91",
+    "name": "Bangkok Supper Club",
+    "tag": "Good for groups",
+    "url": "https://www.bangkoksupperclubnyc.com/private-events/",
     "scope": "location"
   }
 ]

@@ -8,6 +8,17 @@ export const restaurantLabelResearch: Record<
     labels: { label: string; url: string }[];
   }
 > = {
+  "00a10e5f-3007-47cd-a3f9-cd89cb9d7326": {
+    name: "Roscioli NYC",
+    website: "https://rosciolinyc.com/",
+    checkedAt: "2026-09-16T15:15:56.664301+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.rosciolinyc.com/",
+      },
+    ],
+  },
   "023550ea-0b0e-4bb6-a4a7-9d24274fdf9e": {
     name: "Messy",
     website: "https://www.messy-nyc.com/",
@@ -16,6 +27,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Casual",
         url: "https://www.messy-nyc.com/",
+      },
+    ],
+  },
+  "026a7c4d-0395-47ee-b146-ee1bd177dc20": {
+    name: "La Tete D'Or",
+    website: "https://www.latetedorbydaniel.com/",
+    checkedAt: "2026-09-16T15:14:57.180581+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.latetedorbydaniel.com/",
       },
     ],
   },
@@ -41,6 +63,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "03614408-a800-4ef7-82f0-a6cbd0eedba5": {
+    name: "Boss Tweeds",
+    website: "https://bosstweeds.nyc/",
+    checkedAt: "2026-09-16T15:13:41.170268+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://bosstweeds.nyc/",
+      },
+      {
+        label: "Date night",
+        url: "https://bosstweeds.nyc/",
+      },
+    ],
+  },
   "03658d1b-c31d-4da4-9726-6cd91d4aca29": {
     name: "PARK AVE KITCHEN BY DAVID BURKE",
     website: "https://parkavekitchenbydb.com/",
@@ -49,6 +86,25 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://parkavekitchenbydb.com/menus/",
+      },
+    ],
+  },
+  "03e455cc-0cc2-4543-bedd-f453bce23e1a": {
+    name: "Ketchy Shuby",
+    website: "https://ketchyshubynyc.com/",
+    checkedAt: "2026-09-16T15:14:48.053698+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://ketchyshubynyc.com/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://ketchyshubynyc.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://ketchyshubynyc.com/",
       },
     ],
   },
@@ -71,6 +127,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.thenest.nyc/",
+      },
+    ],
+  },
+  "045cf46a-12a3-4a82-9147-6a7c90b094c8": {
+    name: "Momoya",
+    website: "https://momoyanyc.com/",
+    checkedAt: "2026-09-16T15:15:26.671661+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.momoyanyc.com/",
       },
     ],
   },
@@ -111,6 +178,32 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "0881ee08-515a-437e-926b-4d3cd0616e2b": {
+    name: "Sandro's",
+    website: "http://www.sandrosrestaurant.com/",
+    checkedAt: "2026-09-16T15:15:59.743953+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.sandrosrestaurant.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.sandrosrestaurant.com/",
+      },
+    ],
+  },
+  "08a28b42-d43d-499c-b91f-0bf65d104cf8": {
+    name: "Quatorze",
+    website: "http://quatorze.nyc/",
+    checkedAt: "2026-09-16T15:15:50.977592+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.quatorze.nyc/menus/",
+      },
+    ],
+  },
   "0909a12f-9738-4532-9ba9-1ed642222152": {
     name: "Askili Orchard",
     website: "http://www.askiliorchard.com/",
@@ -119,6 +212,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://askiliorchard.com/",
+      },
+    ],
+  },
+  "0cba40b1-2682-45af-b1e1-155711bc5ea8": {
+    name: "Taku Sando",
+    website: "https://www.takusando.com/",
+    checkedAt: "2026-09-16T15:16:19.456281+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.takusando.com/menu",
       },
     ],
   },
@@ -171,6 +275,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.indianaccent.com/newyork",
+      },
+    ],
+  },
+  "10a63e50-c679-4a9a-a251-18a7567b3bf3": {
+    name: "Shmoné Wine",
+    website: "https://www.shmonenyc.com/shmonewine",
+    checkedAt: "2026-09-16T15:16:04.828145+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.shmonenyc.com/shmonewine",
+      },
+    ],
+  },
+  "1100e588-78c8-4ef7-aac3-f52bf7c1e82f": {
+    name: "Mishik",
+    website: "https://mishiknyc.com",
+    checkedAt: "2026-09-16T15:15:24.687210+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://mishiknyc.com/about-1",
       },
     ],
   },
@@ -240,6 +366,65 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "17257622-f269-4d50-b0c4-4208b3d564db": {
+    name: "Lafayette Grand Café & Bakery",
+    website: "http://www.lafayetteny.com/",
+    checkedAt: "2026-09-16T15:14:57.687843+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.lafayetteny.com/location/lafayette/",
+      },
+    ],
+  },
+  "1816bb27-0efb-4715-b107-508842a7d81b": {
+    name: "Pasta Louise Cafe",
+    website: "https://www.pastalouise.com/",
+    checkedAt: "2026-09-16T15:15:40.566718+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.pastalouise.com/menus/",
+      },
+    ],
+  },
+  "19c03820-c523-4011-8059-a2b4f67f7eb9": {
+    name: "Crown Shy",
+    website: "https://crownshy.nyc",
+    checkedAt: "2026-09-16T15:14:04.815324+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.crownshy.nyc/private-dining/",
+      },
+    ],
+  },
+  "19e6840c-6956-43d2-8729-9fa30fd1fd0c": {
+    name: "Runner Up",
+    website: "https://www.winner.nyc/location/runner-up/",
+    checkedAt: "2026-09-16T15:15:57.635030+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.winner.nyc/location/runner-up/",
+      },
+    ],
+  },
+  "1a3592e5-d316-4e7d-be5a-e39b0355d211": {
+    name: "Grandma's Home 外婆家",
+    website: "https://www.grandmashome.us/",
+    checkedAt: "2026-09-16T15:14:33.445428+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.grandmashome.us/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.grandmashome.us/privatedining",
+      },
+    ],
+  },
   "1a68a673-2bff-4027-82d3-004116ce056c": {
     name: "Shmoné",
     website: "https://www.shmonenyc.com/",
@@ -262,6 +447,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "1bac6ee5-0eec-4394-a0af-78e42f764059": {
+    name: "Tacos 1986",
+    website: "https://tacos1986.com/westvillage",
+    checkedAt: "2026-09-16T15:16:19.287354+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://tacos1986.com/about",
+      },
+    ],
+  },
   "1d33922d-bbf7-4a36-8ce0-6db122c6058c": {
     name: "Hellbender",
     website: "https://www.hellbendernyc.com/",
@@ -281,6 +477,43 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.nuyores.com/",
+      },
+    ],
+  },
+  "1e8b4ecd-63f7-4c2c-8d4d-94bb441888d5": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "1ef467ee-cf41-49e0-99c7-e9e57a4c332e": {
+    name: "The History Restaurant",
+    website: "https://www.historyrestaurant.com/",
+    checkedAt: "2026-09-16T15:16:27.182720+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.historyrestaurant.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.historyrestaurant.com/",
+      },
+    ],
+  },
+  "1fdf329e-9780-40b4-8a43-784865b404f1": {
+    name: "Jacob's Pickles",
+    website: "https://www.jacobspickles.com/",
+    checkedAt: "2026-09-16T15:14:45.137814+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.jacobspickles.com/upper-west-side-menus/",
       },
     ],
   },
@@ -310,6 +543,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "22f6e266-e778-456e-b0ac-12726ccab9b1": {
+    name: "St. Mazie",
+    website: "https://www.stmazie.com/",
+    checkedAt: "2026-09-16T15:16:11.632256+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.stmazie.com/",
+      },
+    ],
+  },
   "25556b42-3032-4a1d-8424-ff69b94f570c": {
     name: "Falansai",
     website: "http://falansai.com/",
@@ -322,6 +566,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Vegetarian",
         url: "https://www.falansai.com/menu",
+      },
+    ],
+  },
+  "26d794c5-8bf8-4ce0-b4e9-73eb1d257d97": {
+    name: "Indian Table",
+    website: "http://indiantableny.com/",
+    checkedAt: "2026-09-16T15:14:42.629537+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://indiantableny.com/new-menu/",
       },
     ],
   },
@@ -347,6 +602,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "29ac0ce0-9636-4794-a1e2-db2203a1540d": {
+    name: "Wild Cherry",
+    website: "https://www.wildcherrynyc.com/",
+    checkedAt: "2026-09-16T15:16:50.723111+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.wildcherrynyc.com/",
+      },
+    ],
+  },
   "29c49b28-c5f2-40ef-90c4-53c8d265bcc0": {
     name: "Bonnie's",
     website: "https://www.bonniesbrooklyn.com/",
@@ -359,6 +625,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.bonniesbrooklyn.com/menu",
+      },
+    ],
+  },
+  "29d99d90-b4f2-4777-a7d6-80d7b9f1f3b4": {
+    name: "Wayward Fare",
+    website: "https://waywardfarebk.com/",
+    checkedAt: "2026-09-16T15:16:48.855744+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://waywardfarebk.com/",
+      },
+    ],
+  },
+  "2c9bfc4d-b1cb-428f-ac61-1316aa75ee8c": {
+    name: "Abigail's Kitchen",
+    website: "http://abigailskitchennyc.com/",
+    checkedAt: "2026-09-16T15:13:13.924956+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.abigailskitchennyc.com/",
       },
     ],
   },
@@ -385,6 +673,21 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.goldendinerny.com/",
+      },
+    ],
+  },
+  "2cdcb3c7-c2fa-4991-b36c-24aa3f597044": {
+    name: "Pecking House",
+    website: "https://www.peckinghouse.com/",
+    checkedAt: "2026-09-16T15:15:44.275379+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.peckinghouse.com/about",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://www.peckinghouse.com/menu",
       },
     ],
   },
@@ -432,6 +735,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "2f0c4d00-1ad0-43dd-a15d-6a9658f32c7c": {
+    name: "Nudibranch",
+    website: "https://nudibranchnyc.com",
+    checkedAt: "2026-09-16T15:15:31.873061+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://nudibranchnyc.com/our-story",
+      },
+      {
+        label: "Date night",
+        url: "https://nudibranchnyc.com",
+      },
+    ],
+  },
   "2f3765ef-845b-4cc0-bcd9-c11f74fa0471": {
     name: "Butcher's Daughter",
     website: "https://thebutchersdaughter.com/",
@@ -469,6 +787,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "3158e54f-4977-4c6d-be3b-64655172cd35": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
   "318b485a-505e-48c6-b333-12a784b94721": {
     name: "Lucky Tiger",
     website: "http://www.luckytigernyc.com/",
@@ -492,6 +821,18 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.dhamaka.nyc/",
+      },
+    ],
+  },
+  "32cf52ff-83ff-4ae2-bcd8-9e873707c5bc": {
+    name: "Two Hands Williamsburg",
+    website:
+      "https://www.twohandshospitality.com/location/two-hands-williamsburg/",
+    checkedAt: "2026-09-16T15:16:42.364256+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.twohandshospitality.com/location/two-hands-williamsburg/",
       },
     ],
   },
@@ -550,6 +891,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "34d9e7d6-03c3-4a65-bbc1-d10214c64265": {
+    name: "Seed + Mill",
+    website: "http://seedandmill.com/",
+    checkedAt: "2026-09-16T15:16:02.051329+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.seedandmill.com/",
+      },
+    ],
+  },
   "352d684e-294b-43b4-b265-e323afe4e140": {
     name: "Kings County Brewers Collective",
     website: "https://kcbcbeer.com/",
@@ -583,6 +935,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "36531f03-ab39-44ea-a601-171436015435": {
+    name: "HaSalon",
+    website: "https://www.hasalonnyc.com/",
+    checkedAt: "2026-09-16T15:14:36.429923+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.hasalonnyc.com/",
+      },
+    ],
+  },
   "377ed320-39a7-4075-adfd-bdf2c4ecf6fd": {
     name: "Bar Moga",
     website: "https://www.barmoga.com/",
@@ -602,6 +965,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.leonsnyc.com/menus/",
+      },
+    ],
+  },
+  "37dddedb-50b8-4dcf-93ba-2600e2542615": {
+    name: "The Argyle",
+    website: "https://theargylenyc.com/",
+    checkedAt: "2026-09-16T15:16:22.027664+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.marketterestaurant.com/theargyle/",
+      },
+    ],
+  },
+  "383f76e0-3f72-4dee-a397-2659dfe721ff": {
+    name: "Filaga",
+    website: "http://www.filaga.com/",
+    checkedAt: "2026-09-16T15:14:21.446569+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.filaga.com/menu/",
       },
     ],
   },
@@ -636,6 +1021,28 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "389fcbd4-314d-4f37-b573-d185b4857320": {
+    name: "Wild East Brewing Co.",
+    website: "https://www.wildeastbrewing.com/",
+    checkedAt: "2026-09-16T15:16:50.772462+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.wildeastbrewing.com/",
+      },
+    ],
+  },
+  "396f55d8-3524-4fc9-bac4-245b9e2ea104": {
+    name: "Semma",
+    website: "http://semma.nyc/",
+    checkedAt: "2026-09-16T15:16:02.193447+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.semma.nyc/",
+      },
+    ],
+  },
   "3995fa1e-b8fe-4729-9ed5-942d0c9f5cbb": {
     name: "Gage & Tollner",
     website: "https://www.gageandtollner.com/",
@@ -648,6 +1055,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.gageandtollner.com/gage-and-tollner-menus/",
+      },
+    ],
+  },
+  "39d47ae7-850c-43bc-a45c-ac8e110ead84": {
+    name: "Santa Panza",
+    website: "https://www.santapanza.com/",
+    checkedAt: "2026-09-16T15:15:59.800722+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.santapanza.com/menus/",
       },
     ],
   },
@@ -677,6 +1095,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "3e2c5923-8a2b-495c-bb75-fe2cb17a40e1": {
+    name: "Rokstar Chicken",
+    website: "https://rokstarchicken.com/",
+    checkedAt: "2026-09-16T15:15:55.380384+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://rokstarchicken.com/",
+      },
+    ],
+  },
   "3e974f88-579f-4411-8249-ab928a0a6aac": {
     name: "Ursula Brooklyn",
     website: "http://www.ursulabk.com/",
@@ -688,6 +1117,39 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "3fcfe5e8-e5ae-4c10-b170-defa8ecb4e2c": {
+    name: "Threes Brewing",
+    website: "https://threesbrewing.com/pages/gowanus",
+    checkedAt: "2026-09-16T15:16:35.782647+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://threesbrewing.com/pages/gowanus",
+      },
+    ],
+  },
+  "403cf79b-2239-4498-b92b-b3ea10aee679": {
+    name: "Criollas Baked Empanadas @ Columbus Circle Underground Market",
+    website: "http://www.criollasempanadas.com/",
+    checkedAt: "2026-09-16T15:14:03.366651+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.criollasempanadas.com/",
+      },
+    ],
+  },
+  "404d73b4-ccf6-4b00-bd99-c925fd6037e0": {
+    name: "WINNER Bakery",
+    website: "https://www.winner.nyc/location/winner-bakery/",
+    checkedAt: "2026-09-16T15:16:47.435796+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.winner.nyc/location/winner-bakery/",
+      },
+    ],
+  },
   "40a10cc7-dd75-48e2-9669-8f4f5c412e42": {
     name: "David Burke Tavern",
     website: "https://davidburketavern.com/",
@@ -696,6 +1158,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://davidburketavern.com/menus/",
+      },
+    ],
+  },
+  "40f96b8a-284e-4b8d-a341-20121b476bc6": {
+    name: "Chez Ma Tante",
+    website: "http://www.chezmatantebk.com/",
+    checkedAt: "2026-09-16T15:13:56.134769+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://chezmatantebk.com/Contact-2",
       },
     ],
   },
@@ -725,6 +1198,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "45dfa8d0-baac-4b11-8208-386584ce9420": {
+    name: "Thyme Bar",
+    website: "https://thymebarnyc.com",
+    checkedAt: "2026-09-16T15:16:35.915858+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.thymebarnyc.com/",
+      },
+    ],
+  },
   "4793d0f4-b0a4-47d9-aabb-9c046e2c4a42": {
     name: "Mr. Melo",
     website: "http://mrmelobar.com/",
@@ -733,6 +1217,32 @@ export const restaurantLabelResearch: Record<
       {
         label: "Good for groups",
         url: "https://www.mrmelobar.com/",
+      },
+    ],
+  },
+  "47c23276-4644-4712-93c5-b2af6ba4a4ae": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "485ad18a-4288-4af9-9b0e-973f3f68b6be": {
+    name: "Zou Zou's",
+    website: "https://www.zouzousnyc.com/",
+    checkedAt: "2026-09-16T15:16:53.656458+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.zouzousnyc.com/menus/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.zouzousnyc.com/private-events/",
       },
     ],
   },
@@ -769,6 +1279,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "4b561c0a-e6fd-480f-9184-da4469f46495": {
+    name: "Godunk Thai Street Food",
+    website: "http://godunknewyork.com/",
+    checkedAt: "2026-09-16T15:14:30.978510+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://godunknewyork.com/food-menu",
+      },
+    ],
+  },
   "4b98c0f4-5182-48d3-8d50-a2c0a27a2ba9": {
     name: "The Cactus Shop",
     website: "https://www.thecactusshopnyc.com/",
@@ -777,6 +1298,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.thecactusshopnyc.com/menus/",
+      },
+    ],
+  },
+  "4ba78f75-87e8-41f1-8b78-490fcc8903a5": {
+    name: "Friend of a Farmer",
+    website: "https://www.friendofafarmer.com/",
+    checkedAt: "2026-09-16T15:14:27.945603+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.friendofafarmer.com/",
+      },
+    ],
+  },
+  "4c82cf42-048d-4c19-9b6e-500476830293": {
+    name: "Klom Klorm",
+    website: "https://www.klomklormnyc.com/",
+    checkedAt: "2026-09-16T15:14:51.837518+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.klomklormnyc.com/",
       },
     ],
   },
@@ -810,6 +1353,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.maisonpickle.com/menus/",
+      },
+    ],
+  },
+  "4eccdf34-b84c-4fbc-b642-67aad12831ce": {
+    name: "Spring Cafe Aspen",
+    website: "https://www.springcafeaspen.com/",
+    checkedAt: "2026-09-16T15:16:11.267382+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.springcafeaspen.com/",
       },
     ],
   },
@@ -861,6 +1415,39 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "4f645a0c-6da7-4ef6-a3bb-efe3b15524a9": {
+    name: "Tonchin",
+    website: "https://tonchinus.com/",
+    checkedAt: "2026-09-16T15:16:39.511785+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tonchinus.com/signature-menu",
+      },
+    ],
+  },
+  "4f87c6a3-28a4-42d3-aff8-72710bde780f": {
+    name: "No. 7 Restaurant",
+    website: "http://www.no7restaurant.com/",
+    checkedAt: "2026-09-16T15:15:30.519436+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "http://www.no7restaurant.com/menus",
+      },
+    ],
+  },
+  "4fb3c5b3-b009-48e9-aab7-90ad6cb592ce": {
+    name: "Manhattō",
+    website: "http://manhatto.com/",
+    checkedAt: "2026-09-16T15:15:16.961810+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.manhatto.com/menu",
+      },
+    ],
+  },
   "527d9975-8a41-4911-a647-1d10a6269900": {
     name: "Malka",
     website: "https://malka.nyc/",
@@ -880,6 +1467,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.wabinori.com/",
+      },
+    ],
+  },
+  "535857e1-74a1-46f9-a12b-271e028c5f39": {
+    name: "Cappone's",
+    website: "https://www.capponesnyc.com/",
+    checkedAt: "2026-09-16T15:13:49.803353+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://capponesnyc.com/",
       },
     ],
   },
@@ -906,6 +1504,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "55ca0a88-a7e9-4d86-9eff-750cf2eaf1bb": {
+    name: "Black Tap Craft Burgers & Beer",
+    website: "https://blacktap.com/location/35th/",
+    checkedAt: "2026-09-16T15:13:39.638644+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://blacktap.com/location/35th/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://blacktap.com/restaurant-menu/herald-square-menu/",
+      },
+    ],
+  },
   "56902d27-a0e4-4693-bdf0-a504d2380f63": {
     name: "Maloya",
     website: "http://maloyanyc.com/",
@@ -914,6 +1527,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://maloyanyc.com/menu/",
+      },
+    ],
+  },
+  "56dc742d-3688-4b5f-9d5c-b4fa1448352d": {
+    name: "Twin Tails",
+    website: "https://www.twintailsnyc.com/",
+    checkedAt: "2026-09-16T15:16:41.924574+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.twintailsnyc.com/private-events/",
       },
     ],
   },
@@ -950,6 +1574,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "5a45ac2e-4f97-43e0-8609-4334c8f7975d": {
+    name: "Sushi Ikumi",
+    website: "https://www.ikumi.nyc/",
+    checkedAt: "2026-09-16T15:16:15.953527+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.ikumi.nyc/",
+      },
+    ],
+  },
   "5a7bd4ed-7565-4e45-856b-ed5561a24604": {
     name: "Marseille",
     website: "https://www.marseillenyc.com/",
@@ -965,6 +1600,50 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "5aaa3e5c-ab79-4870-b5f7-3892823bdd83": {
+    name: "Cove",
+    website: "https://www.cove-nyc.com/",
+    checkedAt: "2026-09-16T15:14:01.789664+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.cove-nyc.com/about",
+      },
+    ],
+  },
+  "5c8d156f-4cf9-4081-ad71-a6fd3668f268": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "5d8ea4b5-1b04-4de8-9910-0b1d4185edfc": {
+    name: "WarrenPeace",
+    website: "https://warrenpeaceny.com/",
+    checkedAt: "2026-09-16T15:16:48.803409+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.warrenpeaceny.com/",
+      },
+    ],
+  },
+  "5e1d71c5-e156-4a84-a1d5-d1b6b2f87441": {
+    name: "Davey's Ice Cream",
+    website: "https://www.daveysicecream.com/",
+    checkedAt: "2026-09-16T15:14:07.345592+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.daveysicecream.com/menu",
+      },
+    ],
+  },
   "5e6c34a6-3077-442d-9c04-aa4bdff767ea": {
     name: "Chela",
     website: "http://chelaparkslope.com/",
@@ -977,6 +1656,32 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.chelaparkslope.com/",
+      },
+    ],
+  },
+  "5f06a05d-4506-4fc2-90fb-973a61018712": {
+    name: "Gordo's Cantina",
+    website: "http://gordoscantina.com/",
+    checkedAt: "2026-09-16T15:14:33.039068+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.gordoscantina.com/pages/menu-1",
+      },
+      {
+        label: "Brunch",
+        url: "https://www.gordoscantina.com/",
+      },
+    ],
+  },
+  "6030ca3c-255a-47f4-89ef-381e262f4d49": {
+    name: "Rokstar Chicken",
+    website: "https://rokstarchicken.com/",
+    checkedAt: "2026-09-16T15:15:55.380384+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://rokstarchicken.com/",
       },
     ],
   },
@@ -1007,6 +1712,32 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://fossetta-nyc.com/menus",
+      },
+    ],
+  },
+  "613023fb-a374-4f0f-8314-93f97f0f76ea": {
+    name: "Bar Primi",
+    website: "https://www.barprimi.com/bowery",
+    checkedAt: "2026-09-16T15:13:32.581285+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.barprimi.com/location/bar-primi-penn-district/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.barprimi.com/penn-district-private-events/",
+      },
+    ],
+  },
+  "620ef54c-ae4a-4338-ac39-343cdc3eebe7": {
+    name: "Point Seven",
+    website: "https://pointsevennyc.com/",
+    checkedAt: "2026-09-16T15:15:48.895647+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://pointsevennyc.com/private-dining/",
       },
     ],
   },
@@ -1058,6 +1789,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "66ef633f-7a2e-4d8d-94ec-2f2b3ac81a2b": {
+    name: "Cheeseboat",
+    website: "https://cheeseboatnyc.com/",
+    checkedAt: "2026-09-16T15:13:54.919741+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.cheeseboatnyc.com/menu/",
+      },
+    ],
+  },
   "682b2400-a3bd-4c00-a96e-7b67c5f67784": {
     name: "Fred's Dog House",
     website: "https://www.fredsdoghouse.com/",
@@ -1077,6 +1819,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Casual",
         url: "https://www.goldenhof.com/",
+      },
+    ],
+  },
+  "69925316-2abf-43de-a8bc-78050dcc75b5": {
+    name: "Cafe Boulud",
+    website: "https://www.cafeboulud.com/nyc/",
+    checkedAt: "2026-09-16T15:13:46.237950+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.cafeboulud.com/nyc/",
       },
     ],
   },
@@ -1113,6 +1866,58 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "6b9c56ff-3917-4237-b4b2-53b280696fa3": {
+    name: "Zucker's Bagels & Smoked Fish",
+    website: "http://www.zuckersbagels.com/",
+    checkedAt: "2026-09-16T15:16:53.671559+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.zuckersbagels.com/about/",
+      },
+    ],
+  },
+  "6ce2bca5-91cf-4e47-b2a6-88d2b617a076": {
+    name: "The Paris Café",
+    website: "https://www.pariscafenyc.com/",
+    checkedAt: "2026-09-16T15:16:29.208603+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://pariscafenyc.com/hoursandlocation",
+      },
+    ],
+  },
+  "6decd8e3-6ffb-46ae-9b4a-24153a09000a": {
+    name: "Bella Luna Restaurant",
+    website: "http://www.bellalunanyc.com/",
+    checkedAt: "2026-09-16T15:13:35.982086+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.bellalunanyc.com/",
+      },
+      {
+        label: "Casual",
+        url: "https://www.bellalunanyc.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.bellalunanyc.com/",
+      },
+    ],
+  },
+  "6e1f1cb5-2db1-4499-b017-22cbe3ecb5fe": {
+    name: "la co ce (la cocina central)",
+    website: "https://www.lacocenyc.com/",
+    checkedAt: "2026-09-16T15:16:55.245872+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.lacocenyc.com/",
+      },
+    ],
+  },
   "6e874620-b2c2-4c1c-a517-4b6e9e354aad": {
     name: "Bee's Knees",
     website: "https://www.beeskneesbk.com/",
@@ -1121,6 +1926,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.beeskneesbk.com/menus",
+      },
+    ],
+  },
+  "6f1cbddd-8119-4204-993d-d83af4c0823a": {
+    name: "The Sparrow",
+    website: "http://www.thesparrownyc.com/",
+    checkedAt: "2026-09-16T15:16:31.791153+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.thesparrownyc.com/about-us/",
       },
     ],
   },
@@ -1187,6 +2003,109 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "72b456c3-647c-4ea9-b7fd-9795e35d03dd": {
+    name: "THEP Thai Restaurant",
+    website: "http://www.thepnewyork.com/",
+    checkedAt: "2026-09-16T15:16:18.001976+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://thepnewyork.com/menu-tab/",
+      },
+    ],
+  },
+  "733583f0-30c4-4ed0-a41a-133874e7d916": {
+    name: "Crif Dogs",
+    website: "https://crifdogs.com",
+    checkedAt: "2026-09-16T15:14:02.974414+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.crifdogs.com/menu/",
+      },
+    ],
+  },
+  "73a175f5-5c28-4431-8aa4-5b0f5287bc05": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "740d3301-09ce-49d9-8bd0-4207ba41a9d4": {
+    name: "Soba Ulala",
+    website: "https://www.sobaulala.nyc/",
+    checkedAt: "2026-09-16T15:16:06.580833+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.sobaulala.nyc/",
+      },
+    ],
+  },
+  "7422544d-df19-40f4-8bcd-b419da43e425": {
+    name: "The Shakespeare",
+    website: "https://www.theshakespearenyc.com/",
+    checkedAt: "2026-09-16T15:16:31.712000+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.theshakespearenyc.com/menus/",
+      },
+    ],
+  },
+  "751683e9-0b81-4599-8d41-ef486a1d4843": {
+    name: "Chelsea Living Room",
+    website: "https://www.chelsealivingroomnyc.com/",
+    checkedAt: "2026-09-16T15:13:55.661605+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.chelsealivingroomnyc.com/menus/",
+      },
+    ],
+  },
+  "75f71438-f0ff-45bf-8bad-021022104561": {
+    name: "Locanda Verde",
+    website: "http://locandaverdenyc.com/",
+    checkedAt: "2026-09-16T15:15:11.735856+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.locandaverdenyc.com/about/",
+      },
+      {
+        label: "Brunch",
+        url: "https://www.locandaverdenyc.com/location/-tribeca/",
+      },
+    ],
+  },
+  "76a4d928-9908-4a9a-bc0b-f7807bbfe5a1": {
+    name: "Dravida",
+    website: "https://dravidanyc.com/",
+    checkedAt: "2026-09-16T15:14:12.601987+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://dravidanyc.com/",
+      },
+    ],
+  },
+  "7a7313f8-2be8-4a9c-8a18-76b8823d166c": {
+    name: "Carta",
+    website: "https://cartawinebar.com/",
+    checkedAt: "2026-09-16T15:13:51.604486+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://cartawinebar.com/",
+      },
+    ],
+  },
   "7a95e938-101b-4d41-ad0c-9e70d157076b": {
     name: "Foolproof Whiskey Bar",
     website: "https://foolproofbk.com/",
@@ -1199,6 +2118,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.foolproofbk.com/menu",
+      },
+    ],
+  },
+  "7ad70152-68c1-46d9-abd5-f652a829b170": {
+    name: "Il Corallo Trattoria",
+    website: "https://www.ilcorallotrattoria.com/",
+    checkedAt: "2026-09-16T15:14:41.374690+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.ilcorallotrattoria.com/menus",
+      },
+    ],
+  },
+  "7b6b2354-33b1-4515-bc0a-c26a123427b1": {
+    name: "6 NYC",
+    website: "https://www.6restaurant.com/",
+    checkedAt: "2026-09-16T15:13:10.862772+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.6restaurant.com/",
       },
     ],
   },
@@ -1217,6 +2158,47 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "7c8cb1bc-d82a-4219-997b-947df2d7b66b": {
+    name: "Traveler",
+    website: "http://travelernyc.com/",
+    checkedAt: "2026-09-16T15:16:40.414361+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.travelernyc.com/",
+      },
+    ],
+  },
+  "7ca74d78-0adb-4b01-8141-0f2c8a9816b0": {
+    name: "The Puttery",
+    website: "https://www.puttery.com/",
+    checkedAt: "2026-09-16T15:16:30.636301+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.puttery.com/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://www.puttery.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.puttery.com/",
+      },
+    ],
+  },
+  "805316d8-b49b-4f90-8858-8110bdfdadb6": {
+    name: "Rokstar Chicken",
+    website: "https://rokstarchicken.com/",
+    checkedAt: "2026-09-16T15:15:55.380384+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://rokstarchicken.com/",
+      },
+    ],
+  },
   "822a4442-48f8-44dc-aed2-f0716c66b196": {
     name: "Emily Brooklyn",
     website: "https://www.pizzalovesemily.com/",
@@ -1225,6 +2207,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.pizzalovesemily.com/menus-brooklyn/",
+      },
+    ],
+  },
+  "829b05ae-4ecc-47bb-a4db-c02cf40773c2": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "82a9c052-03d0-43cd-8517-79c2f9a11ae0": {
+    name: "BarDough",
+    website: "https://www.bardoughnyc.com/",
+    checkedAt: "2026-09-16T15:13:32.895572+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.bardoughnyc.com/",
       },
     ],
   },
@@ -1239,6 +2243,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "850c570e-9f2e-423f-855f-ee1661a23ccd": {
+    name: "Boro Brine",
+    website: "https://www.borobrine.com/",
+    checkedAt: "2026-09-16T15:13:41.169754+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.borobrine.com/about",
+      },
+    ],
+  },
   "8581261a-6f7f-4b6a-bda9-9f6160df4e34": {
     name: "Malvan",
     website: "https://malvannyc.com/",
@@ -1250,6 +2265,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "8593a6bf-e69c-4ce0-baa5-6fbca9a9d046": {
+    name: "Sagaponack",
+    website: "https://www.saganewyork.com/",
+    checkedAt: "2026-09-16T15:15:58.122613+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.saganewyork.com/",
+      },
+    ],
+  },
   "85ec983e-b88c-4e5d-9fb9-9f1eb8c75b77": {
     name: "APERITIVO by CARTA",
     website: "http://aperitivobycarta.com/",
@@ -1258,6 +2284,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Good for groups",
         url: "https://aperitivobycarta.com/",
+      },
+    ],
+  },
+  "85fc069c-284f-4c30-9610-45f35e71858c": {
+    name: "tikal cafe",
+    website: "http://tikalcafe2020.com/",
+    checkedAt: "2026-09-16T15:16:55.466349+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://tikalcafe2020.com/",
       },
     ],
   },
@@ -1316,6 +2353,28 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "8cab32d8-296f-421e-a702-c033ee200c0e": {
+    name: "Hard to Explain",
+    website: "http://hardtoexplain.co/",
+    checkedAt: "2026-09-16T15:14:37.921909+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.hardtoexplain.co/",
+      },
+    ],
+  },
+  "8cc2acfa-c691-415c-bc7c-5060c31825a7": {
+    name: "Birds",
+    website: "http://www.birds-nyc.com/",
+    checkedAt: "2026-09-16T15:13:38.986566+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://birds-nyc.com/",
+      },
+    ],
+  },
   "8d74bca7-5df9-48a1-a379-b9704f0bbc73": {
     name: "Carlotto",
     website: "https://carlottonewyork.com/",
@@ -1327,6 +2386,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "8e25de42-d156-490b-9cd6-3549c856c4ea": {
+    name: "Tolo",
+    website: "https://tolonyc.com/",
+    checkedAt: "2026-09-16T15:16:38.138268+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://tolonyc.com/",
+      },
+    ],
+  },
   "8e4b3524-b733-4b52-bc88-97a361b750d4": {
     name: "Bar Chuzo",
     website: "https://www.barchuzo.com/",
@@ -1335,6 +2405,21 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.barchuzo.com/",
+      },
+    ],
+  },
+  "8e5353a7-12f3-42f3-a0ed-ecc1bc2f30e7": {
+    name: "Greywind",
+    website: "https://greywindnyc.com",
+    checkedAt: "2026-09-16T15:14:34.332845+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.greywindnyc.com/about/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.greywindnyc.com/about/",
       },
     ],
   },
@@ -1353,6 +2438,32 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "91a7b23a-f99d-4f12-ab62-8a0325e7e0a7": {
+    name: "The Musket Room",
+    website: "http://www.musketroom.com/",
+    checkedAt: "2026-09-16T15:16:28.756793+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.musketroom.com/about/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.musketroom.com/private-dining/",
+      },
+    ],
+  },
+  "91af3e27-89e1-4ce9-a723-5ebedcac1577": {
+    name: "Breeze",
+    website: "https://breezebk.com/",
+    checkedAt: "2026-09-16T15:13:42.064469+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://breezebk.com/menu/",
+      },
+    ],
+  },
   "91f4f255-df7e-43dc-83d7-2d5d0f26fbd7": {
     name: "Layla",
     website: "https://www.laylabarnyc.com/",
@@ -1361,6 +2472,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.laylabarnyc.com/menus/",
+      },
+    ],
+  },
+  "927ef47c-6124-4d48-95ca-57f6ec5b8a93": {
+    name: "Zoller's",
+    website: "https://zollersnyc.com/",
+    checkedAt: "2026-09-16T15:16:53.349000+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.zollersnyc.com/",
+      },
+    ],
+  },
+  "92b8ac27-ab7c-4bf7-a715-8b29f3d952dd": {
+    name: "ALL BLUES",
+    website: "https://allbluesnyc.com/",
+    checkedAt: "2026-09-16T15:13:12.856588+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://allbluesnyc.com/",
       },
     ],
   },
@@ -1397,6 +2530,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "95872a40-f14b-4b92-bccf-b5331d4bf135": {
+    name: "Diner",
+    website: "https://dinernyc.com",
+    checkedAt: "2026-09-16T15:14:10.938015+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.dinernyc.com/location/diner-brooklyn/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.dinernyc.com/parties/",
+      },
+    ],
+  },
   "95ffdb33-39d7-4ff2-bbce-64149cc2b480": {
     name: "R40",
     website: "http://www.r40lic.com/",
@@ -1408,6 +2556,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "96b431e8-97d8-4b06-bf3b-82eacacda07d": {
+    name: "Tabaré",
+    website: "https://www.tabarenyc.com/",
+    checkedAt: "2026-09-16T15:16:18.541350+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tabarenyc.com/menu",
+      },
+    ],
+  },
   "9701cf31-7f62-4b5d-98d2-b222be199941": {
     name: "HARVEST KITCHEN",
     website: "http://www.harvestkitchennyc.com/",
@@ -1416,6 +2575,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.harvestkitchennyc.com/",
+      },
+    ],
+  },
+  "986d9d8c-c2b9-45af-a57d-3355a0c1c151": {
+    name: "Trinity Place restaurant and bar",
+    website: "http://www.trinityplacenyc.com/",
+    checkedAt: "2026-09-16T15:16:40.488353+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.trinityplacenyc.com/",
       },
     ],
   },
@@ -1485,6 +2655,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "9ee48455-aba1-49d4-9c0f-af4f4cc38ad4": {
+    name: "Locanda Verde",
+    website: "http://locandaverdenyc.com/",
+    checkedAt: "2026-09-16T15:15:11.735856+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.locandaverdenyc.com/location/-hudson-yards/",
+      },
+    ],
+  },
   "a0ef3868-0382-41ca-9062-417050fbe64b": {
     name: "Bareburger",
     website: "https://bareburger.com/",
@@ -1493,6 +2674,21 @@ export const restaurantLabelResearch: Record<
       {
         label: "Vegetarian",
         url: "https://bareburger.com/about/",
+      },
+    ],
+  },
+  "a3b8c112-1a32-4829-af98-8feaf4686644": {
+    name: "Maison Sun",
+    website: "https://www.maisonsun.nyc/",
+    checkedAt: "2026-09-16T15:15:14.599661+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.maisonsun.nyc/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.maisonsun.nyc/",
       },
     ],
   },
@@ -1566,6 +2762,39 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "a6f21c1e-9e22-4def-9146-3a344ca38207": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "a770d7d1-b87e-43a4-b386-7198862e1a80": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "a7ee2444-d3fa-4061-887f-4ec2e2267126": {
+    name: "Bateman's",
+    website: "https://batemansnyc.com/",
+    checkedAt: "2026-09-16T15:13:34.366382+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://batemansnyc.com/about-us/",
+      },
+    ],
+  },
   "a82f782f-9740-4670-a226-d1f80860f3bc": {
     name: "Animo!",
     website: "https://animonyc.com/",
@@ -1588,6 +2817,28 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "a9095820-38bc-428c-8f65-2473b96b74f1": {
+    name: "Za-Ya",
+    website: "http://www.za-ya.com/",
+    checkedAt: "2026-09-16T15:16:52.616670+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.za-ya.com/",
+      },
+    ],
+  },
+  "a91b5fb2-173b-4d10-9f91-2dcbc2f5a391": {
+    name: "KRAAM Thai",
+    website: "http://www.kraamnyc.com/",
+    checkedAt: "2026-09-16T15:14:46.742153+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://kraamnyc.com/food-menu",
+      },
+    ],
+  },
   "aa4bd176-9589-4b76-a22c-d7f0f77542ae": {
     name: "Little Honey",
     website: "http://littlehoneybk.com/",
@@ -1596,6 +2847,36 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.littlehoneybk.com/",
+      },
+    ],
+  },
+  "aa523d34-d61f-4d1e-9d30-938ef8ba1ab4": {
+    name: "The Bronze Owl",
+    website: "https://www.thebronzeowlnyc.com/",
+    checkedAt: "2026-09-16T15:16:23.114493+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://thebronzeowlnyc.com/",
+      },
+      {
+        label: "Casual",
+        url: "https://thebronzeowlnyc.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://thebronzeowlnyc.com/about/",
+      },
+    ],
+  },
+  "ac3e04bb-f749-478b-a5f6-ad769b397af7": {
+    name: "Meet & Meat",
+    website: "https://www.meetandmeatbk.com/",
+    checkedAt: "2026-09-16T15:15:20.676863+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://meetandmeatbk.com/about/",
       },
     ],
   },
@@ -1621,6 +2902,28 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "accdc5bb-d06b-4a54-a763-b83dca431645": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "ad083c2a-46e8-4e0d-a098-cecfe93d50e1": {
+    name: "Le Pavillon",
+    website: "https://www.lepavillonnyc.com/",
+    checkedAt: "2026-09-16T15:15:01.106202+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.lepavillonnyc.com/",
+      },
+    ],
+  },
   "adea3f01-7a91-494a-b0be-f7c067eeae1f": {
     name: "Peaches Lewis",
     website: "https://www.bcrestaurantgroup.com/location/peaches-kitchen-bar/",
@@ -1629,6 +2932,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.bcrestaurantgroup.com/location/peaches-kitchen-bar/",
+      },
+    ],
+  },
+  "adf1e2c5-00b2-4119-9c16-46169c7b1702": {
+    name: "Deux Luxe",
+    website: "https://www.deuxluxeny.com/",
+    checkedAt: "2026-09-16T15:14:09.000639+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.deuxluxeny.com/about-1",
       },
     ],
   },
@@ -1665,6 +2979,39 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "b06de676-cfd6-46d0-8ca1-51d868223202": {
+    name: "Bangkok Supper Club",
+    website: "https://www.bangkoksupperclubnyc.com/",
+    checkedAt: "2026-09-16T15:13:29.002497+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.bangkoksupperclubnyc.com/private-events/",
+      },
+    ],
+  },
+  "b1ce5a53-9960-4da4-90cf-c2300fbfa918": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
+  "b2f82b9d-fb90-4540-95c0-1b339ab3ad06": {
+    name: "Valla Table",
+    website: "https://www.vallatable.com/",
+    checkedAt: "2026-09-16T15:16:44.825717+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://vallatable.com/",
+      },
+    ],
+  },
   "b3b93fae-9422-45d1-923d-628d2c94f0f3": {
     name: "Cafe Mado",
     website: "http://www.cafemadonyc.com/",
@@ -1695,6 +3042,32 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://frijolerosbk.com/",
+      },
+    ],
+  },
+  "b5dadb67-0582-44ff-b616-09d74d0ed742": {
+    name: "Chito Gvrito NYC",
+    website: "https://www.chito-gvritonyc.com/",
+    checkedAt: "2026-09-16T15:13:58.309693+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.chito-gvritonyc.com/",
+      },
+      {
+        label: "Brunch",
+        url: "https://www.chito-gvritonyc.com/location/chito-gvrito-gramercy-location/",
+      },
+    ],
+  },
+  "b855437c-a58b-479b-abd0-8edd3cbce58a": {
+    name: "Francie",
+    website: "http://www.franciebrooklyn.com/",
+    checkedAt: "2026-09-16T15:14:25.446149+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.franciebrooklyn.com/private-events/",
       },
     ],
   },
@@ -1731,6 +3104,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "b9b1d8f7-7a94-49dd-9148-ffdd9a42e32d": {
+    name: "Tacombi",
+    website: "https://www.tacombi.com/",
+    checkedAt: "2026-09-16T15:16:18.685649+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tacombi.com/",
+      },
+    ],
+  },
   "baf4a3d9-c7c0-4c1f-93b1-b413a4b8bbc6": {
     name: "Le Rivage",
     website: "https://www.lerivagenyc.com/",
@@ -1739,6 +3123,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Date night",
         url: "https://www.lerivagenyc.com/",
+      },
+    ],
+  },
+  "bb8e57f2-6293-48c4-8524-eb5362cc5f94": {
+    name: "Tiki Chick",
+    website: "https://www.tikichick.com/",
+    checkedAt: "2026-09-16T15:16:37.257131+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.tikichick.com/about/",
       },
     ],
   },
@@ -1754,6 +3149,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.nicksnyc.com/",
+      },
+    ],
+  },
+  "bc377b5f-48ba-4629-97d4-9cbf35e9a3b1": {
+    name: "Overstory",
+    website: "https://overstory-nyc.com",
+    checkedAt: "2026-09-16T15:15:36.958762+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.overstory-nyc.com/",
       },
     ],
   },
@@ -1801,6 +3207,32 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "c0bd51c6-da7c-461f-93a0-35dab4ec4e9a": {
+    name: "Pesce lulu Seafood Kitchen NYC",
+    website: "http://www.pescelulu.com/",
+    checkedAt: "2026-09-16T15:15:44.994121+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.pescelulu.com/",
+      },
+    ],
+  },
+  "c2437975-6a06-4966-8ef8-272674ed4920": {
+    name: "Someday Bar",
+    website: "https://www.somedaybarnyc.com/",
+    checkedAt: "2026-09-16T15:16:07.406097+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.somedaybarnyc.com/menus/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://www.somedaybarnyc.com/menus/",
+      },
+    ],
+  },
   "c3dd21be-c0e0-445e-a1f0-f94615cd526a": {
     name: "Subject: A Cocktail Bar",
     website: "http://subject-les.com/",
@@ -1831,6 +3263,28 @@ export const restaurantLabelResearch: Record<
       {
         label: "Vegetarian",
         url: "https://bareburger.com/about/",
+      },
+    ],
+  },
+  "c70e1b71-2e97-4403-986a-1d655f023ca4": {
+    name: "American Bar - New York",
+    website: "http://www.americanbarnyc.com/",
+    checkedAt: "2026-09-16T15:13:21.661234+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.americanbarnyc.com/private-events/",
+      },
+    ],
+  },
+  "c79dcb5e-73f8-4acc-ae0f-68929d4d65ee": {
+    name: "Spygold",
+    website: "https://spygoldnyc.com",
+    checkedAt: "2026-09-16T15:16:11.557803+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.spygoldnyc.com/",
       },
     ],
   },
@@ -1902,6 +3356,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "c8d1c914-1c55-4935-b590-6a8b5af80909": {
+    name: "The Ten Bells",
+    website: "http://www.tenbellsnyc.com/",
+    checkedAt: "2026-09-16T15:16:33.899881+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://tenbellsnyc.com/about/",
+      },
+    ],
+  },
   "c8dd0723-0764-400c-9019-349d2d8aed82": {
     name: "Fred's",
     website: "https://www.fredsnyc.com/",
@@ -1935,6 +3400,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "ccc95717-bedc-43fd-97ee-0d029962e166": {
+    name: "HOM Cafe & Wine",
+    website: "http://www.sipathom.com/",
+    checkedAt: "2026-09-16T15:14:35.645472+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.sipathom.com/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://www.sipathom.com/wine-bar",
+      },
+    ],
+  },
   "cd9800c7-1e52-4bed-86dc-00269f788b52": {
     name: "Bar Italia",
     website: "http://www.baritaliamadison.com/",
@@ -1957,6 +3437,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "ce57bd50-443e-4133-b96b-dbfa0cbf003c": {
+    name: "Veselka Williamsburg",
+    website: "https://veselka.com/blogs/menu-list/williamsburg",
+    checkedAt: "2026-09-16T15:16:45.378443+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://veselka.com/blogs/menu-list/williamsburg",
+      },
+    ],
+  },
   "cf48a681-4ddf-4044-b525-b101de1e5733": {
     name: "Pineapple Club",
     website: "https://www.pineappleclub.com/",
@@ -1969,6 +3460,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.pineappleclub.com/menus",
+      },
+    ],
+  },
+  "d086d359-957d-48fd-9819-be60a5cc6399": {
+    name: "Tonchin",
+    website: "https://tonchinus.com/",
+    checkedAt: "2026-09-16T15:16:39.511785+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.tonchinus.com/signature-menu",
       },
     ],
   },
@@ -2057,6 +3559,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "d3e9b596-03e6-4b36-b0a3-37ba7844ea11": {
+    name: "Nabila's",
+    website: "http://www.nabilasbk.com/",
+    checkedAt: "2026-09-16T15:15:28.534742+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.nabilasbk.com/menus/",
+      },
+    ],
+  },
   "d4971aed-a1cb-4b11-b1aa-59396d8023b5": {
     name: "GERTIE",
     website: "https://www.gertie.nyc/",
@@ -2068,6 +3581,28 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "d4bce6d0-5506-4037-887d-562500746b2e": {
+    name: "The Commons Chelsea",
+    website: "https://www.thecommonschelsea.com/",
+    checkedAt: "2026-09-16T15:16:23.554187+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.thecommonschelsea.com/",
+      },
+    ],
+  },
+  "d6af7f83-003e-4410-b490-488c71d68248": {
+    name: "Virginia's",
+    website: "https://www.virginiasnyc.com/",
+    checkedAt: "2026-09-16T15:16:47.084113+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.virginiasnyc.com/",
+      },
+    ],
+  },
   "daa8f770-b4b3-40c7-b5f0-3fc1724d9c71": {
     name: "Aldo Sohm Wine Bar",
     website: "http://www.aldosohmwinebar.com/",
@@ -2076,6 +3611,32 @@ export const restaurantLabelResearch: Record<
       {
         label: "Casual",
         url: "https://www.aldosohmwinebar.com/",
+      },
+    ],
+  },
+  "db0633b9-59c5-45ee-828b-1c2c1ee75c56": {
+    name: "Artesano",
+    website: "https://artesanorestaurant.com/",
+    checkedAt: "2026-09-16T15:13:24.393135+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://artesanorestaurant.com/food-menu",
+      },
+      {
+        label: "Good for groups",
+        url: "https://artesanorestaurant.com/",
+      },
+    ],
+  },
+  "dc246c46-7611-40e0-93ac-c5970bd066e1": {
+    name: "Momoya",
+    website: "https://momoyanyc.com/",
+    checkedAt: "2026-09-16T15:15:26.671661+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.momoyanyc.com/",
       },
     ],
   },
@@ -2098,6 +3659,21 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.randolphbeer.com/menus/",
+      },
+    ],
+  },
+  "dd8717b5-4d96-4855-a16e-7f24b4973fb3": {
+    name: "Aqua",
+    website: "https://aqua-nyc.com/",
+    checkedAt: "2026-09-16T15:13:23.451583+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://aqua-nyc.com/contact-us/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://aqua-nyc.com/private-dining-events/",
       },
     ],
   },
@@ -2157,6 +3733,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "dfc57f28-1449-4022-8beb-d1df8277a4f6": {
+    name: "Rokstar Chicken",
+    website: "https://rokstarchicken.com/",
+    checkedAt: "2026-09-16T15:15:55.380384+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://rokstarchicken.com/",
+      },
+    ],
+  },
   "e0ab9d45-cfbd-433e-8ecc-da88a56b9942": {
     name: "Mango Bay",
     website: "http://www.themangobay.com/",
@@ -2201,6 +3788,21 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "e47f1723-ea48-4d97-9432-323c950b842f": {
+    name: "Markette",
+    website: "https://www.marketterestaurant.com/",
+    checkedAt: "2026-09-16T15:15:19.028917+00:00",
+    labels: [
+      {
+        label: "Date night",
+        url: "https://www.marketterestaurant.com/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.marketterestaurant.com/",
+      },
+    ],
+  },
   "e48f14db-475d-4338-a9f5-a21af8ded4ad": {
     name: "Bareburger",
     website: "https://bareburger.com/",
@@ -2238,6 +3840,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "eadb77a1-8703-4d50-a5c9-4c0a3057c6ee": {
+    name: "Little Pine 小松家宴",
+    website: "https://littlepinenyc.com/",
+    checkedAt: "2026-09-16T15:15:09.885495+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.littlepinenyc.com/",
+      },
+    ],
+  },
   "eba2609e-0049-4169-92e4-fc175556e4d9": {
     name: "L'Express",
     website: "https://www.lexpressnyc.com/",
@@ -2264,6 +3877,43 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "effbbdc5-3519-4a13-a772-88f5ca2e0426": {
+    name: "Carne Mare",
+    website: "https://www.carnemare.com/",
+    checkedAt: "2026-09-16T15:13:51.538880+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.carnemare.com/location/carne-mare/",
+      },
+      {
+        label: "Good for groups",
+        url: "https://www.carnemare.com/contact/",
+      },
+    ],
+  },
+  "f01433d1-4d01-4fe8-bb19-4d666d81979d": {
+    name: "Pinky Swear",
+    website: "http://www.pinkyswearnyc.com/",
+    checkedAt: "2026-09-16T15:15:47.250884+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://pinkyswearnyc.com/kitchen-food/",
+      },
+    ],
+  },
+  "f0e08687-c77f-4faa-aa8e-4f4f2deab7ff": {
+    name: "Ivan Ramen",
+    website: "https://www.ivanramen.com/location/clinton-st/",
+    checkedAt: "2026-09-16T15:14:44.131067+00:00",
+    labels: [
+      {
+        label: "Vegetarian",
+        url: "https://www.ivanramen.com/menu/",
+      },
+    ],
+  },
   "f2bab987-6fc0-41eb-a8d3-89a566901d74": {
     name: "Bareburger",
     website: "https://bareburger.com/",
@@ -2272,6 +3922,21 @@ export const restaurantLabelResearch: Record<
       {
         label: "Vegetarian",
         url: "https://bareburger.com/about/",
+      },
+    ],
+  },
+  "f43e6a67-a7e0-4908-875b-131cd2dd8cfb": {
+    name: "Adda",
+    website: "https://addanyc.com/",
+    checkedAt: "2026-09-16T15:13:14.862791+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.addanyc.com/",
+      },
+      {
+        label: "Vegetarian",
+        url: "https://www.addanyc.com/",
       },
     ],
   },
@@ -2297,6 +3962,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "f494dacb-bbb7-4431-837d-476b94dc4a31": {
+    name: "Spaghetti Incident",
+    website: "https://spaghettiincidentnyc.com/",
+    checkedAt: "2026-09-16T15:16:10.079999+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://spaghettiincidentnyc.com/",
+      },
+    ],
+  },
   "f5c1f39f-f7f3-41eb-9206-763f63740f7a": {
     name: "Strange Delight",
     website: "https://www.strangedelight.nyc/",
@@ -2316,6 +3992,43 @@ export const restaurantLabelResearch: Record<
       {
         label: "Date night",
         url: "https://symposiumnyc.com/",
+      },
+    ],
+  },
+  "f86a8bb0-53b6-41a7-b6c5-689022c11d43": {
+    name: "Friend of a Farmer",
+    website: "https://www.friendofafarmer.com/",
+    checkedAt: "2026-09-16T15:14:27.945603+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.friendofafarmer.com/",
+      },
+    ],
+  },
+  "f9815b86-eee6-42d3-a53f-20f623ba084f": {
+    name: "Peasant",
+    website: "http://www.peasantnyc.com/",
+    checkedAt: "2026-09-16T15:15:43.584706+00:00",
+    labels: [
+      {
+        label: "Casual",
+        url: "https://www.peasantnyc.com/",
+      },
+      {
+        label: "Date night",
+        url: "https://www.peasantnyc.com/",
+      },
+    ],
+  },
+  "fa4b384c-0a79-4fbb-8ec7-45c4591d8529": {
+    name: "Sabai Thai",
+    website: "http://www.sabaithai.nyc/",
+    checkedAt: "2026-09-16T15:15:57.729263+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.sabaithai.nyc/",
       },
     ],
   },
@@ -2382,6 +4095,17 @@ export const restaurantLabelResearch: Record<
       },
     ],
   },
+  "ff3671eb-0349-44bb-8ced-c15a80b43bf9": {
+    name: "Suprema Provisions",
+    website: "https://www.supremanyc.com/",
+    checkedAt: "2026-09-16T15:16:15.566702+00:00",
+    labels: [
+      {
+        label: "Brunch",
+        url: "https://www.supremanyc.com/menus/",
+      },
+    ],
+  },
   "ff8e9711-45ee-40bd-9751-0562ea27e37c": {
     name: "The Dutch",
     website: "http://www.thedutchnyc.com/",
@@ -2390,6 +4114,17 @@ export const restaurantLabelResearch: Record<
       {
         label: "Brunch",
         url: "https://www.thedutchnyc.com/menus/",
+      },
+    ],
+  },
+  "ffbb79af-d94c-43fa-b14a-91009b85a9c0": {
+    name: "Aftermath",
+    website: "https://www.aftermathnyc.com/",
+    checkedAt: "2026-09-16T15:13:15.263546+00:00",
+    labels: [
+      {
+        label: "Good for groups",
+        url: "https://www.aftermathnyc.com/",
       },
     ],
   },

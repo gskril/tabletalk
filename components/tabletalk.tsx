@@ -48,8 +48,16 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast, Toaster } from "sonner";
 import { OCCASION_LABELS, occasionLabels } from "@/lib/occasion-labels";
 import { avatarUrl } from "@/lib/avatar";
-import type { State, Venue, Person, Review, DiningList } from "@/lib/types";
+import type {
+  State,
+  Venue,
+  Person,
+  Review,
+  DiningList,
+  FeedItem,
+} from "@/lib/types";
 import DiningMap from "@/components/dining-map";
+import FriendsFeed from "@/components/friends-feed";
 import RestaurantImage from "@/components/restaurant-image";
 import ConfirmDialog from "@/components/confirm-dialog";
 type Modal =
@@ -156,7 +164,7 @@ export default function Tabletalk() {
     [price, setPrice] = useState(params.get("price") || ""),
     [occasion, setOccasion] = useState(""),
     [mapView, setMapView] = useState(false),
-    [feedTab, setFeedTab] = useState("everyone"),
+    [friendSearch, setFriendSearch] = useState(""),
     [savedTab, setSavedTab] = useState(
       ["places", "visits", "lists"].includes(params.get("tab") || "")
         ? params.get("tab")!
@@ -448,6 +456,129 @@ export default function Tabletalk() {
           </span>
         </div>
       </Link>
+    );
+  }
+  function activityCard(item: FeedItem) {
+    const v = item.venue;
+    const review = item.review
+      ? d.reviews.find((r) => r.id === item.review!.id) || item.review
+      : undefined;
+    const saved = d.bookmarks.includes(v.id);
+    return (
+      <article
+        className="feed-card"
+        key={item.id}
+        data-activity-type={item.type}
+      >
+        <div className="feed-card-head">
+          <Link
+            href={`/profile/${item.person.id}`}
+            aria-label={`View ${item.person.name}'s profile`}
+          >
+            <Avatar person={item.person} />
+          </Link>
+          <div>
+            <Link href={`/profile/${item.person.id}`}>
+              <strong>{item.person.name}</strong>
+            </Link>
+            <p>{item.type === "review" ? "shared a review" : "checked in"}</p>
+          </div>
+          <time dateTime={item.occurred_at}>
+            {new Date(item.occurred_at).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+              timeZone: "America/New_York",
+            })}
+          </time>
+        </div>
+        <Link
+          href={`/restaurants/${v.id}`}
+          className="feed-restaurant-photo"
+          aria-label={`View ${v.name}`}
+        >
+          <RestaurantImage venue={v} />
+        </Link>
+        <div className="feed-card-body">
+          <div className="feed-place-heading">
+            <Link href={`/restaurants/${v.id}`}>
+              <h2>{v.name}</h2>
+            </Link>
+            {review && (
+              <span
+                className="score"
+                aria-label={`Rating ${review.rating} out of 10`}
+              >
+                {review.rating.toFixed(1)}
+              </span>
+            )}
+          </div>
+          <p className="small muted">
+            {v.neighborhood} · {v.cuisine}
+          </p>
+          <p className="small muted">{v.address}</p>
+          <p className="verified">
+            <CheckCircle2 size={14} />
+            {item.type === "checkin" && item.visit_count
+              ? verifiedVisitLabel(item.visit_count)
+              : "Blackbird visit verified"}
+          </p>
+          {review && (
+            <>
+              <p className="feed-review-body">{review.body}</p>
+              {review.dish && (
+                <p className="review-dish">
+                  <Utensils size={14} /> Order this: {review.dish}
+                </p>
+              )}
+            </>
+          )}
+          <div className="feed-card-actions">
+            <button
+              className={`btn ${saved ? "saved-place" : "primary"}`}
+              aria-label={`${saved ? "Unsave" : "Save"} ${v.name}`}
+              aria-pressed={saved}
+              disabled={busy}
+              onClick={() =>
+                quick(
+                  { action: "bookmark", venueId: v.id, active: !saved },
+                  saved ? "Removed from Saved places" : "Saved to My notebook",
+                )
+              }
+            >
+              <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
+              {saved ? "Saved" : "Save place"}
+            </button>
+            <button
+              className="btn"
+              onClick={() => authThen({ type: "list", add: v.id })}
+            >
+              <Plus size={16} />
+              Add to list
+            </button>
+            {review && (
+              <button
+                className="feed-like"
+                disabled={busy}
+                aria-label={`${d.likes.includes(review.id) ? "Unlike" : "Like"} review by ${review.name}`}
+                onClick={() =>
+                  quick({
+                    action: "like",
+                    reviewId: review.id,
+                    active: !d.likes.includes(review.id),
+                  })
+                }
+              >
+                <Heart
+                  size={16}
+                  fill={d.likes.includes(review.id) ? "currentColor" : "none"}
+                />
+                {review.likes || "Helpful"}
+              </button>
+            )}
+          </div>
+        </div>
+      </article>
     );
   }
   function reviewCard(r: Review, showVenue = false) {
@@ -1189,41 +1320,45 @@ export default function Tabletalk() {
       </>
     );
   } else if (active === "feed") {
-    const reviews = d.reviews.filter(
-      (r) => feedTab === "everyone" || d.following.includes(r.user_id),
-    );
     content = (
       <>
         <div className="heading">
           <div>
-            <h1>From the community.</h1>
-            <p>What people are eating, loving, and going back for.</p>
+            <h1>At your table.</h1>
+            <p>Friends’ latest meals. Your next good find.</p>
           </div>
         </div>
         <div className="detail-grid">
           <div>
-            <Tabs value={feedTab} onValueChange={setFeedTab}>
-              <TabsList variant="line" className="tabs-list">
-                <TabsTrigger value="everyone">Everyone</TabsTrigger>
-                <TabsTrigger value="following">Following</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            {reviews.length ? (
-              reviews.map((r) => reviewCard(r, true))
-            ) : (
-              <Empty
-                title="Pull up a chair"
-                body="Follow a few diners and their reviews will appear here."
-              />
-            )}
+            <FriendsFeed
+              userId={me?.id}
+              following={d.following}
+              renderItem={activityCard}
+              signIn={() => setModal({ type: "login" })}
+            />
           </div>
           <aside className="panel" style={{ alignSelf: "start" }}>
             <h3>Taste worth following</h3>
-            <p className="small muted">Most verified places visited first.</p>
-            <div className="people" style={{ marginTop: 23 }}>
+            <p className="small muted">
+              Follow friends and diners whose taste you trust.
+            </p>
+            <input
+              className="feed-people-search"
+              aria-label="Find people"
+              placeholder="Find a friend by name…"
+              value={friendSearch}
+              onChange={(e) => setFriendSearch(e.target.value)}
+            />
+            <div className="people" style={{ marginTop: 18 }}>
               {d.people
-                .filter((p) => p.id !== me?.id)
-                .slice(0, 8)
+                .filter(
+                  (p) =>
+                    p.id !== me?.id &&
+                    p.name
+                      .toLowerCase()
+                      .includes(friendSearch.trim().toLowerCase()),
+                )
+                .slice(0, 12)
                 .map((p) => (
                   <div className="person" key={p.id}>
                     <Link href={`/profile/${p.id}`}>
@@ -1253,6 +1388,19 @@ export default function Tabletalk() {
                   </div>
                 ))}
             </div>
+            {!d.people.some(
+              (p) =>
+                p.id !== me?.id &&
+                p.name
+                  .toLowerCase()
+                  .includes(friendSearch.trim().toLowerCase()),
+            ) && (
+              <p className="note">
+                {friendSearch
+                  ? "No diners match that name."
+                  : "More diners will appear here when they join Tabletalk."}
+              </p>
+            )}
           </aside>
         </div>
       </>
@@ -1675,7 +1823,7 @@ export default function Tabletalk() {
           {[
             ["/", "Explore", "explore"],
             ["/lists", "Lists", "lists"],
-            ["/feed", "The table", "feed"],
+            ["/feed", "Feed", "feed"],
             ["/saved", "My notebook", "saved"],
           ].map(([url, label, section]) => (
             <Link

@@ -85,3 +85,13 @@ export type State = {
     environment: string;
   };
 };
+
+export type FeedItem = {
+  id: string;
+  type: "checkin" | "review";
+  occurred_at: string;
+  visit_count: number | null;
+  person: Person;
+  venue: Venue;
+  review?: Review;
+};

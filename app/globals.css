@@ -1966,3 +1966,146 @@ h3 {
     grid-column: 2 / -1;
   }
 }
+
+/* Social activity: roomy photos, compact context, and an obvious save action. */
+.feed-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.feed-controls > p {
+  flex: 1;
+  min-width: 200px;
+}
+.feed-controls > button {
+  font-size: 14px;
+  min-height: 44px;
+}
+.feed-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.feed-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  margin-bottom: 24px;
+}
+.feed-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+.feed-card-head > div {
+  min-width: 0;
+  flex: 1;
+}
+.feed-card-head strong {
+  font-size: 15px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.feed-card-head p {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  margin: 2px 0 0;
+}
+.feed-card-head time {
+  color: var(--muted-foreground);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.feed-restaurant-photo {
+  display: block;
+  height: 260px;
+}
+.feed-card-body {
+  padding: 20px;
+}
+.feed-place-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.feed-place-heading h2 {
+  font-size: 28px;
+  margin: 0 0 6px;
+}
+.feed-card-body > .small {
+  margin: 2px 0;
+}
+.feed-card-body > .verified {
+  margin-top: 12px;
+}
+.feed-review-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 18px 0;
+}
+.feed-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.feed-like {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px;
+  color: var(--primary);
+  font-size: 14px;
+}
+.saved-place {
+  color: var(--primary);
+  background: var(--surface-soft);
+}
+.feed-empty {
+  padding: 28px 0;
+}
+.feed-empty h2 {
+  font-size: 26px;
+  margin: 0 0 12px;
+}
+.feed-empty p {
+  color: var(--muted-foreground);
+  margin-bottom: 18px;
+}
+.feed-people-search {
+  margin-top: 16px;
+}
+.feed-more {
+  width: 100%;
+}
+@media (max-width: 600px) {
+  .feed-card-head {
+    padding: 12px;
+    gap: 8px;
+  }
+  .feed-card-head .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  .feed-card-head time {
+    font-size: 12px;
+  }
+  .feed-restaurant-photo {
+    height: 210px;
+  }
+  .feed-card-body {
+    padding: 16px;
+  }
+  .feed-place-heading h2 {
+    font-size: 25px;
+  }
+}

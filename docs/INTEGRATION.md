@@ -51,3 +51,11 @@ Reviews require an imported member check-in for the exact location; saves and li
 The member check-in endpoint returns distinct check-in IDs for each location. `visit_checkins` retains these IDs privately, with a `(user_id, checkin_id)` primary key and a `(user_id, venue_id)` count index. Replayed pages and repeated imports cannot inflate counts; completed batches remain available if a later page fails. The existing `visits` table continues to hold one review-eligibility proof and the latest date per member/location.
 
 Public state exposes only the aggregate `visit_count`, never check-in IDs or visit dates. Profile Been there sorts by descending count, then name/neighborhood/ID. Counts represent imported Blackbird check-ins, not a guarantee of every lifetime visit. Older proofs return a null count until that member's next automatic sync imports the underlying history; the UI shows “Visited” in the meantime. Profile totals and community rankings continue to count distinct locations.
+
+## Friends feed
+
+`GET /api/feed` serves 20 activity cards at a time, ordered by event date and a stable ID. Its cursor supports loading older activity without resending the full history. Authenticated Following combines verified reviews and the latest verified Blackbird visit per person/location; check-in dates are the original visit dates, not sync timestamps. Returning to a location updates that location's feed entry. This is a latest-places feed, not a complete archive of individual check-ins.
+
+Following is enforced server-side using the signed-in member's stored follows. Guests cannot request this scope. Community shows public verified reviews only; it does not reveal check-in dates. The separate public profile state continues to expose counts without visit dates. Feed responses are private/no-store and never contain raw provider check-in IDs or credentials.
+
+The Feed navigation entry defaults to Following for signed-in users and Community for guests. Members can filter check-ins/reviews, find other Tabletalk diners by name, follow/unfollow, refresh, save restaurants to My notebook, and add them to lists. Blackbird friends are not automatically imported. A friend's visit activity updates when their Blackbird history syncs with Tabletalk.

@@ -1,3 +1,4 @@
+import { GET as feed } from "../app/api/feed/route.ts";
 import { sessionAccess, RefreshPending, ReconnectRequired } from "../lib/session-access.ts";
 import { occasionLabels, researchedLabels, enrichedVenue } from "../lib/restaurant-labels.ts";
 import { restaurantLabelResearch } from "../data/restaurant-labels.ts";
@@ -1071,4 +1072,43 @@ test("repeat visit counts deduplicate check-in IDs across pages and syncs, prese
     const plan = sql.prepare('EXPLAIN QUERY PLAN SELECT count(*) FROM visit_checkins WHERE user_id=? AND venue_id=?').all(userId, locationId);
     assert(plan.some(row => row.detail.includes('idx_visit_checkins_user_venue')));
   } finally { upstreamOverride = undefined; }
+});
+
+test("friends feed enforces follow scope, merges dated reviews and visits, and paginates without duplicates", async () => {
+  for (const user of ['feed-viewer','feed-friend','feed-stranger']) sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#fff',0,?,?)").run(user,user,'staging:'+user,at);
+  sql.prepare("INSERT INTO follows VALUES('feed-viewer','feed-friend')").run();
+  for (let i=0; i<24; i++) {
+    const venue='feed-place-'+i;
+    sql.prepare("INSERT INTO venues SELECT ?,name,cuisine,neighborhood,address,price,lat,lng,image,website,description,tags,'staging',updated_at,image_thumb FROM venues WHERE id=?").run(venue,locationId);
+    sql.prepare("INSERT INTO visits VALUES('feed-friend',?,?)").run(venue,'2026-09-10T12:00:00.000Z');
+  }
+  sql.prepare("INSERT INTO visits VALUES('feed-stranger','feed-place-0','2026-09-16T12:00:00.000Z')").run();
+  sql.prepare("INSERT INTO reviews(id,user_id,venue_id,rating,body,dish,visited_at,created_at) VALUES('feed-review','feed-friend','feed-place-0',9,'Worth the return trip.','','2026-09-10','2026-09-15T12:00:00.000Z')").run();
+  const session = await makeSession('feed-viewer',new Request('https://tabletalk.test'));
+  cookieJar.set('tt_session',session.match(/tt_session=([^;]+)/)[1]);
+  const request = q => new Request('https://tabletalk.test/api/feed?'+q);
+  const response = await feed(request('scope=following'));
+  assert.equal(response.status,200);
+  assert.equal(response.headers.get('cache-control'),'private, no-store');
+  const first = await response.json();
+  assert.equal(first.items.length,20);
+  assert.equal(first.items[0].type,'review');
+  assert.equal(first.items[0].review.id,'feed-review');
+  assert(first.items.every(i=>i.person.id==='feed-friend'));
+  assert(first.items.filter(i=>i.type==='checkin').every(i=>i.occurred_at==='2026-09-10T12:00:00.000Z'));
+  const second = await (await feed(request('scope=following&cursor='+encodeURIComponent(first.nextCursor)))).json();
+  assert.equal(second.items.length,5);
+  assert.equal(second.nextCursor,null);
+  assert.equal(new Set([...first.items,...second.items].map(i=>i.id)).size,25);
+  const reviews = await (await feed(request('scope=following&kind=review'))).json();
+  assert.deepEqual(reviews.items.map(i=>i.type),['review']);
+  assert.equal((await feed(request('cursor=invalid'))).status,400);
+  assert.equal((await feed(request('kind=secret'))).status,400);
+  sql.prepare("DELETE FROM follows WHERE user_id='feed-viewer'").run();
+  assert.equal((await (await feed(request('scope=following&user_id=feed-friend'))).json()).items.length,0);
+  cookieJar.clear();
+  assert.equal((await feed(request('scope=following'))).status,401);
+  const community = await (await feed(request('scope=everyone'))).json();
+  assert(community.items.every(i=>i.type==='review'));
+  assert.equal((await (await feed(request('scope=everyone&kind=checkin'))).json()).items.length,0);
 });

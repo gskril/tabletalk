@@ -193,3 +193,33 @@ test("homepage suggests every other diner newest signup first and keeps Explore 
     page.getByRole("heading", { name: "At your table." }),
   ).toBeVisible();
 });
+
+test("feed polls for background imports and refresh explicitly requests Blackbird visits", async ({
+  page,
+}) => {
+  await localSession(page.context(), baseURL, "Sync reader");
+  let feedReads = 0,
+    syncRequests = 0;
+  await page.route("**/api/feed?*", (route) => {
+    feedReads++;
+    return route.fulfill({
+      json: { items: [], nextCursor: null, syncing: feedReads === 1 },
+    });
+  });
+  await page.route("**/api/flynet/sync", (route) => {
+    expect(route.request().method()).toBe("POST");
+    syncRequests++;
+    return route.fulfill({ json: { status: "syncing", count: 0 } });
+  });
+  await page.goto("/");
+  await expect(
+    page.getByText("Checking for new Blackbird visits…"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Checking for new Blackbird visits…"),
+  ).toHaveCount(0);
+  expect(feedReads).toBeGreaterThanOrEqual(2);
+  await page.getByRole("button", { name: "Refresh feed", exact: true }).click();
+  await expect.poll(() => syncRequests).toBe(1);
+  await expect.poll(() => feedReads).toBeGreaterThanOrEqual(3);
+});

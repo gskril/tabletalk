@@ -50,3 +50,11 @@ Public state exposes only the aggregate `visit_count`, never check-in IDs or vis
 Following is enforced server-side using the signed-in member's stored follows. Guests cannot request this scope. Community shows public verified reviews only; it does not reveal check-in dates. The separate public profile state continues to expose counts without visit dates. Feed responses are private/no-store and never contain raw provider check-in IDs or credentials.
 
 The Feed navigation entry defaults to Following for signed-in users and Community for guests. Members can filter check-ins/reviews, find other Tabletalk diners by name, follow/unfollow, refresh, save restaurants to My notebook, and add them to lists. Blackbird friends are not automatically imported. A friend's visit activity updates when their Blackbird history syncs with Tabletalk.
+
+## Visit refresh and background catch-up
+
+Access tokens are silently refreshed using encrypted, rotating refresh tokens. The member does not need to be present: first-page feed requests enqueue up to three stale connected members, oldest due first. Each member shares the existing 15-minute cache and two-minute sync lease with interactive imports. Concurrent readers cannot import the same member twice; failures back off without blocking other members. Expired application sessions, unusable credentials, demo accounts, and accounts from a different Flynet environment are excluded.
+
+This is traffic-triggered work, **not a cron schedule**: no visits are fetched while the site has no traffic. A nightly scheduler is not configured. `/users/me/check_ins` requires an individual member token. The API-key network feed is anonymized and cannot be used to assign visits to users; there is no supported all-member batch request. Each import follows the paginated member endpoint, and check-in IDs remain deduplicated in D1.
+
+Refresh feed requests a member visit refresh, and My notebook also exposes Refresh visits. Manual refresh bypasses the 15-minute freshness cache after a short 30-second cooldown; it retains the active-sync lease and existing request rate limit. The feed polls briefly while background imports finish. Revoked or expired refresh authorization still requires reconnecting Blackbird; stored app sessions expire after 30 days.

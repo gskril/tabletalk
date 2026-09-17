@@ -709,7 +709,8 @@ export default function Tabletalk() {
               <CheckCircle2 size={16} /> Visits synced
             </span>
           )}
-          {d.passport?.status === "error" && (
+          {(d.passport?.status === "error" ||
+            d.passport?.status === "ready") && (
             <button
               className="btn dark"
               disabled={busy}
@@ -733,7 +734,7 @@ export default function Tabletalk() {
                 }
               }}
             >
-              Retry sync
+              {d.passport?.status === "error" ? "Retry sync" : "Refresh visits"}
             </button>
           )}
         </div>
@@ -1408,6 +1409,23 @@ export default function Tabletalk() {
             <FriendsFeed
               key={me?.id || "guest"}
               suggestions={needsSuggestions ? suggestions : undefined}
+              refreshVisits={
+                me
+                  ? async () => {
+                      const response = await fetch("/api/flynet/sync", {
+                        method: "POST",
+                      });
+                      const result = (await response.json()) as {
+                        error?: string;
+                      };
+                      if (!response.ok)
+                        throw new Error(
+                          result.error || "Couldn’t refresh visits.",
+                        );
+                      await load();
+                    }
+                  : undefined
+              }
               userId={me?.id}
               following={d.following}
               renderItem={activityCard}

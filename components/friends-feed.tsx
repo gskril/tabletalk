@@ -9,7 +9,9 @@ export default function FriendsFeed({
   renderItem,
   signIn,
   suggestions,
+  refreshVisits,
 }: {
+  refreshVisits?: () => Promise<void>;
   suggestions?: React.ReactNode;
   userId?: string;
   following: string[];
@@ -23,6 +25,9 @@ export default function FriendsFeed({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [refreshingVisits, setRefreshingVisits] = useState(false);
+  const pollCount = useRef(0);
   const requestRef = useRef<AbortController | null>(null);
   const followingKey = [...following].sort().join(",");
   async function fetchPage(next?: string) {
@@ -44,6 +49,7 @@ export default function FriendsFeed({
         items: FeedItem[];
         nextCursor: string | null;
         error?: string;
+        syncing?: boolean;
       };
       if (!response.ok) throw Error(data.error || "Couldn’t load the feed.");
       if (controller.signal.aborted) return;
@@ -58,6 +64,7 @@ export default function FriendsFeed({
           : data.items,
       );
       setCursor(data.nextCursor);
+      setSyncing(!next && !!data.syncing);
     } catch (e) {
       if (!controller.signal.aborted)
         setError(e instanceof Error ? e.message : "Couldn’t load the feed.");
@@ -77,6 +84,16 @@ export default function FriendsFeed({
     // Reset pagination when the scope, filters, account or followed people change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope, kind, userId, followingKey, refresh]);
+  useEffect(() => {
+    if (!syncing || loading || pollCount.current >= 10) return;
+    const timer = window.setTimeout(() => {
+      pollCount.current++;
+      void fetchPage();
+    }, 3000);
+    return () => window.clearTimeout(timer);
+    // A completed poll either schedules another one or ends when sync is done.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncing, loading, scope, kind]);
   return (
     <div className="friends-feed">
       <Tabs
@@ -118,12 +135,33 @@ export default function FriendsFeed({
         )}
         <button
           className="text-link"
-          disabled={loading}
-          onClick={() => setRefresh((n) => n + 1)}
+          disabled={loading || refreshingVisits}
+          onClick={async () => {
+            setRefreshingVisits(true);
+            setError("");
+            pollCount.current = 0;
+            try {
+              await refreshVisits?.();
+              setRefresh((n) => n + 1);
+            } catch (error) {
+              setError(
+                error instanceof Error
+                  ? error.message
+                  : "Couldn’t refresh visits.",
+              );
+            } finally {
+              setRefreshingVisits(false);
+            }
+          }}
         >
-          Refresh feed
+          {refreshingVisits ? "Refreshing visits…" : "Refresh feed"}
         </button>
       </div>
+      {syncing && (
+        <p className="small muted" role="status">
+          Checking for new Blackbird visits…
+        </p>
+      )}
       {scope === "following" && !userId ? (
         <div className="feed-empty">
           <h2>Your friends’ next good find.</h2>

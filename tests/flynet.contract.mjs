@@ -10,7 +10,7 @@ import { env, backgroundTasks } from "./runtime-mock.mjs";
 import { publicCatalog } from "../lib/catalog-cache.ts";
 import { POST as checkCatalog } from "../app/api/flynet/discovery/route.ts";
 import { authDiagnostic } from "../lib/auth-diagnostics.ts";
-import { memberPassport } from "../lib/passport.ts";
+import { memberPassport, queueCommunityVisitSync } from "../lib/passport.ts";
 import { cookieJar } from "./headers-mock.mjs";
 import { GET as start } from "../app/api/auth/blackbird/start/route.ts";
 import { GET as callback } from "../app/api/auth/blackbird/callback/route.ts";
@@ -1075,6 +1075,8 @@ test("repeat visit counts deduplicate check-in IDs across pages and syncs, prese
 });
 
 test("friends feed enforces follow scope, merges dated reviews and visits, and paginates without duplicates", async () => {
+  await Promise.all(backgroundTasks.splice(0));
+  sql.prepare("UPDATE passport_syncs SET next_attempt_at=?").run(Date.now()+900000);
   for (const user of ['feed-viewer','feed-friend','feed-stranger']) sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#fff',0,?,?)").run(user,user,'staging:'+user,at);
   sql.prepare("INSERT INTO follows VALUES('feed-viewer','feed-friend')").run();
   for (let i=0; i<24; i++) {
@@ -1111,4 +1113,88 @@ test("friends feed enforces follow scope, merges dated reviews and visits, and p
   const community = await (await feed(request('scope=everyone'))).json();
   assert(community.items.every(i=>i.type==='review'));
   assert.equal((await (await feed(request('scope=everyone&kind=checkin'))).json()).items.length,0);
+});
+
+
+test("background catch-up refreshes absent members without cookies and manual refresh bypasses a fresh cache", async () => {
+  await Promise.all(backgroundTasks.splice(0));
+  cookieJar.clear();
+  const oldSessions = sql.prepare("SELECT hash,expires_at FROM sessions").all();
+  sql.prepare("UPDATE sessions SET expires_at=0").run();
+  const user = 'background-member';
+  sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#fff',0,?,?)").run(user,user,'staging:'+user,at);
+  const cookie = await makeSession(user,new Request('https://tabletalk.test'),await encryptToken('old-access'),Date.now()-1000,await encryptToken('background-refresh'));
+  let refreshes=0, reads=0;
+  const original = globalThis.fetch;
+  globalThis.fetch = async (input, init) => {
+    const req = new Request(input,init);
+    if (req.url.endsWith('/oauth/token')) {
+      const body = await req.formData();
+      assert.equal(body.get('grant_type'),'refresh_token');
+      assert.equal(body.get('refresh_token'),'background-refresh');
+      refreshes++;
+      return Response.json({access_token:'background-access',refresh_token:'rotated-background-refresh',expires_in:3600,token_type:'Bearer'});
+    }
+    assert.equal(req.headers.get('Authorization'),'Bearer background-access');
+    if (req.url.includes('/check_ins')) {
+      reads++;
+      return Response.json({ check_ins:[{id:'background-check',object:'check_in',location,blackbird_pay_enabled:false,created_at:'2026-09-17T01:00:00Z'}], pagination });
+    }
+    return new Response(null,{status:403}); // Avatar availability cannot block visits.
+  };
+  try {
+    assert.equal(await currentUser(),null);
+    assert.equal(await queueCommunityVisitSync(),true);
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal(reads,1); assert.equal(refreshes,1);
+    assert.equal(sql.prepare('SELECT visited_at FROM visits WHERE user_id=?').get(user).visited_at,'2026-09-17T01:00:00.000Z');
+    assert.equal(await queueCommunityVisitSync(),false);
+    assert.equal(reads,1,'fresh members do not make repeated provider calls');
+    const stored = sql.prepare('SELECT refresh_token FROM sessions WHERE user_id=?').get(user);
+    assert.equal(await decryptToken(stored.refresh_token),'rotated-background-refresh');
+    cookieJar.set('tt_session',cookie.match(/tt_session=([^;]+)/)[1]);
+    sql.prepare('UPDATE passport_syncs SET synced_at=? WHERE user_id=?').run(Date.now()-31000,user);
+    assert.equal((await memberPassport(user,true)).status,'syncing');
+    await Promise.all(backgroundTasks.splice(0));
+    assert.equal(reads,2,'manual refresh must not wait for the 15 minute cache');
+    assert.equal(refreshes,1);
+    assert.equal(sql.prepare('SELECT count(*) AS n FROM visit_checkins WHERE user_id=?').get(user).n,1);
+  } finally {
+    await Promise.all(backgroundTasks.splice(0)); globalThis.fetch=original; cookieJar.clear();
+    for (const row of oldSessions) sql.prepare('UPDATE sessions SET expires_at=? WHERE hash=?').run(row.expires_at,row.hash);
+    sql.prepare('UPDATE sessions SET expires_at=0 WHERE user_id=?').run(user);
+  }
+});
+
+test("community catch-up is bounded, deduplicates concurrent requests and skips unusable or foreign accounts", async () => {
+  const oldSessions = sql.prepare('SELECT hash,expires_at FROM sessions').all();
+  sql.prepare('UPDATE sessions SET expires_at=0').run();
+  const users=[];
+  for (let i=0;i<7;i++) {
+    const user='batch-member-'+i; users.push(user);
+    sql.prepare("INSERT INTO profiles(id,name,bio,color,demo,external_id,created_at) VALUES(?,?,'','#fff',?,?,?)").run(user,user,i===6?1:0,(i===5?'production:':'staging:')+user,at);
+    await makeSession(user,new Request('https://tabletalk.test'),await encryptToken('batch-token-'+i),i===4?Date.now()-1000:Date.now()+3600000,null);
+  }
+  const original=globalThis.fetch, reads=[];
+  globalThis.fetch=async(input,init)=>{
+    const req=new Request(input,init);
+    if (!req.url.includes('/check_ins')) return new Response(null,{status:403});
+    const token=req.headers.get('Authorization'); reads.push(token);
+    if (token==='Bearer batch-token-0') return new Response(null,{status:403});
+    return Response.json({check_ins:[],pagination});
+  };
+  try {
+    cookieJar.clear();
+    await Promise.all([queueCommunityVisitSync(),queueCommunityVisitSync()]);
+    await Promise.all(backgroundTasks.splice(0));
+    assert.deepEqual(reads.sort(),['Bearer batch-token-0','Bearer batch-token-1','Bearer batch-token-2']);
+    assert.equal(sql.prepare('SELECT status FROM passport_syncs WHERE user_id=?').get(users[0]).status,'error');
+    assert.equal(sql.prepare('SELECT status FROM passport_syncs WHERE user_id=?').get(users[1]).status,'ready');
+    await queueCommunityVisitSync(); await Promise.all(backgroundTasks.splice(0));
+    assert.equal(reads.length,4); assert.equal(reads[3],'Bearer batch-token-3');
+  } finally {
+    await Promise.all(backgroundTasks.splice(0));globalThis.fetch=original;
+    for(const user of users) sql.prepare('UPDATE sessions SET expires_at=0 WHERE user_id=?').run(user);
+    for(const row of oldSessions) sql.prepare('UPDATE sessions SET expires_at=? WHERE hash=?').run(row.expires_at,row.hash);
+  }
 });

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { localCatalog, localSession } from "./local-session";
-import { sampleVenues } from "../lib/sample-data";
+import { sampleVenues } from "./fixtures/sample-data";
 
 const baseURL = process.env.TEST_BASE_URL || "http://localhost:5173";
 test.beforeAll(() => localCatalog(baseURL));

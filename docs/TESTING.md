@@ -1,120 +1,33 @@
-# Validation report — September 15, 2026
+# Testing
 
-## Passing checks
-- **TypeScript:** `npm run typecheck` — passed.
-- **Production build:** Sites build helper / Vinext Worker build — passed.
-- **Browser E2E:** six Playwright suites against the built Worker; includes Blackbird-only UI and rejection of retired authentication methods.
-- **Flynet contracts:** actual app OAuth and import handlers with official `@flynetdev/core` 0.8.1 and controlled upstream responses — **13 passed**.
+Use Node.js 24. Install dependencies with `npm ci`.
 
-### Browser coverage
-1. Anonymous restaurant search, empty results/reset, neighborhood filter, zoomable map selection, venue navigation, directions, mobile width.
-2. Local synthetic Blackbird member session, bookmark persistence, review gate and forged-verification rejection, ordered list creation/reordering, public list in another browser, second-account list saving, and follow/feed controls. Verified review CRUD is covered by actual-handler contract tests; live OAuth browser verification remains pending.
-3. Anonymous write rejection; cross-origin rejection; private-list 404 and exclusion from public DTOs; second-account edit/save rejection; invalid rating/date rejection; idempotent bookmarks; logout.
-4. Unconfigured Blackbird sign-in explains the unavailable integration; forged callback does not create an authenticated session.
-5. Blackbird-only sign-in UI, retired signup returns 410, legacy session and platform header rejection.
-6. WebMCP registration contract, valid query and invalid-input rejection using a test implementation of the proposed browser registry. Native browser WebMCP support was not available; this is a contract harness, not native interoperability certification.
-
-### Flynet contract coverage
-- OAuth authorize URL uses exact scopes and S256 PKCE; audience is optional and included only when configured.
-- Cookie-bound state, invalid-state rejection, expiry and atomic one-use callback consumption.
-- Token exchange uses client secret and verifier; canonical member profile determines identity.
-- AES-GCM ciphertext storage and tamper rejection for provider access and refresh tokens.
-- No provider email or raw token is exposed as profile data.
-- Member-scoped import writes private visit records and no public review; repeated imports deduplicate.
-- Expired provider access requires reconnect.
-- Discovery sends API-key auth and excludes non-NYC addresses.
-- Review create/edit requires the current Blackbird member’s imported visit at the exact location. Demo/platform identities, other members, sibling locations, mismatched environments and client-supplied verification all fail. Unverified legacy reviews are excluded from public data and scores.
-- SDK parser handles wire naming, optional/null fields, image/coordinate mapping, Date conversion, repeated visits and multiple pages. Empty history succeeds; malformed payloads, empty-body 401/403 and broken pagination fail without fabricated proof.
-- See `SDK-AUDIT.md` for source-level findings and confidence limits.
-
-## Visual checks
-Desktop (1440px) and mobile (390px) rendered. All 11 venue images loaded in the browser. No horizontal overflow at 390px. Map has visible OpenStreetMap attribution, zoom controls, keyboard-accessible markers and a separate restaurant picker.
-
-## Bugs found and fixed
-- Overlapping pins in the original illustrative map: replaced with a zoomable Leaflet street map and a separate picker.
-- Production-only Vinext client Link error: restaurant and list navigation now uses standard browser links; post-save navigation performs a full route load. The built Worker suite passes this behavior.
-- Development preview instability during simultaneous build/testing: final regression ran against the production Worker after building.
-- Repeated test runs left earlier review text in the local database: review assertions now use unique content. Local test data is not part of the deployment archive.
-
-## Published site smoke test
-- Current site: https://your-app.example.
-- Production Discovery: all 34 pages parsed through SDK 0.8.1; 1,675 locations, 808 matching NYC after including Queens postal city names. Westbury remains excluded.
-- Live shared D1 cache serves the complete catalog to guests. Anonymous state returns no current member, passport, or private visits.
-- Live browser search, real restaurant detail, and 390px mobile overflow checks passed with no browser errors on the preceding catalog release.
-- Real Blackbird sign-in and canonical profile creation are confirmed. The OAuth token exchange supplies the documented User-Agent and uses Workers-supported manual redirects.
-- Production passport sync is ready with complete history import and persisted private visits. No additional Connect or Import action is required.
-- Fourteen contract tests pass, including NYC postal coverage, SDK schemas, review authorization, shared catalog concurrency/failure, automatic passport concurrency/privacy/recovery, and OAuth handlers.
-- The production build and TypeScript checks pass. Browser coverage includes public exploration, lists, reviews, social actions, Blackbird-only auth, automatic passport states, and WebMCP. Interrupted local Worker scenarios passed after server restart.
-
-## Explicitly not verified
-No real member review has been published in production. Existing sample reviews remain hidden; create/edit authorization is verified with controlled integration and browser tests. No money was moved. No hackathon submission or demo video was uploaded. See `INTEGRATION.md` for the repeatable live smoke test.
-
-## Reproduce
-Build, apply all four local migrations once, start the local Worker with an explicitly empty test environment file (do not use production credentials for the synthetic suite), then:
+## Static and contract checks
 
 ```sh
-TEST_BASE_URL=http://127.0.0.1:5173 npm run test:e2e
-npm run test:contract
 npm run typecheck
+npm run lint
+npm run test:contract
+npm run build
 ```
 
-The browser suite provisions synthetic Blackbird-like sessions directly in the local SQLite database. The helper refuses non-local targets; no testing authentication route or bypass is deployed. OAuth itself is tested through the real handlers and SDK with controlled upstream responses. Real Blackbird sign-in and automatic private history import are now confirmed.
+Contract tests run the actual API handlers and official Flynet SDK against controlled upstream responses and an in-memory SQLite database. They cover OAuth state/PKCE/replay protection, encrypted token renewal, catalog and passport synchronization, review eligibility, privacy and ownership boundaries, restaurant labels, visit counts, and feeds. No live credentials are required.
 
-## Automatic passport update
-- Successful real Blackbird sign-in is now confirmed by the owner and a persisted production profile.
-- Authenticated page loads start private visit sync automatically, including existing sessions; the browser polls only while syncing. Normal use has no Connect/Import controls. Retry appears after sync errors; Reconnect appears only when provider access is unavailable.
-- Fourteen contract tests pass, including OAuth-to-automatic-sync, concurrent import deduplication, no repeated calls while fresh, guest privacy, retry and expired/revoked access.
-- Targeted browser checks for notebook behavior, Blackbird-only auth, and automatic passport/recovery states pass. The local Worker stopped during the first passport browser attempt; the isolated rerun passed after restart.
-- The first live automatic visit sync completed successfully; a real visit-backed review has not been published.
+## Browser tests
 
-## Placeholder retirement
-- Fifteen contract tests pass. Legacy demo/platform accounts, their lists/items, and demo venues are excluded from state. Real Blackbird members remain visible even with no posts or visits. Attempts to follow/save/bookmark retired fixtures return 404.
-- Direct profile/list/venue routes and metadata use the same visibility rules. Production page loads no longer create sample records.
-- Historical rows are retained in D1, hidden from the app; no real account or user-authored data is deleted. Browser tests provision their own synthetic catalog explicitly in the local database only.
+Use a separate clean checkout with no real credentials or database exports. Build the app, initialize the local database with all migrations as described in the README, then start the built Worker:
 
-## Notebook navigation
-- My notebook groups Saved places, Been there (private Blackbird visits, newest first), and Lists. Created and saved-from-other collections share one tab without duplicates. Tab selection survives reload through the URL.
-- Profiles show reviews and public lists, with an owner-only link to private visits in the notebook.
-- Imported venue titles prefer the restaurant name, falling back to the location name only when needed. The catalog snapshot version refreshes existing names. Sixteen integration tests cover this mapping and existing authorization rules.
+```sh
+npm start -- --port 5173
+```
 
-## Public visited places and community ordering
-The current product policy makes verified visited locations public on every Blackbird profile. `/api/state.publicVisits` contains only app profile and venue IDs; check-in timestamps remain in the authenticated owner's `visits` array. Profiles show full reviews and visited restaurant names. Diners and public lists rank by the number of distinct verified locations visited by the diner/creator, descending, with deterministic ties. Repeat visits to one location do not increase this measure. Seventeen contract tests pass, including guest access, ranking, absence of raw dates, and rejection of demo/cross-environment proofs. This supersedes earlier notes that described all visited locations as private.
+In another terminal:
 
-## Profile photos
-Eighteen contract tests pass, including sign-in avatar persistence, canonical member matching, missing photos, and invalid URL rejection. Browser coverage checks successful image loading and initials after image failure. The additive avatar column defaults to empty for existing profiles; photos populate on their next authenticated sync or sign-in.
+```sh
+npx playwright install chromium
+TEST_BASE_URL=http://127.0.0.1:5173 npm run test:e2e
+```
 
-## Restaurant media and want-to-go API review
-The build and 18 contract tests pass with image preview persistence. Four browser scenarios pass: exploration/map/mobile, notebook/list interactions, public profiles/reviews, and thumbnail versus mobile picture-source selection. Restaurant photos now appear in visit rows, review cards, list covers/rows and pickers; images load lazily except the detail hero and retain fixed slots. The Blackbird want-to-go import is not implemented because the current official docs, OpenAPI and latest SDK expose no read endpoint. See SDK-AUDIT.md for the required provider clarification.
+The local-session helper explicitly seeds synthetic people, lists, venues, and sessions in the local D1 database. It refuses non-local URLs. Fixtures are test-only; the application does not offer a test authentication bypass. Browser tests cover discovery, maps, lists, reviews, profiles, visit counts, social feeds, and authorization failures. Provider OAuth is covered by the separate contract suite.
 
-## Existing-account avatar diagnosis
-
-## Token-renewal verification
-Twenty-one contract tests pass. New cases cover encrypted refresh-token retention at callback, consecutive rotations with new visit/photo imports, per-session concurrency, revoked grants, transient upstream failure, malformed refresh responses, and logout while refresh is in progress. Real rotation requires one new provider sign-in because previously issued refresh tokens were discarded. The profile exposes reconnect recovery directly.
-
-## Performance pass (September 16, 2026)
-
-Before the change, the production guest `/api/state` response was 517,284 bytes
-of uncompressed JSON, including 475,338 bytes of restaurant rows, on every page
-navigation and account refresh. Two warm observations from the development host
-were 841 ms and 748 ms end to end; these are point observations, not an SLA.
-The grid rendered all 808 current discovery restaurants.
-
-The browser now requests `/api/state?catalog=separate` alongside `/api/catalog`.
-Only the public restaurant response has a five-minute HTTP cache lifetime;
-identity, private lists, bookmarks, and check-in dates remain `private, no-store`.
-Missing restaurants referenced by freshly imported visits trigger catalog
-revalidation. The original full state response remains compatible with older
-clients and the read-only WebMCP tool. D1 reads for the state response are batched
-into one request; public restaurant/profile page validation no longer performs
-an unnecessary member lookup. Venue/review lookup maps avoid repeated scans.
-
-The explore grid initially renders 24 cards, with a Show more button adding 24.
-Filtering still searches the complete catalog and resets the displayed batch;
-the map continues to contain all matching places. This is progressive rendering,
-not server-side pagination: the full catalog is downloaded on the initial visit
-and when its cache expires.
-
-Validation covers identical public catalog responses across auth states, absence
-of private fields from that cache, lightweight/full state equivalence, and an
-808-restaurant browser fixture whose last restaurant remains searchable. Existing
-browser flows cover account actions, visits, images, and public/private lists.
+Screenshots and traces go to ignored `test-results/`; the report goes to ignored `playwright-report/`. Do not commit database files or captured account data. Live provider verification is separate from these controlled tests; see the integration guide for a manual smoke-test procedure.

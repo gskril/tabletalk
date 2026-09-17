@@ -1,3 +1,4 @@
+// Synthetic people and lists for local tests only; restaurant details are public.
 export const photos = {
   rubirosa:
     "https://images.getbento.com/accounts/6f2d27238b2ce91fc78e37fe1866785c/media/images/59002EA__9514.jpg?auto=compress%2Cformat&fit=crop&w=1200",
@@ -224,21 +225,3 @@ export const sampleLists = [
     ["thai-diner", "golden-diner", "los-tacos", "superiority-burger"],
   ],
 ] as const;
-
-export const extraPhotos: Record<string, string> = {
-  Lilia:
-    "https://images.getbento.com/accounts/7bf67b2820625f9f7c33d7b0403a8cca/media/suS7yQ83TqbuYEHpfn2R_Lilia-0276.jpg?w=1200&fit=max&auto=compress,format&cs=origin",
-  Estela:
-    "https://estelanyc.com/cdn/shop/files/Lobster_with_woodear_mushrooms_grapes_and_currants_1200x600_crop_center.jpg?v=1659966747",
-  "Via Carota":
-    "https://images.squarespace-cdn.com/content/v1/609dae90c469194aa5b1f0a9/1620946666207-XJKJ8S3D0OSYPJNIIAJN/7_A_FriedArtichokes_v9-183.jpg",
-  Balthazar:
-    "https://balthazarny.com/wp-content/uploads/2013/09/01_BALTHAZAR-EATER-SCENES-Daniel-Krieger-1010_CROP1.jpg",
-  COTE: "https://cdn.prod.website-files.com/64dc46f3bd5126f2de6e5a04/65739b9b725aeb68ac5c985a_BUTCHERSFEAST-forweb.webp",
-  "Los Tacos No. 1":
-    "https://images.getbento.com/accounts/510cbf777fe58cdd68961f978be1dd35/media/images/27525002OurFood.jpg?w=1200&fit=max&auto=compress,format&cs=origin",
-  "Golden Diner":
-    "https://images.squarespace-cdn.com/content/v1/5b7f58991aef1d9ac2faf070/d3492566-523d-4014-be8b-ab349fabfced/GoldenDiner_Photographer_%2BMarcusLloyd_1.jpg",
-  "Win Son":
-    "https://winsonbrooklyn.com/contentful-assets/1f934fb92b633a7631f144bc552bf808-TPxHdUGQ.jpeg",
-};

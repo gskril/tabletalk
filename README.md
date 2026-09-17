@@ -1,63 +1,58 @@
 # Tabletalk
 
-**Live app:** https://your-app.example
+A NYC dining notebook with restaurant discovery, maps, public lists, verified reviews, personal rankings, and a friends activity feed. Blackbird / Flynet provides restaurant discovery, sign-in, and member-authorized visit verification.
 
-Choose **Join the table → Connect with Blackbird** to sign in. Public lists are readable without signing in. Live Blackbird access still requires partner credentials; see `docs/INTEGRATION.md`.
+## Features
 
-An open NYC dining notebook built for Runtime's Blackbird / Flynet track. Browse restaurants, map a meal, write reviews, rank your favorites, follow diners, and share public lists without a login wall.
+- Search restaurants by cuisine, neighborhood, price, and dining occasion; explore them on an OpenStreetMap map.
+- Create ordered public or private lists, save restaurants, and follow other diners.
+- Write and edit reviews for locations verified through your Blackbird check-ins.
+- View personal visit counts, rankings, and activity from people you follow.
+- Browse public restaurants, lists, profiles, and community reviews without signing in.
 
-## What works
-- NYC restaurant discovery with search, cuisine/neighborhood/price/occasion filters and a zoomable OpenStreetMap view.
-- Restaurant pages, directions, review creation/edit/delete restricted to Blackbird-verified visits, 1–10 ratings and personal rankings.
-- Ordered public/private lists, edits, sharing, saving other people's lists, and a personal Want to try collection.
-- Public profiles, follows, community/following feeds and review likes.
-- D1 persistence and Blackbird-only OAuth sign-in.
-- Official `@flynetdev/core` discovery and member check-in adapters, encrypted provider tokens, PKCE/state/replay protections, private check-in imports and verified-review badges.
+## Local development
 
-## Important status
-Production Discovery has been validated through the official SDK: 1,675 locations, including 808 matching the NYC filter. A shared D1 catalog snapshot populates automatically for guests and refreshes after six hours of age on the next visit. Warm requests use the database; a refresh failure retains the previous catalog. Explore shows the current Blackbird catalog. Legacy sample users, lists, and venues are excluded from app responses and direct routes; page loads never seed fixtures. Real Blackbird sign-in, canonical member profile creation, and automatic private check-in import are confirmed in production.
-
-Only Blackbird-authenticated accounts can save places, curate lists, follow diners or publish reviews. A matching imported Blackbird check-in is required to post or edit; old unverified examples are excluded from public feeds and scores. Wallet balances are out of scope.
-
-Blackbird-authenticated sessions use a 30-day HttpOnly browser cookie. Signing in again resolves the same Blackbird member account. Demo signup is retired and legacy demo/platform sessions no longer authenticate. Public lists remain readable across browsers.
-
-## Develop
-Requires Node 22.13+ (Node 24 for the SQLite-backed contract tests).
+Use Node.js 24 and npm. Blackbird credentials are required for live discovery and OAuth; a clean database has no sample catalog. Tests provision their own synthetic fixtures.
 
 ```sh
 npm ci
 cp .env.example .env
+# Fill in your own credentials for live integration.
 npm run build
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_even_penance.sql
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_handy_frog_thor.sql
+```
+
+Initialize a **new local database** by applying all SQL migrations in order, once:
+
+```sh
+for migration in drizzle/*.sql; do
+  node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js \
+    d1 execute DB --local --config dist/server/wrangler.json \
+    --persist-to .wrangler/state --file "$migration" || break
+done
 npm run dev -- --port 5173
 ```
 
-Apply each migration only once to a given local database. The development server prints its URL (normally `http://localhost:5173`). Blackbird OAuth is the only application sign-in method.
+For an existing database, apply only migrations it has not received. Migration files contain schema changes, not exported user records. `npm start -- --port 5173` serves the production build locally.
+
+See [Blackbird integration](docs/INTEGRATION.md) for environment variables, OAuth configuration, and data visibility. The checked-in hosting template defines local bindings. Deployment-specific Sites configuration belongs in ignored `.openai/hosting.json`; credentials belong in ignored `.env` files or your host's environment settings.
+
+## Validation
 
 ```sh
 npm run typecheck
+npm run lint
 npm run test:contract
-npx playwright install chromium
-npm run test:e2e
+npm run build
 ```
 
-The Playwright suite expects the dev server to be running. Authenticated browser tests provision explicitly synthetic sessions directly in the local database; their helper refuses non-local URLs and is never part of the application. Actual OAuth handlers are exercised separately with SDK contract tests. Do not run its mutation journeys against production. Screenshots and traces are in ignored `test-results/`; the HTML report is in ignored `playwright-report/`.
-
-## Connect Blackbird
-See [integration setup](docs/INTEGRATION.md). Configure all variables in `.env.example`; keep real values out of source control. Hosted variables belong in Sites environment settings. API keys and secrets are never shipped to the client.
-
-## Design and research
-- [Detailed product spec](docs/SPEC.md)
-- [Blackbird research and source links](docs/RESEARCH.md)
-- [Exact official track description](docs/blackbird-track.json)
-- [Demo and submission guide](docs/DEMO.md)
-- [Validation report](docs/TESTING.md)
+For browser tests, follow [the testing guide](docs/TESTING.md). Test fixtures live under `tests/fixtures/` and are never seeded by application page loads. Local databases, reports, traces, credentials, and deployment identifiers are excluded from version control.
 
 ## Architecture
-React + TypeScript on Vinext, Cloudflare Workers, D1/SQLite with Drizzle schema migrations; Radix-backed UI primitives; official Flynet SDK; Leaflet/OpenStreetMap; Playwright. App-specific code lives in `components/tabletalk.tsx`, `lib/`, and `app/api/`. All writes are validated and authorized server-side. Public responses exclude email, external member IDs, tokens and private records.
 
-## MVP limits
-No photo uploads, direct messages, push notifications, collaborative list editing, restaurant reservations, payment/reward transactions, or production moderation console. Review scores are simple arithmetic ratings, not Beli's proprietary ranking algorithm. This is a small hackathon deployment; the state endpoint is designed for a modest catalog and community, not an unbounded production dataset. Authenticated writes have server-side rate limits.
+React and TypeScript on Vinext, Cloudflare Workers, D1/SQLite with Drizzle migrations, Radix UI, the official Flynet SDK, and Leaflet/OpenStreetMap. Application code lives in `app/`, `components/`, and `lib/`.
 
-Photo copyrights remain with the credited restaurants. Source code uses an independent product identity; no Blackbird or Beli affiliation is claimed.
+OAuth uses PKCE and one-use state. Provider access and rotating refresh tokens are encrypted at rest. Writes require a Blackbird session, same-origin validation, authorization, and rate limits. Public catalog responses are cached separately from private account state. Following feeds show friends' visit activity; public profile responses expose aggregate visit counts without raw provider check-in IDs. See the integration guide for details.
+
+[Restaurant labels](docs/restaurant-labels.md) use reviewed public restaurant sources with provenance and expiration; missing labels mean unknown. The data and research scripts are retained to support those filters.
+
+This is a small application, without a production moderation console, reservations, payment processing, direct messages, or photo uploads. Restaurant imagery and fonts remain subject to their owners' rights; bundled font and third-party licenses are retained. Tabletalk is an independent project and does not claim affiliation with Blackbird or Beli.

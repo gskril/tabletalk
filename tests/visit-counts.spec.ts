@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { localPublicProfile } from "./local-session";
-import { sampleVenues } from "../lib/sample-data";
+import { sampleVenues } from "./fixtures/sample-data";
 import { DatabaseSync } from "node:sqlite";
 import { readdirSync } from "node:fs";
 

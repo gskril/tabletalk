@@ -50,3 +50,21 @@ next-env.d.ts
 /playwright-report/
 *.tsbuildinfo
 __pycache__/
+
+# Deployment identity and local credentials
+/.openai/hosting.json
+.dev.vars
+.dev.vars.*
+*.key
+*.p12
+*.pfx
+
+# Local databases, exports, and tool output
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.log
+/backups/
+/exports/
+/research-cache/

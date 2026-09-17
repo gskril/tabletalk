@@ -100,7 +100,7 @@ async function postOAuthToken(form: URLSearchParams) {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
         "User-Agent":
-          "Tabletalk/1.0 (+https://your-app.example)",
+          "Tabletalk/1.0",
       },
       body: form.toString(),
       // Workers supports manual/follow; manual keeps credentials on this endpoint.

@@ -1,7 +1,7 @@
 import { readdirSync } from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
-import { sampleVenues, samplePeople, sampleLists } from "../lib/sample-data";
+import { sampleVenues, samplePeople, sampleLists } from "./fixtures/sample-data";
 import type { BrowserContext } from "@playwright/test";
 
 // Test-only database setup, never an application route. Refuse production URLs.

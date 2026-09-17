@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { localSession, localCatalog, localPublicProfile } from "./local-session";
-import { sampleVenues } from "../lib/sample-data";
+import { sampleVenues } from "./fixtures/sample-data";
 async function join(page: Page, name: string) {
   await localSession(page.context(), baseURL, name);
   await page.reload();

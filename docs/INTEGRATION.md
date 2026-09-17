@@ -1,15 +1,6 @@
-# Connecting the live Blackbird network
+# Connecting Blackbird
 
-## Access request, ready to paste
-**Project:** Tabletalk
-
-**Description:** An open NYC dining notebook: public restaurant lists, reviews, personal rankings and a social feed. Flynet powers restaurant/location discovery, Blackbird sign-in, and member-authorized check-ins that privately verify restaurant visits. Verified visited places appear on public profiles; raw check-in dates and provider credentials remain private. We are building for Runtime's Blackbird track.
-
-**Access needed:** staging Discovery API key with restaurant/location read access; OAuth client ID and secret; audience value; scopes `read:profile read:user_checkins`; exact redirect URI registration. No wallet, rewards or payment scopes required.
-
-**Apply:** https://docs.flynet.org/resources/request-access
-
-The official guide also suggests asking for expedited access in Runtime Discord. No application or message has been sent on your behalf.
+Obtain Discovery and OAuth credentials from Blackbird for your deployment.
 
 ## Environment
 - `FLYNET_ENVIRONMENT`: `staging` (default) or explicitly `production`.

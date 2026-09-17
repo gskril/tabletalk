@@ -20,7 +20,9 @@ export async function generateMetadata({ params }: Props) {
     }
     if (path[0] === "restaurants" && path[1]) {
       const v = await db()
-        .prepare("SELECT name,neighborhood FROM venues WHERE id=? AND source!='demo'")
+        .prepare(
+          "SELECT name,neighborhood FROM venues WHERE id=? AND source!='demo'",
+        )
         .bind(path[1])
         .first<{ name: string; neighborhood: string }>();
       if (v)
@@ -41,6 +43,7 @@ export default async function Page({ params }: Props) {
       "restaurants",
       "lists",
       "feed",
+      "explore",
       "saved",
       "profile",
       "me",

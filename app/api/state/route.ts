@@ -43,7 +43,7 @@ export async function GET(request?: Request) {
     ] = (
       await db().batch<Record<string, unknown>>([
         query(
-          `SELECT id,name,bio,color,avatar,demo FROM profiles WHERE id IN (${memberProfileIds})`,
+          `SELECT id,name,bio,color,avatar,demo,created_at FROM profiles WHERE id IN (${memberProfileIds})`,
         ),
         query(
           `SELECT r.*,p.name,p.color,p.avatar,p.demo,1 AS verified,(SELECT count(*) FROM likes l WHERE l.review_id=r.id AND l.user_id IN (${memberProfileIds})) AS likes FROM reviews r JOIN profiles p ON p.id=r.user_id WHERE EXISTS(SELECT 1 ${verifiedVisitFrom} AND v.user_id=r.user_id AND v.venue_id=r.venue_id) ORDER BY r.created_at DESC`,

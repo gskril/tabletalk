@@ -835,9 +835,13 @@ export default function Tabletalk() {
       </div>
     );
   }
-  const active = path.split("/")[1] || "explore";
+  // Keep existing restaurant-filter links usable after moving discovery.
+  const legacyExplore =
+    path === "/" &&
+    ["q", "neighborhood", "cuisine", "price"].some((key) => params.has(key));
+  const active = legacyExplore ? "explore" : path.split("/")[1] || "feed";
   let content: React.ReactNode;
-  if (path === "/") {
+  if (active === "explore") {
     const catalogIds = d.catalog ? new Set(d.catalog.locationIds) : null;
     const catalogVenues = catalogIds
       ? d.venues.filter((v) => catalogIds.has(v.id))
@@ -1058,7 +1062,7 @@ export default function Tabletalk() {
       <Empty title="Spot not found" body="Try the restaurant directory." />
     ) : (
       <>
-        <Link href="/" className="back">
+        <Link href="/explore" className="back">
           <ArrowLeft size={15} /> All spots
         </Link>
         <div className="heading">
@@ -1320,6 +1324,77 @@ export default function Tabletalk() {
       </>
     );
   } else if (active === "feed") {
+    const needsSuggestions = !!me && !d.following.length;
+    const suggestions = (
+      <section className="panel" style={{ alignSelf: "start" }}>
+        <h2>
+          {needsSuggestions ? "Find your people" : "Taste worth following"}
+        </h2>
+        <p className="small muted">
+          Follow friends to bring their latest meals to your feed. Newest
+          members first.
+        </p>
+        <input
+          className="feed-people-search"
+          aria-label="Find people"
+          placeholder="Find a friend by name…"
+          value={friendSearch}
+          onChange={(e) => setFriendSearch(e.target.value)}
+        />
+        <div className="people" style={{ marginTop: 18 }}>
+          {d.people
+            .filter(
+              (p) =>
+                p.id !== me?.id &&
+                p.name
+                  .toLowerCase()
+                  .includes(friendSearch.trim().toLowerCase()),
+            )
+            .sort(
+              (a, b) =>
+                (b.created_at || "").localeCompare(a.created_at || "") ||
+                a.id.localeCompare(b.id),
+            )
+            .map((p) => (
+              <div className="person" key={p.id}>
+                <Link href={`/profile/${p.id}`}>
+                  <Avatar person={p} />
+                </Link>
+                <div className="person-info">
+                  <Link href={`/profile/${p.id}`}>
+                    <strong>{p.name}</strong>
+                  </Link>
+                  <small>{p.visited_count || 0} verified places visited</small>
+                </div>
+                <button
+                  className="btn"
+                  disabled={busy}
+                  onClick={() =>
+                    quick({
+                      action: "follow",
+                      targetId: p.id,
+                      active: !d.following.includes(p.id),
+                    })
+                  }
+                >
+                  {d.following.includes(p.id) ? "Following" : "Follow"}
+                </button>
+              </div>
+            ))}
+        </div>
+        {!d.people.some(
+          (p) =>
+            p.id !== me?.id &&
+            p.name.toLowerCase().includes(friendSearch.trim().toLowerCase()),
+        ) && (
+          <p className="note">
+            {friendSearch
+              ? "No diners match that name."
+              : "More diners will appear here when they join Tabletalk."}
+          </p>
+        )}
+      </section>
+    );
     content = (
       <>
         <div className="heading">
@@ -1331,75 +1406,27 @@ export default function Tabletalk() {
         <div className="detail-grid">
           <div>
             <FriendsFeed
+              key={me?.id || "guest"}
+              suggestions={needsSuggestions ? suggestions : undefined}
               userId={me?.id}
               following={d.following}
               renderItem={activityCard}
               signIn={() => setModal({ type: "login" })}
             />
           </div>
-          <aside className="panel" style={{ alignSelf: "start" }}>
-            <h3>Taste worth following</h3>
-            <p className="small muted">
-              Follow friends and diners whose taste you trust.
-            </p>
-            <input
-              className="feed-people-search"
-              aria-label="Find people"
-              placeholder="Find a friend by name…"
-              value={friendSearch}
-              onChange={(e) => setFriendSearch(e.target.value)}
-            />
-            <div className="people" style={{ marginTop: 18 }}>
-              {d.people
-                .filter(
-                  (p) =>
-                    p.id !== me?.id &&
-                    p.name
-                      .toLowerCase()
-                      .includes(friendSearch.trim().toLowerCase()),
-                )
-                .slice(0, 12)
-                .map((p) => (
-                  <div className="person" key={p.id}>
-                    <Link href={`/profile/${p.id}`}>
-                      <Avatar person={p} />
-                    </Link>
-                    <div className="person-info">
-                      <Link href={`/profile/${p.id}`}>
-                        <strong>{p.name}</strong>
-                      </Link>
-                      <small>
-                        {p.visited_count || 0} verified places visited
-                      </small>
-                    </div>
-                    <button
-                      className="btn"
-                      disabled={busy}
-                      onClick={() =>
-                        quick({
-                          action: "follow",
-                          targetId: p.id,
-                          active: !d.following.includes(p.id),
-                        })
-                      }
-                    >
-                      {d.following.includes(p.id) ? "Following" : "Follow"}
-                    </button>
-                  </div>
-                ))}
-            </div>
-            {!d.people.some(
-              (p) =>
-                p.id !== me?.id &&
-                p.name
-                  .toLowerCase()
-                  .includes(friendSearch.trim().toLowerCase()),
-            ) && (
-              <p className="note">
-                {friendSearch
-                  ? "No diners match that name."
-                  : "More diners will appear here when they join Tabletalk."}
-              </p>
+          <aside style={{ alignSelf: "start" }}>
+            {needsSuggestions ? (
+              <div className="panel">
+                <h3>Find your next spot.</h3>
+                <p className="small muted">
+                  Browse restaurants while your table comes together.
+                </p>
+                <Link className="btn" href="/explore">
+                  Explore restaurants
+                </Link>
+              </div>
+            ) : (
+              suggestions
             )}
           </aside>
         </div>
@@ -1467,7 +1494,7 @@ export default function Tabletalk() {
                 title="Your next great meal starts here"
                 body="Tap the bookmark on a restaurant to save it for later."
                 action={
-                  <Link className="btn primary" href="/">
+                  <Link className="btn primary" href="/explore">
                     Find a spot
                   </Link>
                 }
@@ -1700,7 +1727,7 @@ export default function Tabletalk() {
                   : "This diner hasn’t published a review yet."
               }
               action={
-                <Link href="/" className="btn primary">
+                <Link href="/explore" className="btn primary">
                   Explore NYC
                 </Link>
               }
@@ -1821,9 +1848,9 @@ export default function Tabletalk() {
         </Link>
         <nav className="nav" aria-label="Main navigation">
           {[
-            ["/", "Explore", "explore"],
+            ["/", "Home", "feed"],
+            ["/explore", "Explore", "explore"],
             ["/lists", "Lists", "lists"],
-            ["/feed", "Feed", "feed"],
             ["/saved", "My notebook", "saved"],
           ].map(([url, label, section]) => (
             <Link

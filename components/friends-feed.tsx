@@ -8,7 +8,9 @@ export default function FriendsFeed({
   following,
   renderItem,
   signIn,
+  suggestions,
 }: {
+  suggestions?: React.ReactNode;
   userId?: string;
   following: string[];
   renderItem: (item: FeedItem) => React.ReactNode;
@@ -153,22 +155,26 @@ export default function FriendsFeed({
               </button>
             </div>
           )}
-          {!loading && !error && !items.length && (
-            <div className="feed-empty">
-              <h2>
-                {scope === "following" && !following.length
-                  ? "Good taste is better shared."
-                  : "Nothing here yet."}
-              </h2>
-              <p>
-                {scope === "following" && !following.length
-                  ? "Find a friend below and follow them. Their latest check-ins and reviews will appear here."
-                  : scope === "following"
-                    ? "New activity from the diners you follow will appear here as they sync their Blackbird visits or post a review."
-                    : "Reviews from the community will appear here."}
-              </p>
-            </div>
-          )}
+          {scope === "following" && !following.length && suggestions}
+          {!loading &&
+            !error &&
+            !items.length &&
+            !(scope === "following" && suggestions) && (
+              <div className="feed-empty">
+                <h2>
+                  {scope === "following" && !following.length
+                    ? "Good taste is better shared."
+                    : "Nothing here yet."}
+                </h2>
+                <p>
+                  {scope === "following" && !following.length
+                    ? "Find a friend below and follow them. Their latest check-ins and reviews will appear here."
+                    : scope === "following"
+                      ? "New activity from the diners you follow will appear here as they sync their Blackbird visits or post a review."
+                      : "Reviews from the community will appear here."}
+                </p>
+              </div>
+            )}
           {!loading && cursor && (
             <button
               className="btn feed-more"

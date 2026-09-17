@@ -29,7 +29,7 @@ test("mobile map fits loaded logos and exposes usable zoom controls", async ({
       body: '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600"><rect width="1200" height="600" fill="#7d2939"/><text x="600" y="380" text-anchor="middle" fill="white" font-size="240">CAFE</text></svg>',
     }),
   );
-  await page.goto("/");
+  await page.goto("/explore");
   await page.getByRole("button", { name: "Map", exact: true }).click();
   const map = page.getByRole("region", { name: "NYC restaurant map" });
   await map.scrollIntoViewIfNeeded();
@@ -80,7 +80,7 @@ test("dense places cluster, zoom apart, and shared addresses stay selectable", a
   await page.route("**/api/catalog", (route) =>
     route.fulfill({ json: { venues } }),
   );
-  await page.goto("/");
+  await page.goto("/explore");
   await page.getByRole("button", { name: "Map", exact: true }).click();
   const map = page.getByRole("region", { name: "NYC restaurant map" });
   await expect(map.locator(".restaurant-cluster").first()).toBeVisible();

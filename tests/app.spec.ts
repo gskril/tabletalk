@@ -22,7 +22,7 @@ test("anonymous exploration, filters, map, detail, and mobile layout", async ({
     }));
     await route.fulfill({ json: { venues } });
   });
-  await page.goto("/");
+  await page.goto("/explore");
   await expect(
     page.getByRole("heading", { name: "New York, by taste." }),
   ).toBeVisible();
@@ -58,7 +58,7 @@ test("anonymous exploration, filters, map, detail, and mobile layout", async ({
     page.getByRole("link", { name: "Get directions" }),
   ).toHaveAttribute("href", /google.com\/maps/);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/explore");
   await expect(
     page.getByRole("heading", { name: "New York, by taste." }),
   ).toBeVisible();
@@ -77,7 +77,7 @@ test("notebook: review gate, ordered public list across browsers, saves and foll
   page,
   browser,
 }) => {
-  await page.goto("/");
+  await page.goto("/explore");
   await join(page, "E2E Diner");
   await page
     .getByRole("button", { name: "Save Rubirosa", exact: true })
@@ -305,7 +305,7 @@ test("unsupported OAuth is honest and malicious callback cannot sign in", async 
 test("only Blackbird sign-in is offered; legacy sessions and platform headers cannot authorize writes", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/explore");
   await page.getByRole("button", { name: "Join the table" }).click();
   const dialog = page.getByRole("dialog");
   await expect(
@@ -341,7 +341,7 @@ test("only Blackbird sign-in is offered; legacy sessions and platform headers ca
   ).toBe(410);
 });
 test("passport updates automatically and only offers recovery actions when needed", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/explore");
   await expect(page.getByRole("heading", { name: "New York, by taste." })).toBeVisible();
   await localSession(page.context(), baseURL, "Passport diner");
   let mode = "syncing";
@@ -400,7 +400,7 @@ test("WebMCP tool contract validates input and reads the same restaurant state",
     });
     (window as unknown as { testTools: unknown }).testTools = tools;
   });
-  await page.goto("/");
+  await page.goto("/explore");
   await expect(
     page.getByRole("heading", { name: "New York, by taste." }),
   ).toBeVisible();
@@ -512,7 +512,7 @@ test("large catalog renders in batches and searches restaurants beyond the first
   }));
   await page.route("**/api/catalog", route => route.fulfill({ json: { venues, catalog: { locationIds: venues.map(v => v.id), syncedAt: Date.now() } } }));
   await page.route(/\/api\/state(?:\?.*)?$/, route => route.fulfill({ json: { ...original, items: [], publicVisits: [], visits: [] } }));
-  await page.goto("/");
+  await page.goto("/explore");
   await expect(page.locator(".venue-card")).toHaveCount(24);
   await expect(page.getByText("808 spots", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Show more restaurants" }).click();

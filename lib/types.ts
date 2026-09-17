@@ -6,6 +6,7 @@ export type Person = {
   avatar?: string;
   demo: number;
   visited_count?: number;
+  created_at?: string;
 };
 export type Venue = {
   id: string;

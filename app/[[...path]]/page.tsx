@@ -3,20 +3,44 @@ import { db, memberProfileIds, memberListIds } from "@/lib/data";
 import { currentUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
+function publicMetadata(title: string, description: string) {
+  return {
+    title,
+    description,
+    openGraph: { title, description, type: "website" },
+    twitter: { card: "summary", title, description },
+  };
+}
 type Props = { params: Promise<{ path?: string[] }> };
 export async function generateMetadata({ params }: Props) {
   const { path = [] } = await params;
   try {
+    if (path[0] === "profile" && path[1]) {
+      const p = await db()
+        .prepare(
+          `SELECT name,bio FROM profiles WHERE id=? AND id IN (${memberProfileIds})`,
+        )
+        .bind(path[1])
+        .first<{ name: string; bio: string }>();
+      if (p)
+        return publicMetadata(
+          `${p.name} · Tabletalk`,
+          p.bio ||
+            `Explore ${p.name}’s verified restaurant visits, reviews and public lists.`,
+        );
+    }
     if (path[0] === "lists" && path[1]) {
-      const u = await currentUser();
       const l = await db()
         .prepare(
-          `SELECT title,description FROM lists WHERE id IN (${memberListIds}) AND id=? AND (visibility='public' OR user_id=?)`,
+          `SELECT title,description FROM lists WHERE id IN (${memberListIds}) AND id=? AND visibility='public'`,
         )
-        .bind(path[1], u?.id || "")
+        .bind(path[1])
         .first<{ title: string; description: string }>();
       if (l)
-        return { title: `${l.title} · Tabletalk`, description: l.description };
+        return publicMetadata(
+          `${l.title} · Tabletalk`,
+          l.description || "A restaurant shortlist on Tabletalk.",
+        );
     }
     if (path[0] === "restaurants" && path[1]) {
       const v = await db()
@@ -26,10 +50,10 @@ export async function generateMetadata({ params }: Props) {
         .bind(path[1])
         .first<{ name: string; neighborhood: string }>();
       if (v)
-        return {
-          title: `${v.name} · Tabletalk`,
-          description: `Reviews and lists for ${v.name} in ${v.neighborhood}.`,
-        };
+        return publicMetadata(
+          `${v.name} · Tabletalk`,
+          `Reviews and lists for ${v.name} in ${v.neighborhood}.`,
+        );
     }
   } catch {}
   return { title: "Tabletalk — NYC, by taste" };

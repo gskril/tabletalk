@@ -212,7 +212,9 @@ h3 {
   display: flex;
   align-items: center;
   gap: 38px;
-  padding: 0 max(32px, calc((100vw - 1216px) / 2));
+  padding: env(safe-area-inset-top)
+    max(32px, env(safe-area-inset-right), calc((100vw - 1216px) / 2)) 0
+    max(32px, env(safe-area-inset-left), calc((100vw - 1216px) / 2));
 }
 .nav {
   display: flex;
@@ -344,7 +346,9 @@ h3 {
 .shell {
   max-width: 1280px;
   margin: auto;
-  padding: 32px 32px 56px;
+  padding: 32px max(32px, env(safe-area-inset-right))
+    calc(56px + env(safe-area-inset-bottom))
+    max(32px, env(safe-area-inset-left));
 }
 .heading {
   display: flex;
@@ -692,6 +696,12 @@ h3 {
   padding-top: 24px;
   font-size: 13px;
   color: var(--muted-foreground);
+}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 .footer .brand {
   font-size: 27px;
@@ -1124,6 +1134,11 @@ h3 {
 }
 .profile-summary {
   min-width: 0;
+  flex: 1;
+}
+.profile-hero h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .profile-actions {
   margin-top: 18px;
@@ -1649,50 +1664,6 @@ h3 {
   .section-head h2 {
     font-size: 27px;
   }
-  .profile-hero {
-    display: grid;
-    grid-template-columns: 56px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 16px 12px;
-    margin-bottom: 12px;
-  }
-  .profile-summary {
-    display: contents;
-  }
-  .profile-hero .avatar.large {
-    grid-column: 1;
-    grid-row: 1;
-    width: 56px;
-    height: 56px;
-    font-size: 22px;
-  }
-  .profile-hero h1 {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 32px;
-  }
-  .profile-hero .profile-bio {
-    grid-column: 1 / -1;
-    margin: 0;
-    font-size: 16px;
-  }
-  .profile-actions {
-    grid-column: 3;
-    grid-row: 1;
-    margin: 0;
-  }
-  .profile-actions .btn {
-    padding: 9px 12px;
-    white-space: nowrap;
-  }
-  .stats {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin: 0;
-    padding: 0 0 4px;
-  }
   .tabs-list {
     gap: 20px !important;
     margin-bottom: 16px !important;
@@ -2107,5 +2078,157 @@ h3 {
   }
   .feed-place-heading h2 {
     font-size: 25px;
+  }
+}
+
+.friend-context {
+  margin: 12px 0;
+  font-size: 13px;
+}
+.friend-summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  line-height: 1.5;
+}
+.friend-avatars {
+  display: flex;
+  flex-shrink: 0;
+}
+.friend-avatars .avatar + .avatar {
+  margin-left: -8px;
+}
+.friend-context h3 {
+  margin-bottom: 14px;
+}
+.friend-pick {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.friend-pick p {
+  margin-top: 5px;
+}
+.explore-sort {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.explore-sort select {
+  max-width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background, white);
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+}
+.sort-explanation {
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .explore-sort {
+    justify-content: flex-start;
+  }
+}
+
+.review-date-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  color: inherit;
+  font: inherit;
+}
+.review-date-select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.install-app {
+  min-height: 44px;
+  font: inherit;
+}
+.install-instructions {
+  line-height: 1.6;
+}
+.install-instructions h3 {
+  margin-top: 16px;
+}
+.install-instructions ol {
+  list-style: decimal;
+  padding-left: 24px;
+  margin: 10px 0 20px;
+}
+.install-instructions p {
+  margin: 10px 0;
+}
+@media (max-width: 760px) {
+  .topbar {
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  .shell {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: calc(36px + env(safe-area-inset-bottom));
+  }
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Give names their own space before the profile controls become cramped. */
+@media (max-width: 960px) {
+  .profile-hero {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px 12px;
+    margin-bottom: 12px;
+  }
+  .profile-summary {
+    display: contents;
+  }
+  .profile-hero .avatar.large {
+    grid-column: 1;
+    grid-row: 1;
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+  .profile-hero h1 {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 32px;
+  }
+  .profile-hero .profile-bio {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 16px;
+  }
+  .profile-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .profile-actions .btn {
+    padding: 9px 12px;
+    white-space: normal;
+    max-width: 100%;
+  }
+  .stats {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0 0 4px;
   }
 }

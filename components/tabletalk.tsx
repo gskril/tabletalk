@@ -1,10 +1,29 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { navigateTab, useTabLocation } from "@/lib/tab-navigation";
 function Link(
   props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string },
 ) {
-  return <a {...props} />;
+  return (
+    <a
+      {...props}
+      onClick={(event) => {
+        props.onClick?.(event);
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          props.download != null ||
+          (props.target && props.target !== "_self")
+        )
+          return;
+        if (navigateTab(props.href)) event.preventDefault();
+      }}
+    />
+  );
 }
 import {
   ArrowLeft,
@@ -57,6 +76,7 @@ import type {
   FeedItem,
 } from "@/lib/types";
 import DiningMap from "@/components/dining-map";
+import { InstallApp } from "@/components/pwa";
 import FriendsFeed from "@/components/friends-feed";
 import RestaurantImage from "@/components/restaurant-image";
 import ConfirmDialog from "@/components/confirm-dialog";
@@ -154,8 +174,7 @@ export default function Tabletalk() {
     [error, setError] = useState(""),
     [modal, setModal] = useState<Modal>(null),
     [busy, setBusy] = useState(false);
-  const path = usePathname(),
-    params = useSearchParams();
+  const { path, params } = useTabLocation();
   const [query, setQuery] = useState(params.get("q") || ""),
     [neighborhood, setNeighborhood] = useState(
       params.get("neighborhood") || "",
@@ -164,17 +183,37 @@ export default function Tabletalk() {
     [price, setPrice] = useState(params.get("price") || ""),
     [occasion, setOccasion] = useState(""),
     [mapView, setMapView] = useState(false),
+    [sort, setSort] = useState("default"),
     [friendSearch, setFriendSearch] = useState(""),
-    [savedTab, setSavedTab] = useState(
-      ["places", "visits", "lists"].includes(params.get("tab") || "")
-        ? params.get("tab")!
-        : "places",
-    ),
+    [savedTabChoice, setSavedTabChoice] = useState<{
+      route: string;
+      value: string;
+    } | null>(null),
     [profileTab, setProfileTab] = useState("visits");
+  const savedRoute = `${path}?tab=${params.get("tab") || ""}`;
+  const requestedTab = params.get("tab") || "";
+  const savedTab =
+    savedTabChoice?.route === savedRoute
+      ? savedTabChoice.value
+      : ["places", "visits", "lists"].includes(requestedTab)
+        ? requestedTab
+        : "places";
+  const setSavedTab = (value: string) =>
+    setSavedTabChoice({ route: savedRoute, value });
+  useEffect(() => {
+    const titles: Record<string, string> = {
+      "/": "Home",
+      "/feed": "Home",
+      "/explore": "Explore",
+      "/lists": "Lists",
+      "/saved": "My notebook",
+    };
+    if (titles[path]) document.title = `${titles[path]} · Tabletalk`;
+  }, [path]);
   const [visibleCount, setVisibleCount] = useState(24);
   useEffect(
     () => setVisibleCount(24),
-    [query, neighborhood, cuisine, price, occasion],
+    [query, neighborhood, cuisine, price, occasion, sort],
   );
   const load = useCallback(async () => {
     try {
@@ -285,7 +324,7 @@ export default function Tabletalk() {
     setModal(data?.me ? m : { type: "login" });
   }
   function go(to: string) {
-    window.location.assign(to);
+    if (!navigateTab(to)) window.location.assign(to);
   }
   const venueById = useMemo(
     () => new Map(data?.venues.map((v) => [v.id, v])),
@@ -300,6 +339,46 @@ export default function Tabletalk() {
     }
     return grouped;
   }, [data?.reviews]);
+  const friendVisits = useMemo(() => {
+    const grouped = new Map<
+      string,
+      { person: Person; count: number | null }[]
+    >();
+    if (!data?.me) return grouped;
+    const following = new Set(data.following);
+    const people = new Map(data.people.map((p) => [p.id, p]));
+    for (const visit of data.publicVisits || []) {
+      const person = people.get(visit.user_id);
+      if (!person || !following.has(person.id)) continue;
+      const group = grouped.get(visit.venue_id) || [];
+      group.push({ person, count: visit.visit_count ?? null });
+      grouped.set(visit.venue_id, group);
+    }
+    for (const group of grouped.values())
+      group.sort(
+        (a, b) =>
+          (b.count || 0) - (a.count || 0) ||
+          a.person.name.localeCompare(b.person.name),
+      );
+    return grouped;
+  }, [data]);
+  async function share(title: string, path: string) {
+    const url = new URL(path, window.location.origin).href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied. Anyone can view this page.");
+    } catch {
+      toast.info(url, { duration: 10000 });
+    }
+  }
   if (!data)
     return (
       <>
@@ -379,6 +458,53 @@ export default function Tabletalk() {
       />
     </button>
   );
+  function socialContext(v: Venue, detail = false) {
+    const friends = friendVisits.get(v.id) || [];
+    if (!friends.length) return null;
+    const names = friends
+      .slice(0, 2)
+      .map((f) => f.person.name)
+      .join(" and ");
+    return (
+      <div className={detail ? "panel friend-context" : "friend-context"}>
+        {detail && <h3>Your people have been here</h3>}
+        <div className="friend-summary">
+          <span className="friend-avatars">
+            {friends.slice(0, 3).map(({ person }) => (
+              <Avatar key={person.id} person={person} />
+            ))}
+          </span>
+          <span>
+            {names}
+            {friends.length > 2 ? ` and ${friends.length - 2} more` : ""}{" "}
+            {friends.length === 1 ? "has" : "have"} been here
+          </span>
+        </div>
+        {detail &&
+          friends.map(({ person, count }) => {
+            const review = (reviewsByVenue.get(v.id) || []).find(
+              (r) => r.user_id === person.id,
+            );
+            return (
+              <div className="friend-pick" key={person.id}>
+                <Link className="text-link" href={`/profile/${person.id}`}>
+                  {person.name}
+                </Link>
+                <p className="small muted">
+                  {verifiedVisitLabel(count)}
+                  {review ? ` · Rated ${review.rating.toFixed(1)}/10` : ""}
+                </p>
+                {review?.dish && (
+                  <p className="review-dish">
+                    <Utensils size={14} /> {person.name}’s pick: {review.dish}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+      </div>
+    );
+  }
   function card(v: Venue) {
     const rev = reviewsByVenue.get(v.id) || [];
     return (
@@ -399,6 +525,7 @@ export default function Tabletalk() {
           <p className="venue-meta">
             {v.neighborhood} · {v.cuisine} · {"$".repeat(v.price)}
           </p>
+          {socialContext(v)}
           <div className="card-footer">
             <div className="actions" style={{ gap: 0 }}>
               {rev.slice(0, 3).map((r) => (
@@ -869,6 +996,16 @@ export default function Tabletalk() {
       )
       .sort(
         (a, b) =>
+          (sort === "following"
+            ? (friendVisits.get(b.id) || []).reduce(
+                (sum, f) => sum + (f.count || 0),
+                0,
+              ) -
+              (friendVisits.get(a.id) || []).reduce(
+                (sum, f) => sum + (f.count || 0),
+                0,
+              )
+            : 0) ||
           Number(!!b.image) - Number(!!a.image) ||
           Number(average(b.id) || 0) - Number(average(a.id) || 0),
       );
@@ -971,8 +1108,34 @@ export default function Tabletalk() {
               ? "Find your kind of table"
               : "Restaurants in New York"}
           </h2>
-          <span className="small muted">{filtered.length} spots</span>
+          <div className="actions explore-sort">
+            <span className="small muted">{filtered.length} spots</span>
+            <select
+              aria-label="Sort restaurants"
+              value={sort}
+              onChange={(event) => setSort(event.target.value)}
+            >
+              <option value="default">Recommended</option>
+              {me && (
+                <option value="following">
+                  Most visited by people you follow
+                </option>
+              )}
+            </select>
+          </div>
         </div>
+        {sort === "following" && (
+          <p className="small muted sort-explanation">
+            {!d.following.length ? (
+              <>
+                Follow diners in the <Link href="/feed">friends feed</Link> to
+                discover their most-visited spots.
+              </>
+            ) : (
+              "Sorted by total synced Blackbird check-ins from people you follow. Repeat visits count; unknown visit counts do not. Places with no counted visits appear afterward."
+            )}
+          </p>
+        )}
         {!filtered.length ? (
           <Empty
             title={
@@ -1082,6 +1245,12 @@ export default function Tabletalk() {
           <div className="actions">
             {bookmark(v)}
             <button
+              className="btn"
+              onClick={() => share(v.name, `/restaurants/${v.id}`)}
+            >
+              <Link2 size={15} /> Share
+            </button>
+            <button
               className="btn primary"
               onClick={() => authThen({ type: "review", venue: v })}
             >
@@ -1143,6 +1312,7 @@ export default function Tabletalk() {
             )}
           </div>
           <aside className="stack">
+            {socialContext(v, true)}
             <div className="panel stack">
               <h3>Make a plan</h3>
               <p className="small">
@@ -1266,16 +1436,7 @@ export default function Tabletalk() {
             {l.visibility === "public" && (
               <button
                 className="btn"
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(window.location.href);
-                    toast.success(
-                      "Link copied. Anyone can view this public list.",
-                    );
-                  } catch {
-                    toast.info(window.location.href, { duration: 10000 });
-                  }
-                }}
+                onClick={() => share(l.title, `/lists/${l.id}`)}
               >
                 <Link2 size={15} /> Share
               </button>
@@ -1644,6 +1805,14 @@ export default function Tabletalk() {
               </div>
             </div>
             <div className="actions profile-actions">
+              <button
+                className="btn"
+                onClick={() =>
+                  share(`${p.name} on Tabletalk`, `/profile/${p.id}`)
+                }
+              >
+                <Link2 size={15} /> Share profile
+              </button>
               {p.demo ? <span className="demo-tag">Demo diner</span> : null}
               {own ? (
                 <button
@@ -1904,11 +2073,14 @@ export default function Tabletalk() {
         )}
         {content}
         <footer className="footer">
-          <Link className="brand" href="/">
-            tabletalk
-          </Link>
-          <span>Made for people who make plans around food.</span>
+          <div className="footer-brand">
+            <Link className="brand" href="/">
+              tabletalk
+            </Link>
+            <span>Made for people who make plans around food.</span>
+          </div>
           <div className="actions">
+            <InstallApp />
             <Link href="/about">About & data</Link>
             <a href="https://flynet.org" target="_blank" rel="noreferrer">
               Powered by Flynet ↗
@@ -1967,6 +2139,27 @@ function ModalBody({
           (r) => r.user_id === data.me?.id && r.venue_id === modal.venue.id,
         )
       : undefined;
+  const importedVisit =
+    modal?.type === "review"
+      ? data.visits.find((visit) => visit.venue_id === modal.venue.id)
+          ?.visited_at
+      : undefined;
+  const importedVisitDate = importedVisit
+    ? importedVisit.includes("T")
+      ? new Date(importedVisit).toLocaleDateString("en-CA", {
+          timeZone: "America/New_York",
+        })
+      : importedVisit.slice(0, 10)
+    : undefined;
+  const reviewDates = [
+    ...new Set(
+      [importedVisitDate, existing?.visited_at].filter(
+        (value): value is string => !!value,
+      ),
+    ),
+  ]
+    .sort()
+    .reverse();
   const original = modal?.type === "list" ? modal.list : undefined;
   const [name, setName] = useState(data.me?.name || ""),
     [bio, setBio] = useState(data.me?.bio || ""),
@@ -1974,7 +2167,9 @@ function ModalBody({
     [body, setBody] = useState(existing?.body || ""),
     [dish, setDish] = useState(existing?.dish || ""),
     [date, setDate] = useState(
-      existing?.visited_at || new Date().toISOString().slice(0, 10),
+      existing?.visited_at ||
+        importedVisitDate ||
+        new Date().toISOString().slice(0, 10),
     ),
     [title, setTitle] = useState(original?.title || ""),
     [description, setDescription] = useState(original?.description || ""),
@@ -2127,14 +2322,42 @@ function ModalBody({
           </label>
           <label>
             When did you visit?
-            <input
-              type="date"
-              required
-              max={new Date().toISOString().slice(0, 10)}
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            {importedVisitDate ? (
+              <select
+                className="review-date-select"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              >
+                {reviewDates.map((value) => (
+                  <option key={value} value={value}>
+                    {new Date(value + "T12:00:00").toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                    {value === importedVisitDate
+                      ? " · Latest Blackbird visit"
+                      : " · Current review date"}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="date"
+                required
+                max={new Date().toISOString().slice(0, 10)}
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            )}
           </label>
+          {importedVisitDate && (
+            <p className="form-help">
+              Only your latest imported visit date is available. An existing
+              review’s date is kept when editing.
+            </p>
+          )}
           <p className="form-help">
             Your review is public. Your imported Blackbird history verifies that
             you visited this location.

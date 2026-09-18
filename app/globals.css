@@ -701,7 +701,7 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 2px;
 }
 .footer .brand {
   font-size: 27px;

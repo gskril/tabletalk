@@ -79,6 +79,24 @@ export function navigateTab(href: string): boolean {
   }
 }
 
+// Mirror in-page filter state into the current URL without adding history
+// entries, so leaving the page and pressing back restores the same view.
+export function replaceTabParams(
+  updates: Record<string, string>,
+  pathname?: string,
+) {
+  const url = new URL(window.location.href);
+  if (pathname) url.pathname = pathname;
+  for (const [key, value] of Object.entries(updates)) {
+    if (value) url.searchParams.set(key, value);
+    else url.searchParams.delete(key);
+  }
+  const next = url.pathname + url.search;
+  if (next === snapshot()) return;
+  window.history.replaceState({ ...window.history.state }, "", next);
+  window.dispatchEvent(new Event(changed));
+}
+
 export function useTabLocation() {
   const serverPath = usePathname();
   const serverParams = useSearchParams();

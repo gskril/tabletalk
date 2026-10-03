@@ -112,3 +112,53 @@ test("sign-in links retain native navigation", async ({ page }) => {
     page.getByRole("link", { name: /Connect with Blackbird/ }),
   ).toHaveAttribute("href", "/api/auth/blackbird/start");
 });
+
+test("explore filters are kept in the URL and restored on back", async ({
+  page,
+}) => {
+  const venue = (id: string, name: string, cuisine: string, price: number) => ({
+    id,
+    name,
+    cuisine,
+    neighborhood: "SoHo",
+    address: "",
+    price,
+    lat: null,
+    lng: null,
+    image: "",
+    website: "",
+    description: "",
+    tags: "",
+    source: "test",
+    updated_at: "2026-09-01",
+  });
+  await page.route("**/api/catalog", (route) =>
+    route.fulfill({
+      json: {
+        venues: [
+          venue("v1", "Noodle Bar", "Ramen", 2),
+          venue("v2", "Taco Spot", "Mexican", 1),
+          venue("v3", "Ramen House", "Ramen", 3),
+        ],
+      },
+    }),
+  );
+  await page.goto("/explore");
+  await page.getByLabel("Search restaurants").fill("ramen");
+  await page.getByRole("button", { name: "Map", exact: true }).tap();
+  await page.getByRole("button", { name: "Grid", exact: true }).tap();
+  await expect(page).toHaveURL(/\/explore\?q=ramen$/);
+  await expect(page.getByText("2 spots")).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("link", { name: "Lists", exact: true })
+    .tap();
+  await expect(page).toHaveURL(/\/lists$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/explore\?q=ramen$/);
+  await expect(page.getByLabel("Search restaurants")).toHaveValue("ramen");
+  await expect(page.getByText("2 spots")).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("Search restaurants")).toHaveValue("ramen");
+  await expect(page.getByText("2 spots")).toBeVisible();
+});

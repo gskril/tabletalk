@@ -1,6 +1,10 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { navigateTab, useTabLocation } from "@/lib/tab-navigation";
+import {
+  navigateTab,
+  replaceTabParams,
+  useTabLocation,
+} from "@/lib/tab-navigation";
 function Link(
   props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string },
 ) {
@@ -175,16 +179,28 @@ export default function Tabletalk() {
     [modal, setModal] = useState<Modal>(null),
     [busy, setBusy] = useState(false);
   const { path, params } = useTabLocation();
-  const [query, setQuery] = useState(params.get("q") || ""),
-    [neighborhood, setNeighborhood] = useState(
-      params.get("neighborhood") || "",
-    ),
-    [cuisine, setCuisine] = useState(params.get("cuisine") || ""),
-    [price, setPrice] = useState(params.get("price") || ""),
-    [occasion, setOccasion] = useState(""),
-    [mapView, setMapView] = useState(false),
-    [sort, setSort] = useState("default"),
-    [friendSearch, setFriendSearch] = useState(""),
+  // Explore filters live in the URL so back/forward restores the same results.
+  // Updates always target /explore so legacy filter links on / stay on Explore.
+  const query = params.get("q") || "",
+    neighborhood = params.get("neighborhood") || "",
+    cuisine = params.get("cuisine") || "",
+    price = params.get("price") || "",
+    occasion = params.get("occasion") || "",
+    mapView = params.get("view") === "map",
+    sort = params.get("sort") || "default";
+  const setFilters = (updates: Record<string, string>) =>
+    replaceTabParams(updates, "/explore");
+  const setFilter = (key: string) => (value: string) =>
+    setFilters({ [key]: value });
+  const setQuery = setFilter("q"),
+    setNeighborhood = setFilter("neighborhood"),
+    setCuisine = setFilter("cuisine"),
+    setPrice = setFilter("price"),
+    setOccasion = setFilter("occasion"),
+    setMapView = (map: boolean) => setFilters({ view: map ? "map" : "" }),
+    setSort = (value: string) =>
+      setFilters({ sort: value === "default" ? "" : value });
+  const [friendSearch, setFriendSearch] = useState(""),
     [savedTabChoice, setSavedTabChoice] = useState<{
       route: string;
       value: string;
@@ -966,7 +982,9 @@ export default function Tabletalk() {
   // Keep existing restaurant-filter links usable after moving discovery.
   const legacyExplore =
     path === "/" &&
-    ["q", "neighborhood", "cuisine", "price"].some((key) => params.has(key));
+    ["q", "neighborhood", "cuisine", "price", "occasion"].some((key) =>
+      params.has(key),
+    );
   const active = legacyExplore ? "explore" : path.split("/")[1] || "feed";
   let content: React.ReactNode;
   if (active === "explore") {
@@ -1009,13 +1027,14 @@ export default function Tabletalk() {
           Number(!!b.image) - Number(!!a.image) ||
           Number(average(b.id) || 0) - Number(average(a.id) || 0),
       );
-    const reset = () => {
-      setQuery("");
-      setNeighborhood("");
-      setCuisine("");
-      setPrice("");
-      setOccasion("");
-    };
+    const reset = () =>
+      setFilters({
+        q: "",
+        neighborhood: "",
+        cuisine: "",
+        price: "",
+        occasion: "",
+      });
     content = (
       <>
         <div className="heading explore-heading">

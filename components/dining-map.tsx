@@ -11,16 +11,17 @@ export default function DiningMap({
   card: (v: Venue) => React.ReactNode;
 }) {
   const [selected, setSelected] = useState(venues[0]?.id),
-    [mapError, setMapError] = useState(false);
+    [mapErrorKey, setMapErrorKey] = useState<string | null>(null);
   const element = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
   const markers = useRef(new Map<string, Marker>());
   const selectedId = useRef<string | undefined>(undefined);
   const key = venues.map((v) => v.id).join(",");
   const current = venues.find((v) => v.id === selected) || venues[0];
+  const mapError = mapErrorKey !== null && mapErrorKey === key;
   useEffect(() => {
     let cancelled = false;
-    setMapError(false);
+    const markerMap = markers.current;
     const points = venues.filter((v) => v.lat !== null && v.lng !== null);
     import("leaflet")
       .then((L) => {
@@ -39,7 +40,7 @@ export default function DiningMap({
               '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           },
         ).addTo(m);
-        tiles.on("tileerror", () => setMapError(true));
+        tiles.on("tileerror", () => setMapErrorKey(key));
         if (points.length)
           m.fitBounds(
             points.map((p) => [p.lat!, p.lng!] as [number, number]),
@@ -183,12 +184,14 @@ export default function DiningMap({
         resize.observe(element.current);
         m.on("unload", () => resize.disconnect());
       })
-      .catch(() => setMapError(true));
+      .catch(() => {
+        if (!cancelled) setMapErrorKey(key);
+      });
     return () => {
       cancelled = true;
       map.current?.remove();
       map.current = null;
-      markers.current.clear();
+      markerMap.clear();
     };
     // Recreate only when the result set changes, not when its selected card changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps

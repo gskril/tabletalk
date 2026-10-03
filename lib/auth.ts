@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { db, now } from "./data";
+import { db } from "./data";
 export type User = {
   id: string;
   name: string;

@@ -45,8 +45,6 @@ import {
   Map as MapIcon,
   Plus,
   Search,
-  SlidersHorizontal,
-  Star,
   Utensils,
   X,
   LogOut,
@@ -113,6 +111,8 @@ function Avatar({
   return (
     <span className={`avatar ${large ? "large" : ""}`} aria-hidden="true">
       {photo && failedUrl !== photo ? (
+        // Avatars come from the connected profile provider and use its URL as-is.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={photo}
           alt=""
@@ -226,11 +226,22 @@ export default function Tabletalk() {
     };
     if (titles[path]) document.title = `${titles[path]} · Tabletalk`;
   }, [path]);
-  const [visibleCount, setVisibleCount] = useState(24);
-  useEffect(
-    () => setVisibleCount(24),
-    [query, neighborhood, cuisine, price, occasion, sort],
-  );
+  const filterKey = JSON.stringify([
+    query,
+    neighborhood,
+    cuisine,
+    price,
+    occasion,
+    sort,
+  ]);
+  const [visibleResults, setVisibleResults] = useState({
+    key: filterKey,
+    count: 24,
+  });
+  if (visibleResults.key !== filterKey)
+    setVisibleResults({ key: filterKey, count: 24 });
+  const visibleCount =
+    visibleResults.key === filterKey ? visibleResults.count : 24;
   const load = useCallback(async () => {
     try {
       const [r, catalogResponse] = await Promise.all([
@@ -263,7 +274,9 @@ export default function Tabletalk() {
     }
   }, []);
   useEffect(() => {
-    load();
+    // The request updates state only after its asynchronous fetches settle.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load();
   }, [load]);
   useEffect(() => {
     if (!data?.me?.id) return;
@@ -840,6 +853,8 @@ export default function Tabletalk() {
         </div>
         <div className="actions">
           {d.passport?.status === "reconnect" && (
+            // OAuth must perform a native document navigation.
+            // eslint-disable-next-line @next/next/no-html-link-for-pages
             <a className="btn" href="/api/auth/blackbird/start">
               Reconnect Blackbird
             </a>
@@ -1188,7 +1203,13 @@ export default function Tabletalk() {
                 </p>
                 <button
                   className="btn"
-                  onClick={() => setVisibleCount((n) => n + 24)}
+                  onClick={() =>
+                    setVisibleResults((current) => ({
+                      key: filterKey,
+                      count:
+                        (current.key === filterKey ? current.count : 24) + 24,
+                    }))
+                  }
                 >
                   Show more restaurants
                 </button>
@@ -1957,7 +1978,7 @@ export default function Tabletalk() {
             style={{ marginTop: 30 }}
             onClick={async () => {
               await fetch("/api/auth/logout", { method: "POST" });
-              window.location.href = "/";
+              window.location.replace("/");
             }}
           >
             <LogOut size={15} /> Sign out
@@ -2037,7 +2058,7 @@ export default function Tabletalk() {
         </p>
         <h2>Made for the next meal.</h2>
         <p>
-          Built for Runtime's Blackbird track. Powered by Flynet. Tabletalk is
+          Built for Runtime’s Blackbird track. Powered by Flynet. Tabletalk is
           not affiliated with or endorsed by Blackbird or Beli.
         </p>
       </div>
@@ -2119,7 +2140,6 @@ export default function Tabletalk() {
             modal={modal}
             data={d}
             close={() => setModal(null)}
-            reload={load}
             action={action}
             navigate={go}
           />
@@ -2141,14 +2161,12 @@ function ModalBody({
   modal,
   data,
   close,
-  reload,
   action,
   navigate,
 }: {
   modal: Modal;
   data: State;
   close: () => void;
-  reload: () => Promise<void>;
   action: (b: Record<string, unknown>) => Promise<{ id?: string }>;
   navigate: (s: string) => void;
 }) {
@@ -2234,6 +2252,8 @@ function ModalBody({
           "A notebook for the places you love and the ones you’ll love next.",
         )}
         <div className="form-stack">
+          {/* OAuth must perform a native document navigation. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a className="btn dark" href="/api/auth/blackbird/start">
             <Utensils size={17} /> Connect with Blackbird{" "}
             <ArrowRight size={16} />
@@ -2270,13 +2290,15 @@ function ModalBody({
           </p>
           {data.integration.configured &&
             data.passport?.status === "reconnect" && (
+              // OAuth must perform a native document navigation.
+              // eslint-disable-next-line @next/next/no-html-link-for-pages
               <a className="btn primary" href="/api/auth/blackbird/start">
                 Reconnect Blackbird
               </a>
             )}
-          <a className="btn" href="/saved?tab=visits">
+          <Link className="btn" href="/saved?tab=visits">
             View my visits
-          </a>
+          </Link>
         </div>
       </>
     );

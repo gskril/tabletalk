@@ -1,15 +1,17 @@
+import Link from "next/link";
+
 export default function NotFound() {
   return (
     <main className="shell">
-      <a className="brand" href="/">
+      <Link className="brand" href="/">
         tabletalk
-      </a>
+      </Link>
       <div className="empty" style={{ marginTop: 70 }}>
         <h1>This table is off the map.</h1>
         <p>The page may be private, deleted, or have a different address.</p>
-        <a href="/" className="btn primary">
+        <Link href="/" className="btn primary">
           Explore NYC
-        </a>
+        </Link>
       </div>
     </main>
   );

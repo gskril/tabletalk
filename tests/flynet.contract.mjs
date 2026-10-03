@@ -964,6 +964,7 @@ test("cached catalog is identical for members and guests; lightweight state stay
     const { venues, catalog, ...remaining } = full;
     assert.deepEqual(lightweight, remaining);
     assert.deepEqual(venues, publicData.venues);
+    assert.deepEqual(catalog, publicData.catalog);
   } finally {
     env.DB.batch = originalBatch;
     if (session) cookieJar.set("tt_session", session);

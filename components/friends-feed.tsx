@@ -73,6 +73,9 @@ export default function FriendsFeed({
     }
   }
   useEffect(() => {
+    // Changing the feed query intentionally discards stale pagination before
+    // starting the replacement request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setItems([]);
     setCursor(null);
     if (scope === "following" && !userId) {

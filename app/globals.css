@@ -1951,9 +1951,19 @@ h3 {
   flex: 1;
   min-width: 200px;
 }
-.feed-controls > button {
-  font-size: 14px;
-  min-height: 44px;
+.feed-refresh {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+.feed-refresh:hover:not(:disabled) {
+  background: var(--surface-soft);
+}
+.feed-refresh:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 .feed-filters {
   display: flex;
@@ -2078,6 +2088,162 @@ h3 {
   }
   .feed-place-heading h2 {
     font-size: 25px;
+  }
+}
+
+.feed-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.feed-view-toggle {
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+.feed-view-toggle button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 38px;
+  border-radius: 5px;
+  color: var(--muted-foreground);
+}
+.feed-view-toggle button[aria-pressed="true"] {
+  color: var(--primary);
+  background: var(--surface-soft);
+}
+.feed-view-toggle button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.feed-card-compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 4px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.feed-card-compact .feed-card-body {
+  display: contents;
+}
+.feed-card-compact .feed-place-heading {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.feed-card-compact .feed-place-heading > a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.feed-restaurant-thumbnail {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.feed-restaurant-thumbnail .restaurant-image-empty > span {
+  display: none;
+}
+.feed-card-compact .feed-card-head .avatar {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+.feed-card-compact .feed-card-head > a {
+  flex-shrink: 0;
+}
+.feed-card-compact .feed-place-heading h2 {
+  font-size: 18px;
+  line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.feed-card-compact .score {
+  font-size: 13px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+.feed-card-compact .feed-card-body > .small {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.feed-card-compact .feed-card-head {
+  grid-column: 1;
+  grid-row: 3;
+  padding: 0;
+  gap: 4px 8px;
+  flex-wrap: wrap;
+  align-content: start;
+}
+.feed-card-compact .verified,
+.feed-card-compact .review-dish {
+  display: none;
+}
+.feed-card-compact .feed-card-head > div {
+  flex: initial;
+}
+.feed-card-compact .feed-card-head strong,
+.feed-card-compact .feed-card-head p,
+.feed-card-compact .feed-card-head time {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.feed-card-compact .feed-card-head p {
+  display: inline;
+  margin-left: 4px;
+}
+.feed-card-compact .feed-review-body {
+  grid-column: 1;
+  grid-row: 4;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.feed-card-compact .feed-card-actions {
+  grid-column: 1;
+  grid-row: 5;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.feed-card-compact .feed-card-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 9px;
+  gap: 5px;
+  font-size: 12px;
+}
+.feed-card-compact .feed-card-actions .feed-like {
+  margin-left: auto;
+  padding-inline: 0;
+}
+@media (pointer: coarse) {
+  .feed-card-compact .feed-card-actions button {
+    min-height: 44px;
   }
 }
 

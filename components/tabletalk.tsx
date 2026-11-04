@@ -614,7 +614,7 @@ export default function Tabletalk() {
       </Link>
     );
   }
-  function activityCard(item: FeedItem) {
+  function activityCard(item: FeedItem, compact: boolean) {
     const v = item.venue;
     const review = item.review
       ? d.reviews.find((r) => r.id === item.review!.id) || item.review
@@ -622,7 +622,7 @@ export default function Tabletalk() {
     const saved = d.bookmarks.includes(v.id);
     return (
       <article
-        className="feed-card"
+        className={`feed-card${compact ? " feed-card-compact" : ""}`}
         key={item.id}
         data-activity-type={item.type}
       >
@@ -648,16 +648,23 @@ export default function Tabletalk() {
             })}
           </time>
         </div>
-        <Link
-          href={`/restaurants/${v.id}`}
-          className="feed-restaurant-photo"
-          aria-label={`View ${v.name}`}
-        >
-          <RestaurantImage venue={v} />
-        </Link>
+        {!compact && (
+          <Link
+            href={`/restaurants/${v.id}`}
+            className="feed-restaurant-photo"
+            aria-label={`View ${v.name}`}
+          >
+            <RestaurantImage venue={v} />
+          </Link>
+        )}
         <div className="feed-card-body">
           <div className="feed-place-heading">
             <Link href={`/restaurants/${v.id}`}>
+              {compact && (
+                <span className="feed-restaurant-thumbnail">
+                  <RestaurantImage venue={v} compact />
+                </span>
+              )}
               <h2>{v.name}</h2>
             </Link>
             {review && (
@@ -670,9 +677,11 @@ export default function Tabletalk() {
             )}
           </div>
           <p className="small muted">
-            {v.neighborhood} · {v.cuisine}
+            {[v.neighborhood || v.address, v.cuisine]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
-          <p className="small muted">{v.address}</p>
+          {!compact && <p className="small muted">{v.address}</p>}
           <p className="verified">
             <CheckCircle2 size={14} />
             {item.type === "checkin" && item.visit_count
@@ -703,10 +712,12 @@ export default function Tabletalk() {
               }
             >
               <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
-              {saved ? "Saved" : "Save place"}
+              {saved ? "Saved" : compact ? "Save" : "Save place"}
             </button>
             <button
               className="btn"
+              aria-label={`Add ${v.name} to list`}
+              title={`Add ${v.name} to list`}
               onClick={() => authThen({ type: "list", add: v.id })}
             >
               <Plus size={16} />
@@ -715,6 +726,7 @@ export default function Tabletalk() {
             {review && (
               <button
                 className="feed-like"
+                aria-pressed={d.likes.includes(review.id)}
                 disabled={busy}
                 aria-label={`${d.likes.includes(review.id) ? "Unlike" : "Like"} review by ${review.name}`}
                 onClick={() =>
@@ -729,7 +741,9 @@ export default function Tabletalk() {
                   size={16}
                   fill={d.likes.includes(review.id) ? "currentColor" : "none"}
                 />
-                {review.likes || "Helpful"}
+                {compact
+                  ? `Helpful${review.likes ? ` · ${review.likes}` : ""}`
+                  : review.likes || "Helpful"}
               </button>
             )}
           </div>

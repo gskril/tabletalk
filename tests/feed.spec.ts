@@ -68,7 +68,7 @@ test("follow a diner, browse real check-ins and reviews, and keep a restaurant f
   ).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Reviews", exact: true }).click();
   await expect(cards).toHaveCount(1);
-  await page.getByRole("button", { name: "All activity", exact: true }).click();
+  await page.getByRole("button", { name: "All", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(cards).toHaveCount(4);
   expect(
@@ -212,14 +212,84 @@ test("feed polls for background imports and refresh explicitly requests Blackbir
     return route.fulfill({ json: { status: "syncing", count: 0 } });
   });
   await page.goto("/");
-  await expect(
-    page.getByText("Checking for new Blackbird visits…"),
-  ).toBeVisible();
+  const refreshButton = page.getByRole("button", {
+    name: "Refresh feed",
+    exact: true,
+  });
+  await expect(refreshButton).toHaveAttribute("aria-busy", "true");
+  await expect(refreshButton).toBeDisabled();
   await expect(
     page.getByText("Checking for new Blackbird visits…"),
   ).toHaveCount(0);
+  await expect(refreshButton).toHaveAttribute("aria-busy", "false");
+  await expect(refreshButton).toBeEnabled();
   expect(feedReads).toBeGreaterThanOrEqual(2);
-  await page.getByRole("button", { name: "Refresh feed", exact: true }).click();
+  await refreshButton.click();
   await expect.poll(() => syncRequests).toBe(1);
   await expect.poll(() => feedReads).toBeGreaterThanOrEqual(3);
+});
+
+test("compact feed stays small and remembers the selected view", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const card = page.locator(".feed-card").first();
+  const compact = page.getByRole("button", {
+    name: "Compact view",
+    exact: true,
+  });
+  const full = page.getByRole("button", { name: "Full view", exact: true });
+  await expect(card).toBeVisible();
+  await expect(full).toHaveAttribute("aria-pressed", "true");
+  const fullHeight = (await card.boundingBox())!.height;
+  await compact.click();
+  await expect(card).toHaveClass(/feed-card-compact/);
+  await expect(card.locator(".feed-restaurant-photo")).toHaveCount(0);
+  await expect(card.locator(".feed-restaurant-thumbnail")).toBeVisible();
+  await expect(card.locator(".feed-card-head .avatar")).toBeVisible();
+  await expect(card.locator("h2")).toBeVisible();
+  await expect(card.locator("time")).toBeVisible();
+  await expect(card.locator(".feed-review-body")).toBeVisible();
+  expect((await card.boundingBox())!.height).toBeLessThan(fullHeight / 2);
+  await page.reload();
+  await expect(compact).toHaveAttribute("aria-pressed", "true");
+  await expect(card).toHaveClass(/feed-card-compact/);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(card.locator("time")).toBeVisible();
+  expect((await card.boundingBox())!.height).toBeLessThan(fullHeight / 2);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({ path: "test-results/compact-feed-mobile.png" });
+  await full.click();
+  await expect(card.locator(".feed-restaurant-photo")).toBeVisible();
+  await page.reload();
+  await expect(full).toHaveAttribute("aria-pressed", "true");
+});
+
+test("mobile defaults to compact without overriding an explicit full preference", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const compact = page.getByRole("button", {
+    name: "Compact view",
+    exact: true,
+  });
+  const full = page.getByRole("button", { name: "Full view", exact: true });
+  await expect(compact).toHaveAttribute("aria-pressed", "true");
+  expect(
+    await page.evaluate(() => localStorage.getItem("tabletalk:feed-view")),
+  ).toBeNull();
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.reload();
+  await expect(full).toHaveAttribute("aria-pressed", "true");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  await expect(compact).toHaveAttribute("aria-pressed", "true");
+  await full.click();
+  await page.reload();
+  await expect(full).toHaveAttribute("aria-pressed", "true");
 });

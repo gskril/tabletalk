@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { LayoutList, Rows3, RefreshCw } from "lucide-react";
 import type { FeedItem } from "@/lib/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -15,10 +16,33 @@ export default function FriendsFeed({
   suggestions?: React.ReactNode;
   userId?: string;
   following: string[];
-  renderItem: (item: FeedItem) => React.ReactNode;
+  renderItem: (item: FeedItem, compact: boolean) => React.ReactNode;
   signIn: () => void;
 }) {
   const [scope, setScope] = useState(userId ? "following" : "everyone");
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    let initialCompact = window.matchMedia("(max-width: 600px)").matches;
+    try {
+      const savedView = localStorage.getItem("tabletalk:feed-view");
+      if (savedView === "compact" || savedView === "full") {
+        initialCompact = savedView === "compact";
+      }
+    } catch {
+      // Use the screen-size default when browser storage is unavailable.
+    }
+    // Resolve browser-only settings after hydration without saving the default.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCompact(initialCompact);
+  }, []);
+  function changeView(next: boolean) {
+    setCompact(next);
+    try {
+      localStorage.setItem("tabletalk:feed-view", next ? "compact" : "full");
+    } catch {
+      // The control still works when browser storage is unavailable.
+    }
+  }
   const [kind, setKind] = useState("all");
   const [items, setItems] = useState<FeedItem[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -30,6 +54,7 @@ export default function FriendsFeed({
   const pollCount = useRef(0);
   const requestRef = useRef<AbortController | null>(null);
   const followingKey = [...following].sort().join(",");
+  const refreshing = loading || refreshingVisits || (syncing && !error);
   async function fetchPage(next?: string) {
     requestRef.current?.abort();
     const controller = new AbortController();
@@ -64,7 +89,7 @@ export default function FriendsFeed({
           : data.items,
       );
       setCursor(data.nextCursor);
-      setSyncing(!next && !!data.syncing);
+      setSyncing(!next && !!data.syncing && pollCount.current < 10);
     } catch (e) {
       if (!controller.signal.aborted)
         setError(e instanceof Error ? e.message : "Couldn’t load the feed.");
@@ -115,7 +140,7 @@ export default function FriendsFeed({
         {scope === "following" ? (
           <div className="feed-filters" aria-label="Activity type">
             {[
-              ["all", "All activity"],
+              ["all", "All"],
               ["checkin", "Check-ins"],
               ["review", "Reviews"],
             ].map(([value, label]) => (
@@ -136,35 +161,60 @@ export default function FriendsFeed({
             check-ins.
           </p>
         )}
-        <button
-          className="text-link"
-          disabled={loading || refreshingVisits}
-          onClick={async () => {
-            setRefreshingVisits(true);
-            setError("");
-            pollCount.current = 0;
-            try {
-              await refreshVisits?.();
-              setRefresh((n) => n + 1);
-            } catch (error) {
-              setError(
-                error instanceof Error
-                  ? error.message
-                  : "Couldn’t refresh visits.",
-              );
-            } finally {
-              setRefreshingVisits(false);
-            }
-          }}
-        >
-          {refreshingVisits ? "Refreshing visits…" : "Refresh feed"}
-        </button>
+        <div className="feed-toolbar">
+          <div className="feed-view-toggle" role="group" aria-label="Feed view">
+            <button
+              type="button"
+              aria-label="Full view"
+              title="Full view"
+              aria-pressed={!compact}
+              onClick={() => changeView(false)}
+            >
+              <LayoutList size={18} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              aria-label="Compact view"
+              title="Compact view"
+              aria-pressed={compact}
+              onClick={() => changeView(true)}
+            >
+              <Rows3 size={18} aria-hidden="true" />
+            </button>
+          </div>
+          <button
+            type="button"
+            className="feed-refresh text-link"
+            aria-label="Refresh feed"
+            title={refreshing ? "Refreshing feed…" : "Refresh feed"}
+            disabled={refreshing}
+            aria-busy={refreshing}
+            onClick={async () => {
+              setRefreshingVisits(true);
+              setError("");
+              pollCount.current = 0;
+              try {
+                await refreshVisits?.();
+                setRefresh((n) => n + 1);
+              } catch (error) {
+                setError(
+                  error instanceof Error
+                    ? error.message
+                    : "Couldn’t refresh visits.",
+                );
+              } finally {
+                setRefreshingVisits(false);
+              }
+            }}
+          >
+            <RefreshCw
+              size={18}
+              aria-hidden="true"
+              className={refreshing ? "motion-safe:animate-spin" : undefined}
+            />
+          </button>
+        </div>
       </div>
-      {syncing && (
-        <p className="small muted" role="status">
-          Checking for new Blackbird visits…
-        </p>
-      )}
       {scope === "following" && !userId ? (
         <div className="feed-empty">
           <h2>Your friends’ next good find.</h2>
@@ -177,8 +227,8 @@ export default function FriendsFeed({
         </div>
       ) : (
         <>
-          {items.map(renderItem)}
-          {loading && (
+          {items.map((item) => renderItem(item, compact))}
+          {loading && !syncing && !items.length && (
             <p className="note" role="status">
               Loading activity…
             </p>
